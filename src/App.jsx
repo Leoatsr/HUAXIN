@@ -1095,7 +1095,7 @@ function LandscapeSVG({season,color,w,h}){
   </svg>);
 }
 
-function Card({s,onClose,isFav,onFav}){const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
+function Card({s,onClose,isFav,onFav,inTrip,onAddTrip}){const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
   useEffect(()=>{setTimeout(()=>setV(true),10);},[]);
   // Fetch real accumulated temperature from Open-Meteo
   useEffect(()=>{(async()=>{try{
@@ -1187,6 +1187,10 @@ function Card({s,onClose,isFav,onFav}){const [v,setV]=useState(false);const [rea
             background:isFav?"#fef5f4":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:isFav?"#e06050":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
             {isFav?"♥ 已收藏":"♡ 收藏"}</button>
+          <button onClick={()=>onAddTrip?.(s.id)} style={{flex:1,border:`1.5px solid ${inTrip?"#3a8a60":"#e0dcd4"}`,
+            background:inTrip?"#eef8f0":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
+            fontSize:13,fontWeight:600,color:inTrip?"#3a8a60":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
+            {inTrip?"✓ 已加入行程":"+ 加入行程"}</button>
           <button onClick={()=>{const text=`${s.n} · ${s.sp}\n${s.po}\n预测盛花期：${s._pred?.dateStr||""}`;
             if(navigator.share)navigator.share({title:"花信风 · "+s.n,text}).catch(()=>{});
             else{navigator.clipboard?.writeText(text);alert("已复制到剪贴板");}}}
@@ -1235,6 +1239,7 @@ export default function App(){
   const [wz,setWz]=useState(1);const [wc,setWc]=useState([104.5,35]);
   const [selSp,setSelSp]=useState("牡丹");const [userLoc,setUserLoc]=useState(null);const [locAsked,setLocAsked]=useState(false);
   const [showMood,setShowMood]=useState(false);
+  const [trip,setTrip]=useState([]);const [showTrip,setShowTrip]=useState(false);
   const [nearbyMonth,setNearbyMonth]=useState(0);
   const [searchQ,setSearchQ]=useState("");const [showSearch,setShowSearch]=useState(false);
   const [favs,setFavs]=useState({});
@@ -1245,6 +1250,13 @@ export default function App(){
     if(r?.value)setFavs(JSON.parse(r.value));}catch{}})();},[]);
   const toggleFav=async(id)=>{const nf={...favs};if(nf[id])delete nf[id];else nf[id]=Date.now();
     setFavs(nf);try{await window.storage?.set("favs",JSON.stringify(nf));}catch{}};
+  const addToTrip=(id)=>{if(!trip.includes(id))setTrip([...trip,id]);};
+  const removeFromTrip=(id)=>setTrip(trip.filter(x=>x!==id));
+  const moveInTrip=(id,dir)=>{const i=trip.indexOf(id);if(i<0)return;const n=[...trip];
+    const j=i+dir;if(j<0||j>=n.length)return;[n[i],n[j]]=[n[j],n[i]];setTrip(n);};
+  const tripSpots=useMemo(()=>trip.map(id=>flora.find(f=>f.id===id)).filter(Boolean),[trip,flora]);
+  const tripDist=useMemo(()=>{let d=0;for(let i=1;i<tripSpots.length;i++)
+    d+=distKm(tripSpots[i-1].lat,tripSpots[i-1].lon,tripSpots[i].lat,tripSpots[i].lon);return Math.round(d);},[tripSpots]);
   const W=1000,H=850;const cs=getSeason();const cr=REGIONS.find(r=>r.id===region)||REGIONS[0];
 
   const proj=useMemo(()=>d3.geoMercator().center([104.5,35.5]).scale(580).translate([W/2,H/2]),[]);
@@ -1560,8 +1572,100 @@ export default function App(){
           </div>))}
       </div>);})()}
 
-    {sel&&<Card s={sel} onClose={()=>setSel(null)} isFav={!!favs[sel.id]} onFav={toggleFav}/>}
+    {sel&&<Card s={sel} onClose={()=>setSel(null)} isFav={!!favs[sel.id]} onFav={toggleFav} inTrip={trip.includes(sel.id)} onAddTrip={addToTrip}/>}
     {showMood&&<MoodCard onClose={()=>setShowMood(false)}/>}
+
+    {/* Trip planning floating button */}
+    {trip.length>0&&!showTrip&&<button onClick={()=>setShowTrip(true)} style={{position:"absolute",bottom:60,right:8,zIndex:35,
+      border:"none",borderRadius:20,padding:"6px 14px",cursor:"pointer",
+      background:"rgba(58,138,96,.9)",color:"#fff",boxShadow:"0 2px 10px rgba(58,138,96,.3)",
+      fontSize:12,fontWeight:600,display:"flex",alignItems:"center",gap:4,letterSpacing:1}}>
+      🗺 行程({trip.length})</button>}
+
+    {/* Trip planning panel */}
+    {showTrip&&<div style={{position:"fixed",inset:0,zIndex:110,display:"flex",justifyContent:"flex-end",
+      background:"rgba(0,0,0,.2)",backdropFilter:"blur(3px)"}} onClick={()=>setShowTrip(false)}>
+      <div onClick={e=>e.stopPropagation()} style={{width:"min(380px,88vw)",height:"100vh",
+        background:dark?"#221e18":"#faf6ef",overflowY:"auto",boxShadow:"-4px 0 20px rgba(0,0,0,.1)",
+        padding:"20px 18px"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+          <h2 style={{fontSize:20,fontWeight:800,color:dark?"#e0d8c8":C.text,letterSpacing:3,margin:0}}>🗺 行程规划</h2>
+          <button onClick={()=>setShowTrip(false)} style={{border:"none",background:"none",cursor:"pointer",fontSize:18,color:C.tl}}>{"×"}</button>
+        </div>
+
+        {tripSpots.length===0&&<div style={{textAlign:"center",padding:"40px 0",color:C.tl}}>
+          <div style={{fontSize:40,marginBottom:12}}>🌸</div>
+          <div style={{fontSize:14,letterSpacing:2}}>还没有添加景点</div>
+          <div style={{fontSize:12,marginTop:6,opacity:.6}}>在地图上点击景点 → "加入行程"</div>
+        </div>}
+
+        {tripSpots.map((s,i)=>{
+          const nextS=tripSpots[i+1];
+          const segDist=nextS?Math.round(distKm(s.lat,s.lon,nextS.lat,nextS.lon)):0;
+          return(<div key={s.id}>
+            <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 8px",
+              background:dark?"rgba(255,255,255,.03)":"rgba(0,0,0,.02)",borderRadius:8,marginBottom:2}}>
+              {/* Drag handle + number */}
+              <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:24}}>
+                <button onClick={()=>moveInTrip(s.id,-1)} disabled={i===0}
+                  style={{border:"none",background:"none",cursor:i===0?"default":"pointer",fontSize:10,color:i===0?"#ddd":C.tl}}>▲</button>
+                <span style={{fontSize:14,fontWeight:800,color:C.accent}}>{i+1}</span>
+                <button onClick={()=>moveInTrip(s.id,1)} disabled={i===tripSpots.length-1}
+                  style={{border:"none",background:"none",cursor:i===tripSpots.length-1?"default":"pointer",fontSize:10,
+                    color:i===tripSpots.length-1?"#ddd":C.tl}}>▼</button>
+              </div>
+              {/* Flower icon */}
+              <div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,.8)",
+                border:`1.5px solid ${s.c}55`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <FI sp={s.sp} sz={18} co={s.c}/></div>
+              {/* Info */}
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,color:dark?"#e0d8c8":C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.n}</div>
+                <div style={{fontSize:11,color:s.c,display:"flex",gap:6}}>
+                  <span>{s.sp}</span>
+                  <span>{s._pred?.dateStr||`${s.pk[0]}月`}</span>
+                  <span style={{color:C.tl}}>{s.rg}</span>
+                </div>
+              </div>
+              {/* Remove */}
+              <button onClick={()=>removeFromTrip(s.id)} style={{border:"none",background:"none",cursor:"pointer",
+                fontSize:14,color:"#d04030",padding:4}}>×</button>
+            </div>
+            {/* Distance to next stop */}
+            {nextS&&<div style={{display:"flex",alignItems:"center",gap:4,padding:"4px 0 4px 32px",color:C.tl,fontSize:11}}>
+              <div style={{width:1,height:16,background:C.tl+"33"}}/>
+              <span>↓ {segDist}km · 约{segDist<100?"1小时":segDist<300?"2-3小时":segDist<600?"高铁3-4小时":"飞机"}</span>
+            </div>}
+          </div>);
+        })}
+
+        {tripSpots.length>0&&<>
+          {/* Trip summary */}
+          <div style={{margin:"14px 0",padding:"12px 14px",background:dark?"rgba(255,255,255,.04)":"#f5f0e8",borderRadius:8}}>
+            <div style={{fontSize:13,color:dark?"#e0d8c8":C.text,display:"flex",justifyContent:"space-between"}}>
+              <span>共 <strong>{tripSpots.length}</strong> 站</span>
+              <span>全程约 <strong>{tripDist}</strong> km</span>
+            </div>
+            <div style={{fontSize:11,color:C.tl,marginTop:4}}>
+              花种：{[...new Set(tripSpots.map(s=>s.sp))].join("、")}
+            </div>
+          </div>
+          {/* Actions */}
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>{const text=`花信风·行程规划\n${tripSpots.map((s,i)=>`${i+1}. ${s.n} · ${s.sp} · ${s._pred?.dateStr||""}`).join("\n")}\n全程约${tripDist}km`;
+              if(navigator.share)navigator.share({title:"花信风行程",text}).catch(()=>{});
+              else{navigator.clipboard?.writeText(text);alert("已复制");}}}
+              style={{flex:1,border:"1.5px solid #e0dcd4",background:dark?"#2a2620":"#faf6ef",borderRadius:8,
+                padding:"10px",cursor:"pointer",fontSize:13,fontWeight:600,color:C.accent,letterSpacing:1}}>
+              📤 分享行程</button>
+            <button onClick={()=>{setTrip([]);setShowTrip(false);}}
+              style={{border:"1.5px solid #e0dcd4",background:dark?"#2a2620":"#faf6ef",borderRadius:8,
+                padding:"10px 14px",cursor:"pointer",fontSize:13,color:"#d04030"}}>
+              清空</button>
+          </div>
+        </>}
+      </div>
+    </div>}
     {/* Mood card trigger button (always visible top right area) */}
     <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:12,right:180,zIndex:31,
       border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
