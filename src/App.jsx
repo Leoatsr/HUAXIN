@@ -755,7 +755,7 @@ function getRev(){if(!_rev){const ac=getAC();_rev=ac.createConvolver();
 function playN(freq,dur,type,vol,pan=0){
   const ac=getAC(),now=ac.currentTime;
   // Main oscillator
-  const o=ac.createOscillator(),g=ac.createGain(),p=ac.createStereoPanner?.();
+  const o=ac.createOscillator(),g=ac.createGain(),p=(ac.createStereoPanner?ac.createStereoPanner():null);
   o.type=type;o.frequency.value=freq;
   g.gain.setValueAtTime(0,now);
   g.gain.linearRampToValueAtTime(vol,now+0.02);
@@ -897,9 +897,9 @@ function AlertBanner({onGo,flora}){
       const pred=f._pred;if(!pred)return;
       const du=pred.daysUntil;
       if(du>=3&&du<=7) result.push({m:"【花信风】"+f.n+f.sp+"将于"+du+"日后进入盛花期",id:f.id,pri:3});
-      if(du<=0&&du>=-10&&(f._st?.l||0)>=3) result.push({m:"【花信风】"+f.n+f.sp+"正值盛花期 · "+f.po,id:f.id,pri:4});
-      if(du<-8&&du>=-14&&(f._st?.l||0)>=3) result.push({m:"【急报】"+f.n+f.sp+"花期渐近尾声，欲赏请趁本周",id:f.id,pri:5});
-      if(du<-14&&(f._st?.l||0)<=1){
+      if(du<=0&&du>=-10&&((f._st&&f._st.l)||0)>=3) result.push({m:"【花信风】"+f.n+f.sp+"正值盛花期 · "+f.po,id:f.id,pri:4});
+      if(du<-8&&du>=-14&&((f._st&&f._st.l)||0)>=3) result.push({m:"【急报】"+f.n+f.sp+"花期渐近尾声，欲赏请趁本周",id:f.id,pri:5});
+      if(du<-14&&((f._st&&f._st.l)||0)<=1){
         const next=flora.find(x=>x.sp===f.sp&&x.id!==f.id&&x._pred&&x._pred.daysUntil>0&&x._pred.daysUntil<30);
         if(next) result.push({m:"【接力】"+(f.n.split("·")[1]||f.n)+f.sp+"已谢，"+next.n+"正在接力绽放",id:next.id,pri:2});
       }
@@ -958,8 +958,8 @@ function MoodCard({onClose}){
   const dailySeed=useMemo(()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();},[]);
   
   useEffect(()=>{(async()=>{
-    try{const r=await window.storage?.get("mood_"+dailySeed);
-      if(r?.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setScrollOpen(1);setRevealed(true);return;}}catch{}
+    try{const r=window.storage?await window.storage.get("mood_"+dailySeed):null;
+      if(r&&r.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setScrollOpen(1);setRevealed(true);return;}}catch{}
   })();},[dailySeed]);
 
   // Animate scroll opening
@@ -974,7 +974,7 @@ function MoodCard({onClose}){
     setTimeout(async()=>{
       const picked=MOOD_CARDS[Math.floor(Math.abs(Math.sin(dailySeed*0.618))*MOOD_CARDS.length)%MOOD_CARDS.length];
       setCard(picked);setShaking(false);
-      try{await window.storage?.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
+      try{if(window.storage)await window.storage.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
     },1500);
   };
 
@@ -1082,7 +1082,7 @@ function ScrollLanding({onEnter}){
   useEffect(()=>{const t=setInterval(()=>setPulse(p=>!p),1500);return()=>clearInterval(t);},[]);
   const hs=e=>{e.preventDefault();sr.current={x:e.touches?e.touches[0].clientX:e.clientX,d:dx};setDg(true);};
   const hm=e=>{if(!dg||!sr.current)return;const x=e.touches?e.touches[0].clientX:e.clientX;
-    setDx(Math.max(0,Math.min(1,sr.current.d+(x-sr.current.x)/((cr.current?.offsetWidth||600)*.4))));};
+    setDx(Math.max(0,Math.min(1,sr.current.d+(x-sr.current.x)/(((cr.current?cr.current.offsetWidth:600))*.4))));};
   const he=()=>{setDg(false);if(dx>.5){setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,300);},150);}else setDx(0);};
   // 千里江山图色调
   const qp={spring:{s:"#e8dcd0",m1:"#3a6b5a",m2:"#4a8a6a",w:"#6aaab0",t:"#d4756b"},
@@ -1131,14 +1131,14 @@ function ScrollLanding({onEnter}){
           cursor:"grab",transition:dg?"none":"all .3s",zIndex:5}}/></div>
     {/* Animated hint */}
     <div style={{marginTop:14,display:"flex",alignItems:"center",gap:8,zIndex:2,
-      opacity:dx>0?.2:.6,transition:"opacity .3s"}}>
+      opacity:dx>0?0.2:0.6,transition:"opacity .3s"}}>
       <span style={{fontSize:16,transform:pulse?"translateX(-4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☞</span>
       <span style={{fontSize:13,color:C.tl,letterSpacing:4}}>拖动卷轴，展开花事</span>
       <span style={{fontSize:16,transform:pulse?"translateX(4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☜</span>
     </div>
     <button onClick={()=>{setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,200);},100);}}
       style={{position:"absolute",bottom:"min(20px,4vh)",border:"none",background:"transparent",
-        cursor:"pointer",fontSize:12,color:C.tl,opacity:.35,letterSpacing:3,zIndex:2}}>
+        cursor:"pointer",fontSize:12,color:C.tl,opacity:0.35,letterSpacing:3,zIndex:2}}>
       {"直接进入"}</button>
   </div>);
 }
@@ -1155,7 +1155,7 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
   return(<div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
     style={{position:"absolute",left:px,top:py,
       transform:"translate(-50%,-50%) scale("+(sh?(hov?cs*1.12:cs):0)+")",
-      opacity:sh?(dead?(hl?.35:.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
+      opacity:sh?(dead?(hl?0.35:0.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?"drop-shadow(0 0 6px "+s.c+")":"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
       width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:"radial-gradient(circle,"+s.c+"20,transparent 70%)",animation:"pulse 2.5s ease-in-out infinite"}}></div>}
@@ -1163,7 +1163,7 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
       border:"1.5px solid "+(dead?"#c0b8b0":s.c)+"55",
       boxShadow:dead?"none":"0 2px 4px "+s.c+"33",
       display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-      {dead?<span style={{fontSize:sz*.4,opacity:.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?.8:.65)} co={s.c}/>}
+      {dead?<span style={{fontSize:sz*.4,opacity:0.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?0.8:0.65)} co={s.c}/>}
       {fav&&<div style={{position:"absolute",top:-2,right:-2,fontSize:8,color:"#e06050"}}>♥</div>}
       {checked&&<div style={{position:"absolute",bottom:-2,right:-2,fontSize:7,color:"#c8a050"}}>📍</div>}</div>
     {(zoom>=1.5||hl)&&!dead&&<div style={{marginTop:2,fontSize:hl?11:11,color:C.text,whiteSpace:"nowrap",
@@ -1213,12 +1213,12 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
   const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
   const [note,setNote]=useState("");const [notes,setNotes]=useState([]);
   // Load shared notes for this spot
-  useEffect(()=>{(async()=>{try{const r=await window.storage?.get("notes_"+s.id,true);
-    if(r?.value)setNotes(JSON.parse(r.value));}catch{}})();},[s.id]);
+  useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("notes_"+s.id,true):null;
+    if(r&&r.value)setNotes(JSON.parse(r.value));}catch{}})();},[s.id]);
   const addNote=async()=>{if(!note.trim())return;
     const nn=[...notes,{t:note.trim(),d:new Date().toLocaleDateString("zh-CN"),ts:Date.now()}].slice(-20);
     setNotes(nn);setNote("");
-    try{await window.storage?.set("notes_"+s.id,JSON.stringify(nn),true);}catch{}};
+    try{if(window.storage)await window.storage.set("notes_"+s.id,JSON.stringify(nn),true);}catch{}};
   useEffect(()=>{setTimeout(()=>setV(true),10);},[]);
   // Fetch real accumulated temperature from Open-Meteo
   useEffect(()=>{(async()=>{try{
@@ -1226,7 +1226,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
     const start=y+"-01-01";const end=now.toISOString().split("T")[0];
     const url="https://archive-api.open-meteo.com/v1/archive?latitude="+s.lat+"&longitude="+s.lon+"&start_date="+start+"&end_date="+end+"&daily=temperature_2m_mean&timezone=Asia/Shanghai";
     const res=await fetch(url);const data=await res.json();
-    if(data.daily?.temperature_2m_mean){
+    if(data.daily&&data.daily.temperature_2m_mean){
       const at=data.daily.temperature_2m_mean.reduce((sum,t)=>sum+(t>5?t-5:0),0);
       setRealAT(Math.round(at));
     }}catch{}})();},[s.id]);
@@ -1283,7 +1283,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             {pred.daysUntil>0?<span style={{color:C.accent,fontWeight:600}}>{" "}({pred.daysUntil}天后)</span>
               :<span style={{color:"#2a7a40",fontWeight:600}}>{" "}(已到/已过)</span>}</div>
           <div style={{fontSize:12,color:C.tl,marginTop:6,lineHeight:1.5}}>
-            历史数据：{s.hist?.join(" / ")} · 置信度 <strong>{pred.confidence}%</strong>
+            历史数据：{(s.hist||[]).join(" / ")} · 置信度 <strong>{pred.confidence}%</strong>
             {pred.daysUntil<15&&pred.daysUntil>0&&<span style={{color:C.accent,fontWeight:700}}>{" "}← 临近！精度高</span>}
           </div>
         </div>}
@@ -1356,7 +1356,7 @@ function SpeciesWheel({onSelect,selected,spots}){
   useEffect(()=>{const h=e=>{if(e.key==="ArrowLeft"){setSi(i=>{const n=(i-1+species.length)%species.length;onSelect(species[n]);return n;});e.preventDefault();}
     else if(e.key==="ArrowRight"){setSi(i=>{const n=(i+1)%species.length;onSelect(species[n]);return n;});e.preventDefault();}};
     window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h);},[species]);
-  const count=spots.filter(s=>s.sp===selected&&(s._st?.l||0)>0).length;
+  const count=spots.filter(s=>s.sp===selected&&((s._st&&s._st.l)||0)>0).length;
   return(<div style={{position:"absolute",bottom:0,right:0,zIndex:28,width:210,height:120}}>
     <svg viewBox="0 0 210 120" style={{width:"100%",height:"100%"}}>
       <path d={`M${105-95},110 A95,95 0 0,1 ${105+95},110`} fill="rgba(250,245,237,.9)" stroke="rgba(180,150,100,.1)" strokeWidth=".5"/>
@@ -1366,9 +1366,9 @@ function SpeciesWheel({onSelect,selected,spots}){
         const x=105+82*Math.cos(rad),y=110-82*Math.sin(rad);const isSel=sp===selected;const fl=FLORA.find(f=>f.sp===sp);
         return <g key={sp} onClick={()=>sel(i)} style={{cursor:"pointer"}}>
           <circle cx={x} cy={y} r={isSel?13:8} fill={isSel?"rgba(250,245,237,.95)":"rgba(250,245,237,.5)"}
-            stroke={fl?.c||C.accent} strokeWidth={isSel?1.2:.3}/>
+            stroke={(fl&&fl.c)||C.accent} strokeWidth={isSel?1.2:.3}/>
           <foreignObject x={x-(isSel?10:5)} y={y-(isSel?10:5)} width={isSel?20:10} height={isSel?20:10}>
-            <FI sp={sp} sz={isSel?20:10} co={fl?.c}/></foreignObject></g>;})}
+            <FI sp={sp} sz={isSel?20:10} co={(fl&&fl.c)}/></foreignObject></g>;})}
       <text x="105" y="98" textAnchor="middle" fontSize="9.5" fill={C.text} fontWeight="700">{selected}</text>
       <text x="105" y="108" textAnchor="middle" fontSize="6.5" fill={C.tl}>{count}个观赏地 · ← →</text>
     </svg></div>);
@@ -1389,10 +1389,10 @@ export default function App(){
   const [checkins,setCheckins]=useState({});
 
   // Load checkins from storage
-  useEffect(()=>{(async()=>{try{const r=await window.storage?.get("checkins");
-    if(r?.value)setCheckins(JSON.parse(r.value));}catch{}})();},[]);
+  useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("checkins"):null;
+    if(r&&r.value)setCheckins(JSON.parse(r.value));}catch{}})();},[]);
   const doCheckin=async(id)=>{const nc={...checkins,[id]:{date:new Date().toLocaleDateString("zh-CN"),ts:Date.now()}};
-    setCheckins(nc);try{await window.storage?.set("checkins",JSON.stringify(nc));}catch{}};
+    setCheckins(nc);try{if(window.storage)await window.storage.set("checkins",JSON.stringify(nc));}catch{}};
 
   // P3-16: Request notification permission + schedule bloom alerts
   useEffect(()=>{if(!entered)return;
@@ -1412,10 +1412,10 @@ export default function App(){
   const mapRef=useRef(null);const touchD=useRef(null);
 
   // Load favorites from storage
-  useEffect(()=>{(async()=>{try{const r=await window.storage?.get("favs");
-    if(r?.value)setFavs(JSON.parse(r.value));}catch{}})();},[]);
+  useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("favs"):null;
+    if(r&&r.value)setFavs(JSON.parse(r.value));}catch{}})();},[]);
   const toggleFav=async(id)=>{const nf={...favs};if(nf[id])delete nf[id];else nf[id]=Date.now();
-    setFavs(nf);try{await window.storage?.set("favs",JSON.stringify(nf));}catch{}};
+    setFavs(nf);try{if(window.storage)await window.storage.set("favs",JSON.stringify(nf));}catch{}};
   const addToTrip=(id)=>{if(!trip.includes(id))setTrip([...trip,id]);};
   const removeFromTrip=(id)=>setTrip(trip.filter(x=>x!==id));
   const moveInTrip=(id,dir)=>{const i=trip.indexOf(id);if(i<0)return;const n=[...trip];
@@ -1435,13 +1435,13 @@ export default function App(){
   // Auto-show mood card once per day
   useEffect(()=>{if(!entered)return;(async()=>{
     const d=new Date();const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
-    try{const r=await window.storage?.get("moodShown_"+seed);
-      if(!r?.value){setTimeout(()=>{setShowMood(true);
-        window.storage?.set("moodShown_"+seed,"1");},1200);}}catch{}
+    try{const r=window.storage?await window.storage.get("moodShown_"+seed):null;
+      if(!r&&r.value){setTimeout(()=>{setShowMood(true);
+        window.storage&&window.storage.set("moodShown_"+seed,"1");},1200);}}catch{}
   })();},[entered]);
 
   const requestLoc=()=>{if(locAsked)return;setLocAsked(true);
-    navigator.geolocation?.getCurrentPosition(p=>{
+    navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{
       const loc={lat:p.coords.latitude,lon:p.coords.longitude};
       setUserLoc(loc);
       setWz(2.5);setWc([loc.lon,loc.lat]);setRegion("all");
@@ -1503,7 +1503,7 @@ export default function App(){
       if(isPinch){f=e.deltaY*-.02;}// pinch gesture
       else if(isTrackpad){f=e.deltaY<0?.08:-.08;}// trackpad scroll zoom
       else{f=e.deltaY<0?.2:-.18;}// mouse wheel
-      const rect=el.getBoundingClientRect();const gx=proj.invert?.([(e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H]);
+      const rect=el.getBoundingClientRect();const gx=proj.invert&&proj.invert([(e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H]);
       setWz(p=>{const n=Math.max(1,Math.min(8,p*(1+f)));
         if(n>1.05&&gx){const t=Math.min(.15,.05*(n-1));setWc(c=>[c[0]+(gx[0]-c[0])*t,c[1]+(gx[1]-c[1])*t]);}
         else setWc([104.5,35]);return n;});};
@@ -1537,8 +1537,8 @@ export default function App(){
   const onPM=useCallback(e=>{if(!drag)return;setPan({x:e.clientX-drag.x,y:e.clientY-drag.y});},[drag]);
   const onPU=useCallback(()=>setDrag(null),[]);
   const tx=(W/2-pc[0])*ez+pan.x;const ty=(H/2-pc[1])*ez+pan.y;
-  const rP=useMemo(()=>RIVERS.map(r=>({...r,d:d3.line().x(d=>proj(d)?.[0]).y(d=>proj(d)?.[1]).curve(d3.curveBasis)(r.co.map(c=>[c[0],c[1]]))})),[proj]);
-  const mP=useMemo(()=>MTNS.map(m=>({...m,dd:d3.line().x(d=>proj(d)?.[0]).y(d=>proj(d)?.[1]).curve(d3.curveBasis)(m.co.map(c=>[c[0],c[1]]))})),[proj]);
+  const rP=useMemo(()=>RIVERS.map(r=>({...r,d:d3.line().x(d=>(proj(d)||[])[0]).y(d=>(proj(d)||[])[1]).curve(d3.curveBasis)(r.co.map(c=>[c[0],c[1]]))})),[proj]);
+  const mP=useMemo(()=>MTNS.map(m=>({...m,dd:d3.line().x(d=>(proj(d)||[])[0]).y(d=>(proj(d)||[])[1]).curve(d3.curveBasis)(m.co.map(c=>[c[0],c[1]]))})),[proj]);
   const sP=useMemo(()=>{const m=new Map();FLORA.forEach(f=>{const p=proj([f.lon,f.lat]);if(p)m.set(f.id,{x:(p[0]/W*100)+"%",y:(p[1]/H*100)+"%"});});return m;},[proj]);
 
   const [dark,setDark]=useState(false);
@@ -1553,7 +1553,7 @@ export default function App(){
   return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",
     background:"linear-gradient(155deg,"+dc.bg+","+dc.bg2+")"}} tabIndex={0}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
-      @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
+      @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
       @keyframes progress{0%{width:0;opacity:.5}50%{width:100%;opacity:1}100%{width:0;opacity:.5}}
       *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}
@@ -1584,8 +1584,8 @@ export default function App(){
         transition:drag?"none":"transform .4s cubic-bezier(.22,1,.36,1)",transformOrigin:"center center"}}>
         <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"100%",position:"absolute"}}>
           {geo&&(geo.features||[geo]).map((f,i)=><path key={i} d={pathGen(f)||""} fill="#eee8dc" fillOpacity=".14"
-            stroke={C.border} strokeWidth={f.properties?.name?.length>0?.2:.4} strokeLinejoin="round"
-            opacity={f.properties?.name?.length>0?.18:.36}/>)}
+            stroke={C.border} strokeWidth={((f.properties&&f.properties.name)?0.2:0.4)} strokeLinejoin="round"
+            opacity={((f.properties&&f.properties.name)?0.18:0.36)}/>)}
           {rP.map((r,i)=>r.d&&<g key={"r"+i}><path d={r.d} fill="none" stroke={C.river} strokeWidth={r.w*1.2} strokeLinecap="round" opacity=".2"/>
             <path id={"rv"+i} d={r.d} fill="none"/><text fontSize="8" fill={C.river} opacity=".25" fontWeight="600">
               <textPath href={"#rv"+i} startOffset="35%">{r.n}</textPath></text></g>)}
@@ -1702,7 +1702,7 @@ export default function App(){
       padding:"6px",boxShadow:"0 1px 6px rgba(0,0,0,.04)",width:200,overflowY:"auto"}}>
       <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>{"📍 "+t.nearby_title}</div>
       <div style={{fontSize:12,color:C.tl,marginBottom:5}}>共{spots.length}个 · 500km内</div>
-      {spots.filter(s=>(s._st?.l||0)>=1).slice(0,20).map((s,i)=>{
+      {spots.filter(s=>((s._st&&s._st.l)||0)>=1).slice(0,20).map((s,i)=>{
         const sm=SM[s.s];
         return(<div key={s.id} onClick={()=>{setSel(s);setWz(5);setWc([s.lon,s.lat]);}}
           style={{display:"flex",alignItems:"center",gap:3,padding:"4px 3px",cursor:"pointer",
@@ -1725,7 +1725,7 @@ export default function App(){
       })}
     </div>}
 
-    {page==="map"&&(()=>{const li=spots.filter(s=>(s._st?.l||0)>=2).sort((a,b)=>(b._st?.l||0)-(a._st?.l||0)).slice(0,8);
+    {page==="map"&&(()=>{const li=spots.filter(s=>((s._st&&s._st.l)||0)>=2).sort((a,b)=>((b._st&&b._st.l)||0)-((a._st&&a._st.l)||0)).slice(0,8);
       if(!li.length)return null;
       return(<div style={{position:"absolute",right:3,top:44,zIndex:25,background:"rgba(250,245,237,.82)",
         borderRadius:4,padding:"4px 5px",maxHeight:"min(230px,36vh)",overflowY:"auto",width:180}}>
@@ -1803,7 +1803,7 @@ export default function App(){
             </div>
             {/* Distance to next stop */}
             {nextS&&<div style={{display:"flex",alignItems:"center",gap:4,padding:"4px 0 4px 32px",color:C.tl,fontSize:11}}>
-              <div style={{width:1,height:16,background:C.tl+"33"}}/>
+              <div style={{width:1,height:16,background:C.tl+"33"}}></div>
               <span>↓ {segDist}km · 约{segDist<100?"1小时":segDist<300?"2-3小时":segDist<600?"高铁3-4小时":"飞机"}</span>
             </div>}
           </div>);
