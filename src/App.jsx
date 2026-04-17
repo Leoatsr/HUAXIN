@@ -271,36 +271,134 @@ function InstrIcon({type,sz}){const s=sz||20;const o=.8;
   return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><circle cx="16" cy="16" r="6" fill="none" stroke="#a08050" strokeWidth="1.5"/><circle cx="16" cy="16" r="2" fill="#c8a060"/></g></svg>;
 }
 
-// ═══ Music: minimal link to curated playlists ═══
+// ═══ Music: High-quality Web Audio synthesis ═══
+let _ac=null,_rev=null;
+function getAC(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac;}
+function getRev(){if(!_rev){const ac=getAC();_rev=ac.createConvolver();
+  // Generate impulse response for reverb
+  const len=ac.sampleRate*2,imp=ac.createBuffer(2,len,ac.sampleRate);
+  for(let c=0;c<2;c++){const d=imp.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);}
+  _rev.buffer=imp;_rev.connect(ac.destination);}return _rev;}
+
+function playN(freq,dur,type,vol,pan=0){
+  const ac=getAC(),now=ac.currentTime;
+  // Main oscillator
+  const o=ac.createOscillator(),g=ac.createGain(),p=ac.createStereoPanner?.();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(0,now);
+  g.gain.linearRampToValueAtTime(vol,now+0.02);
+  g.gain.setValueAtTime(vol*0.7,now+dur*0.3);
+  g.gain.exponentialRampToValueAtTime(0.001,now+dur);
+  o.connect(g);
+  if(p){p.pan.value=pan;g.connect(p);p.connect(ac.destination);p.connect(getRev());}
+  else{g.connect(ac.destination);g.connect(getRev());}
+  o.start(now);o.stop(now+dur);
+  // Chorus: detuned second oscillator
+  if(type!=="square"){
+    const o2=ac.createOscillator(),g2=ac.createGain();
+    o2.type=type;o2.frequency.value=freq*1.003;// slight detune
+    g2.gain.setValueAtTime(0,now);g2.gain.linearRampToValueAtTime(vol*0.3,now+0.03);
+    g2.gain.exponentialRampToValueAtTime(0.001,now+dur*0.8);
+    o2.connect(g2);g2.connect(p||ac.destination);
+    o2.start(now);o2.stop(now+dur);
+  }
+}
+
+const TRACKS=[
+  {name:"高山流水",inst:"guzheng",bpm:68,
+   notes:[[4,1],[3,.5],[2,1],[0,1.5],[-1,1],[0,.5],[1,.5],[2,1],[3,1],[4,1.5],[-1,.5],[3,.5],[2,1],[1,.5],[0,1.5],[-1,1],[2,.5],[3,1],[4,1.5],[-1,1]]},
+  {name:"春江花月夜",inst:"pipa",bpm:76,
+   notes:[[3,1],[2,.5],[1,.5],[0,1],[-1,.5],[1,.5],[2,1],[3,.5],[4,1],[3,.5],[2,.5],[1,1],[-1,1],[0,.5],[1,1],[2,.5],[3,1.5],[-1,.5],[2,.5],[1,1],[0,1.5]]},
+  {name:"梅花三弄",inst:"guqin",bpm:48,
+   notes:[[0,1.5],[1,1],[2,1.5],[4,2],[-1,1.5],[2,1],[1,1],[0,2],[-1,1],[0,1],[1,1.5],[-1,1.5],[2,1.5],[3,1],[2,1],[1,1],[0,2],[-1,1.5]]},
+  {name:"二泉映月",inst:"erhu",bpm:56,
+   notes:[[1,1],[0,1.5],[2,1],[3,1.5],[-1,1],[4,1],[3,.5],[2,1],[0,1.5],[-1,.5],[1,1],[0,.5],[2,.5],[0,1],[1,1.5],[-1,1],[0,1],[1,1],[2,1.5],[-1,1.5]]},
+  {name:"渔舟唱晚",inst:"guzheng",bpm:72,
+   notes:[[2,.5],[3,1],[4,.5],[3,1],[-1,.5],[2,.5],[1,1],[0,1.5],[-1,.5],[1,.5],[2,1],[3,.5],[-1,.5],[4,1],[3,.5],[2,1],[-1,.5],[1,1],[0,.5],[1,1.5],[-1,1]]},
+  {name:"姑苏行",inst:"dizi",bpm:80,
+   notes:[[2,.5],[1,.5],[0,1],[2,.5],[3,1],[-1,.5],[4,.5],[3,.5],[2,1],[1,.5],[-1,.5],[0,.5],[1,1],[2,.5],[-1,.5],[3,1],[4,.5],[3,.5],[2,1],[-1,.5],[1,.5],[0,1],[1,1.5]]},
+];
+const INST_CONF={
+  guzheng:{wave:"triangle",scale:[293.7,329.6,392,440,523.3],vol:.06},
+  pipa:{wave:"sawtooth",scale:[392,440,523.3,587.3,659.3],vol:.04},
+  guqin:{wave:"sine",scale:[196,220,261.6,293.7,329.6],vol:.07},
+  erhu:{wave:"triangle",scale:[220,261.6,293.7,329.6,392],vol:.05},
+  dizi:{wave:"square",scale:[523.3,587.3,659.3,784,880],vol:.03},
+};
+const INST_LABEL={"guqin":"古琴","guzheng":"古筝","pipa":"琵琶","erhu":"二胡","dizi":"竹笛"};
+
 function MusicPlayer(){
   const [show,setShow]=useState(false);
-  const lists=[
-    {name:"古琴雅韵",url:"https://y.qq.com/n/ryqq/playlist/8522890842",icon:"guqin"},
-    {name:"古筝流水",url:"https://music.163.com/#/playlist?id=2765891267",icon:"guzheng"},
-    {name:"琵琶语",url:"https://y.qq.com/n/ryqq/playlist/7520374253",icon:"pipa"},
-  ];
+  const [ti,setTi]=useState(0);
+  const [playing,setPlaying]=useState(false);
+  const tmRef=useRef(null);const niRef=useRef(0);const loopRef=useRef(0);const playRef=useRef(false);
+  const t=TRACKS[ti%TRACKS.length];
+
+  const stop=useCallback(()=>{playRef.current=false;if(tmRef.current)clearTimeout(tmRef.current);setPlaying(false);},[]);
+
+  const play=useCallback((idx)=>{
+    stop();const tr=TRACKS[idx%TRACKS.length];const ic=INST_CONF[tr.inst]||INST_CONF.guzheng;
+    niRef.current=0;loopRef.current=0;playRef.current=true;setPlaying(true);
+    const beatMs=60000/tr.bpm;
+    // Low drone
+    playN(ic.scale[0]/2,6,"sine",ic.vol*0.2);
+    const tick=()=>{
+      if(!playRef.current)return;
+      const[ni,dur]=tr.notes[niRef.current%tr.notes.length];
+      if(ni>=0){
+        const freq=ic.scale[ni%ic.scale.length];
+        const d=dur*beatMs/1000;
+        const pan=(Math.random()-.5)*.4;
+        playN(freq,d,ic.wave,ic.vol,pan);
+        // Occasional harmony
+        if(Math.random()>.75)playN(freq*1.5,d*.6,ic.wave,ic.vol*.25,pan);
+      }
+      niRef.current++;
+      if(niRef.current>=tr.notes.length){niRef.current=0;loopRef.current++;
+        if(loopRef.current>=2){const next=(idx+1)%TRACKS.length;setTi(next);play(next);return;}
+        playN(ic.scale[0]/2,5,"sine",ic.vol*0.15);
+      }
+      tmRef.current=setTimeout(tick,dur*beatMs+(ni<0?100:0));
+    };tick();
+  },[stop]);
+
+  const toggle=()=>{if(playing)stop();else{getAC();play(ti);}};
+  const next=()=>{const n=(ti+1)%TRACKS.length;setTi(n);if(playing)play(n);};
+  const prev=()=>{const n=(ti-1+TRACKS.length)%TRACKS.length;setTi(n);if(playing)play(n);};
+
   if(!show)return(
     <button onClick={()=>setShow(true)} style={{position:"absolute",bottom:8,right:8,zIndex:36,
-      border:"none",borderRadius:"50%",width:44,height:44,cursor:"pointer",
+      border:"none",borderRadius:"50%",width:46,height:46,cursor:"pointer",
       background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.06)",
       display:"flex",alignItems:"center",justifyContent:"center"}}>
-      <InstrIcon type="guqin" sz={26}/></button>);
+      <InstrIcon type={playing?t.inst:"guqin"} sz={playing?28:24}/>
+      {playing&&<div style={{position:"absolute",top:0,right:0,width:10,height:10,borderRadius:"50%",
+        background:C.accent,border:"2px solid #faf5ed"}}/>}
+    </button>);
+
   return(<div style={{position:"absolute",bottom:8,right:8,zIndex:36,
     background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",
-    borderRadius:12,padding:"10px 14px",boxShadow:"0 2px 12px rgba(0,0,0,.06)",width:200}}>
+    borderRadius:12,padding:"10px 14px",boxShadow:"0 2px 14px rgba(0,0,0,.08)",width:220}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-      <span style={{fontSize:13,color:C.text,fontWeight:700,letterSpacing:2}}>推荐歌单</span>
-      <button onClick={()=>setShow(false)} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>{"×"}</button>
+      <div style={{display:"flex",alignItems:"center",gap:6}}>
+        <InstrIcon type={t.inst} sz={22}/>
+        <span style={{fontSize:11,color:C.tl,letterSpacing:2}}>{INST_LABEL[t.inst]}</span>
+      </div>
+      <button onClick={()=>setShow(false)} style={{border:"none",background:"none",cursor:"pointer",fontSize:16,color:C.tl}}>{"×"}</button>
     </div>
-    {lists.map(l=>(
-      <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer"
-        style={{display:"flex",alignItems:"center",gap:8,padding:"8px 6px",
-          borderBottom:"1px solid #f0ece4",textDecoration:"none",cursor:"pointer"}}>
-        <InstrIcon type={l.icon} sz={22}/>
-        <span style={{fontSize:13,color:C.text,fontWeight:500}}>{l.name}</span>
-        <span style={{fontSize:11,color:C.accent,marginLeft:"auto"}}>{"▶"}</span>
-      </a>))}
-    <div style={{fontSize:10,color:C.tl,textAlign:"center",marginTop:6,letterSpacing:1}}>点击在音乐平台中播放</div>
+    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+      <button onClick={prev} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>⏮</button>
+      <button onClick={toggle} style={{border:"none",background:"none",cursor:"pointer",fontSize:20,color:C.accent}}>{playing?"⏸":"▶"}</button>
+      <button onClick={next} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>⏭</button>
+      <div style={{flex:1}}>
+        <div style={{fontSize:14,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
+        <div style={{fontSize:11,color:C.tl}}>{ti+1}/{TRACKS.length}首</div>
+      </div>
+    </div>
+    {playing&&<div style={{height:3,borderRadius:2,background:"#ece6dc",overflow:"hidden"}}>
+      <div style={{height:"100%",width:"60%",borderRadius:2,background:`linear-gradient(90deg,${C.accent},${C.accent2})`,
+        animation:"progress 3s linear infinite"}}/>
+    </div>}
   </div>);
 }
 
@@ -311,7 +409,7 @@ function ZoomControls({wz,setWz}){
     borderRadius:6,padding:"2px",boxShadow:"0 1px 4px rgba(0,0,0,.03)"}}>
     <button onClick={()=>setWz(z=>Math.min(8,z*1.4))} style={{border:"none",borderRadius:4,width:32,height:32,
       cursor:"pointer",background:"transparent",color:C.tl,fontSize:14,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>+</button>
-    <div style={{width:24,textAlign:"center",fontSize:7,color:C.tl}}>{Math.round(wz*100)}%</div>
+    <div style={{width:24,textAlign:"center",fontSize:10,color:C.tl}}>{Math.round(wz*100)}%</div>
     <button onClick={()=>setWz(z=>Math.max(1,z*.7))} style={{border:"none",borderRadius:4,width:32,height:32,
       cursor:"pointer",background:"transparent",color:C.tl,fontSize:14,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>−</button>
   </div>);
@@ -466,7 +564,7 @@ function MoodCard({onClose}){
           {/* Poem in scroll style */}
           <div style={{textAlign:"center",padding:"14px 20px",margin:"12px 0",position:"relative",
             background:`linear-gradient(135deg,${qljsBlue}08,${qljsGreen}08)`,borderRadius:8}}>
-            <div style={{fontSize:9,color:qljsGold,letterSpacing:3,marginBottom:6}}>题 辞</div>
+            <div style={{fontSize:12,color:qljsGold,letterSpacing:4,marginBottom:8}}>题 辞</div>
             <div style={{fontSize:18,color:C.text,letterSpacing:4,lineHeight:2,fontStyle:"italic",
               fontFamily:"'Noto Serif SC',serif"}}>
               {"「"}{card.poem}{"」"}</div>
@@ -474,7 +572,7 @@ function MoodCard({onClose}){
 
           {/* Interpretation */}
           <div style={{padding:"14px 16px",margin:"12px 0"}}>
-            <div style={{fontSize:9,color:qljsGold,letterSpacing:3,marginBottom:8,textAlign:"center"}}>解 签</div>
+            <div style={{fontSize:12,color:qljsGold,letterSpacing:4,marginBottom:8,textAlign:"center"}}>解 签</div>
             <div style={{fontSize:14,color:C.text,letterSpacing:2,lineHeight:2,textAlign:"center",
               fontFamily:"'Noto Serif SC',serif"}}>{card.meaning}</div>
           </div>
@@ -526,10 +624,10 @@ function ScrollLanding({onEnter}){
         style={{position:"absolute",left:`${12+dx*66}%`,top:0,bottom:0,width:14,borderRadius:7,
           background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"-2px 0 5px rgba(0,0,0,.12)",
           cursor:"grab",transition:dg?"none":"all .3s",zIndex:5}}/></div>
-    <div style={{marginTop:12,fontSize:8.5,color:C.tl,letterSpacing:3,opacity:.35}}>← 拖动卷轴 →</div>
+    <div style={{marginTop:12,fontSize:12,color:C.tl,letterSpacing:4,opacity:.45}}>← 拖动卷轴 →</div>
     <button onClick={()=>{setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,200);},100);}}
       style={{position:"absolute",bottom:14,border:"none",background:"transparent",
-        cursor:"pointer",fontSize:8,color:C.tl,opacity:.25}}>
+        cursor:"pointer",fontSize:11,color:C.tl,opacity:.3}}>
       {"直接进入"}</button>
   </div>);
 }
@@ -744,19 +842,33 @@ export default function App(){
   useEffect(()=>{setPan({x:0,y:0});},[region]);
   useEffect(()=>{if(region!=="all"){setWz(1);setWc([104.5,35]);}},[region]);
   useEffect(()=>{const el=mapRef.current;if(!el)return;
-    const h=e=>{e.preventDefault();const isPinch=e.ctrlKey||Math.abs(e.deltaY)<50;
-      const f=isPinch?e.deltaY*-.015:e.deltaY<0?.17:-.15;
+    const h=e=>{e.preventDefault();
+      // Chrome/Edge: trackpad pinch sends ctrlKey+wheel with small deltaY
+      // Firefox: trackpad pinch sends small deltaY without ctrlKey
+      // All: mouse wheel sends larger deltaY without ctrlKey
+      const isPinch=e.ctrlKey||e.metaKey;
+      const isTrackpad=!isPinch&&Math.abs(e.deltaY)<=40&&!e.deltaMode;
+      let f;
+      if(isPinch){f=e.deltaY*-.02;}// pinch gesture
+      else if(isTrackpad){f=e.deltaY<0?.08:-.08;}// trackpad scroll zoom
+      else{f=e.deltaY<0?.2:-.18;}// mouse wheel
       const rect=el.getBoundingClientRect();const gx=proj.invert?.([(e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H]);
       setWz(p=>{const n=Math.max(1,Math.min(8,p*(1+f)));
         if(n>1.05&&gx){const t=Math.min(.15,.05*(n-1));setWc(c=>[c[0]+(gx[0]-c[0])*t,c[1]+(gx[1]-c[1])*t]);}
         else setWc([104.5,35]);return n;});};
     el.addEventListener("wheel",h,{passive:false});
     // Safari gesture events for trackpad pinch
-    const gs=e=>{e.preventDefault();};
-    const gc=e=>{e.preventDefault();setWz(p=>Math.max(1,Math.min(8,p*e.scale)));};
+    let lastScale=1;
+    const gs=e=>{e.preventDefault();lastScale=1;};
+    const gc=e=>{e.preventDefault();
+      const delta=e.scale/lastScale;lastScale=e.scale;
+      setWz(p=>Math.max(1,Math.min(8,p*delta)));};
+    const ge=e=>{e.preventDefault();lastScale=1;};
     el.addEventListener("gesturestart",gs,{passive:false});
     el.addEventListener("gesturechange",gc,{passive:false});
-    return()=>{el.removeEventListener("wheel",h);el.removeEventListener("gesturestart",gs);el.removeEventListener("gesturechange",gc);};},[proj]);
+    el.addEventListener("gestureend",ge,{passive:false});
+    return()=>{el.removeEventListener("wheel",h);el.removeEventListener("gesturestart",gs);
+      el.removeEventListener("gesturechange",gc);el.removeEventListener("gestureend",ge);};},[proj]);
   useEffect(()=>{const el=mapRef.current;if(!el)return;
     const ts=e=>{if(e.touches.length===2){e.preventDefault();const dx=e.touches[0].clientX-e.touches[1].clientX;const dy=e.touches[0].clientY-e.touches[1].clientY;touchD.current=Math.sqrt(dx*dx+dy*dy);}};
     const tm=e=>{if(e.touches.length===2&&touchD.current){e.preventDefault();const dx=e.touches[0].clientX-e.touches[1].clientX;const dy=e.touches[0].clientY-e.touches[1].clientY;
@@ -784,6 +896,7 @@ export default function App(){
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
       @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
+      @keyframes progress{0%{width:0;opacity:.5}50%{width:100%;opacity:1}100%{width:0;opacity:.5}}
       *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:rgba(0,0,0,.04)}`}</style>
 
     {ez>1.5&&<><div style={{position:"absolute",left:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070)"}}/>
@@ -823,7 +936,7 @@ export default function App(){
     <div style={{position:"absolute",top:22,left:ez>1.5?12:3,zIndex:30}}>
       <div style={{display:"flex",alignItems:"center",gap:3}}>
         <div style={{width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
-          display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:7}}>風</div>
+          display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:10}}>風</div>
         <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}}>花信风</h1></div></div>
 
     {/* Page tabs */}
@@ -870,7 +983,7 @@ export default function App(){
       <button onClick={()=>setNearbyMonth(0)} style={{border:"none",borderRadius:7,padding:"3px 8px",cursor:"pointer",fontSize:11,
         background:nearbyMonth===0?`${C.accent}18`:"transparent",color:nearbyMonth===0?C.accent:"#999"}}>全年</button>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>(
-        <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:6,padding:"2px 4px",cursor:"pointer",fontSize:7.5,
+        <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:8,padding:"4px 8px",cursor:"pointer",fontSize:12,
           background:nearbyMonth===m?`${C.accent}18`:"transparent",color:nearbyMonth===m?C.accent:"#999"}}>{m}月</button>))}</div>}
 
     {/* Region nav - hidden in nearby mode */}
@@ -889,7 +1002,7 @@ export default function App(){
       <div style={{background:"#faf5ed",borderRadius:10,padding:"18px 22px",textAlign:"center",boxShadow:"0 4px 16px rgba(0,0,0,.08)",maxWidth:260}}>
         <div style={{fontSize:24,marginBottom:6}}>📍</div>
         <div style={{fontSize:12,fontWeight:700,color:C.text,marginBottom:3}}>获取你的位置</div>
-        <div style={{fontSize:9,color:C.tl,marginBottom:10,lineHeight:1.4}}>推荐附近花事需要你的位置信息<br/>数据仅在本地使用</div>
+        <div style={{fontSize:13,color:C.tl,marginBottom:12,lineHeight:1.4}}>推荐附近花事需要你的位置信息<br/>数据仅在本地使用</div>
         <button onClick={requestLoc} style={{border:"none",background:C.accent,color:"#fff",borderRadius:7,padding:"7px 18px",cursor:"pointer",fontSize:10,fontWeight:700}}>允许获取</button>
       </div></div>}
 
@@ -898,7 +1011,7 @@ export default function App(){
       background:"rgba(250,245,237,.9)",backdropFilter:"blur(8px)",borderRadius:6,
       padding:"6px",boxShadow:"0 1px 6px rgba(0,0,0,.04)",width:200,overflowY:"auto"}}>
       <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>📍 附近花事</div>
-      <div style={{fontSize:7,color:C.tl,marginBottom:4}}>共{spots.length}个 · 500km内</div>
+      <div style={{fontSize:12,color:C.tl,marginBottom:5}}>共{spots.length}个 · 500km内</div>
       {spots.filter(s=>(s._st?.l||0)>=1).slice(0,20).map((s,i)=>{
         const sm=SM[s.s];
         return(<div key={s.id} onClick={()=>{setSel(s);setWz(5);setWc([s.lon,s.lat]);}}
@@ -912,7 +1025,7 @@ export default function App(){
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:12,color:C.text,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
               {s.n.split("·")[1]||s.n}</div>
-            <div style={{fontSize:6.5,color:C.tl,display:"flex",gap:3}}>
+            <div style={{fontSize:11,color:C.tl,display:"flex",gap:3}}>
               <span>{Math.round(s._dist||0)}km</span>
               <span style={{color:sm.c}}>{sm.i}{s.pk[0]}月</span>
               <span style={{color:s.c}}>{s._st?.st}</span>
@@ -929,11 +1042,11 @@ export default function App(){
         <div style={{fontSize:10,color:C.tl,marginBottom:4,letterSpacing:2}}>花事排行</div>
         {li.map((s,i)=>(
           <div key={s.id} onClick={()=>setSel(s)} style={{display:"flex",alignItems:"center",gap:2,padding:"1.5px 0",cursor:"pointer"}}>
-            <span style={{fontSize:6,fontWeight:700,color:i<3?C.accent:C.tl,width:8}}>{i+1}</span>
+            <span style={{fontSize:11,fontWeight:700,color:i<3?C.accent:C.tl,width:8}}>{i+1}</span>
             <div style={{width:10,height:10,flexShrink:0}}><FI sp={s.sp} sz={10} co={s.c}/></div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:11,color:C.text,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.n.split("·")[1]||s.n}</div>
-              <div style={{fontSize:5,color:s.c}}>{s._st?.st}{s._pred?` · 预测${s._pred.dateStr}`:""}</div></div>
+              <div style={{fontSize:11,color:s.c}}>{s._st?.st}{s._pred?` · 预测${s._pred.dateStr}`:""}</div></div>
           </div>))}
       </div>);})()}
 
