@@ -965,34 +965,67 @@ function ScrollLanding({onEnter}){
   const cs=getSeason();const sm=SM[cs];
   const poems={spring:"桃花一簇开无主\n可爱深红爱浅红",summer:"小荷才露尖尖角\n早有蜻蜓立上头",autumn:"停车坐爱枫林晚\n霜叶红于二月花",winter:"忽如一夜春风来\n千树万树梨花开"};
   const [dx,setDx]=useState(0);const [dg,setDg]=useState(false);const [en,setEn]=useState(false);const sr=useRef(null);const cr=useRef(null);
+  const [pulse,setPulse]=useState(true);
+  useEffect(()=>{const t=setInterval(()=>setPulse(p=>!p),1500);return()=>clearInterval(t);},[]);
   const hs=e=>{e.preventDefault();sr.current={x:e.touches?e.touches[0].clientX:e.clientX,d:dx};setDg(true);};
   const hm=e=>{if(!dg||!sr.current)return;const x=e.touches?e.touches[0].clientX:e.clientX;
     setDx(Math.max(0,Math.min(1,sr.current.d+(x-sr.current.x)/((cr.current?.offsetWidth||600)*.4))));};
   const he=()=>{setDg(false);if(dx>.5){setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,300);},150);}else setDx(0);};
-  return(<div ref={cr} style={{position:"fixed",inset:0,zIndex:200,background:sm.c+"10",
+  // 千里江山图色调
+  const qp={spring:{s:"#e8dcd0",m1:"#3a6b5a",m2:"#4a8a6a",w:"#6aaab0",t:"#d4756b"},
+    summer:{s:"#d8d4c0",m1:"#2a5a48",m2:"#3a7858",w:"#5898a0",t:"#5a8a50"},
+    autumn:{s:"#e0d0b8",m1:"#8a6a30",m2:"#a08040",w:"#7090a0",t:"#c8703a"},
+    winter:{s:"#e0dcd8",m1:"#6a7a80",m2:"#8a9098",w:"#8aa0b0",t:"#6a8aaa"}}[cs];
+  return(<div ref={cr} style={{position:"fixed",inset:0,zIndex:200,
+    background:`linear-gradient(180deg,${qp.s},${qp.s}dd,${qp.s}aa)`,
     display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
     opacity:en?0:1,transition:"opacity .3s",userSelect:"none",touchAction:"none"
   }} onPointerMove={hm} onPointerUp={he} onPointerLeave={he} onTouchMove={hm} onTouchEnd={he}>
-    <div style={{position:"absolute",inset:0,overflow:"hidden",opacity:.08}}>
-      {Array.from({length:12}).map((_,i)=>(<div key={i} style={{position:"absolute",left:`${Math.random()*100}%`,top:`${Math.random()*100}%`,fontSize:10+Math.random()*12,color:sm.c}}>{sm.i}</div>))}</div>
-    <div style={{marginBottom:18,textAlign:"center",opacity:1-dx*1.5,transition:dg?"none":"all .3s"}}>
-      <div style={{fontSize:38,fontWeight:900,color:C.text,letterSpacing:10}}>花信风</div>
-      <div style={{fontSize:10,color:C.tl,letterSpacing:3,marginTop:4}}>跟着天地节律 · 追一场中国色</div></div>
-    <div style={{position:"relative",width:"min(420px,74vw)",height:130}}>
-      <div style={{position:"absolute",left:0,top:0,bottom:0,width:14,borderRadius:7,background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"2px 0 5px rgba(0,0,0,.12)",zIndex:5}}/>
-      <div style={{position:"absolute",left:14,right:14,top:0,bottom:0,overflow:"hidden"}}>
-        <div style={{position:"absolute",left:0,top:0,bottom:0,width:`${dx*100}%`,background:"linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)",
+    {/* 千里江山图风格 SVG 背景 */}
+    <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" style={{position:"absolute",bottom:0,left:0,width:"100%",height:"55%",opacity:.25}}>
+      <defs><linearGradient id="lmist" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={qp.s} stopOpacity="1"/><stop offset="100%" stopColor={qp.s} stopOpacity="0"/></linearGradient></defs>
+      {/* Far mountains - 千里江山图 的层叠远山 */}
+      <path d="M0,280 Q100,180 200,220 T400,160 T600,200 T800,150 T1000,190 T1200,170 L1200,400 L0,400Z" fill={qp.m1} opacity=".15"/>
+      <path d="M0,300 Q150,200 300,250 T500,190 T700,230 T900,180 T1100,210 L1200,220 L1200,400 L0,400Z" fill={qp.m2} opacity=".2"/>
+      {/* Near mountains with peaks */}
+      <path d="M0,340 Q80,260 180,290 T350,240 T500,280 T650,230 T800,270 T950,240 T1100,260 L1200,280 L1200,400 L0,400Z" fill={qp.m1} opacity=".25"/>
+      {/* Water and mist */}
+      <rect x="0" y="350" width="1200" height="50" fill={qp.w} opacity=".12"/>
+      <rect x="0" y="250" width="1200" height="60" fill="url(#lmist)" opacity=".3"/>
+      {/* Scattered trees */}
+      {[100,250,420,580,750,900,1050].map((x,i)=><circle key={i} cx={x} cy={310+Math.sin(i*2.3)*15} r={6+Math.sin(i*1.7)*3} fill={qp.t} opacity=".15"/>)}
+      {/* Boats on water (春江) */}
+      {cs==="spring"&&<><path d="M300,365 Q310,358 320,365" stroke={qp.m1} strokeWidth="1" fill="none" opacity=".2"/><line x1="310" y1="358" x2="310" y2="348" stroke={qp.m1} strokeWidth=".5" opacity=".15"/></>}
+      {/* Flying birds */}
+      {[400,450,480].map((x,i)=><path key={`b${i}`} d={`M${x},${120+i*8} q5,-4 10,0 q5,4 10,0`} stroke={qp.m1} strokeWidth=".8" fill="none" opacity=".12"/>)}
+    </svg>
+    {/* Title */}
+    <div style={{marginBottom:18,textAlign:"center",opacity:1-dx*1.5,transition:dg?"none":"all .3s",position:"relative",zIndex:2}}>
+      <div style={{fontSize:"min(42px,8vw)",fontWeight:900,color:C.text,letterSpacing:12}}>花信风</div>
+      <div style={{fontSize:"min(13px,3vw)",color:C.tl,letterSpacing:4,marginTop:6}}>跟着天地节律 · 追一场中国色</div></div>
+    {/* Scroll */}
+    <div style={{position:"relative",width:"min(460px,80vw)",height:"min(140px,20vh)",zIndex:2}}>
+      <div style={{position:"absolute",left:0,top:0,bottom:0,width:16,borderRadius:8,background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"2px 0 6px rgba(0,0,0,.15)",zIndex:5}}/>
+      <div style={{position:"absolute",left:16,right:16,top:0,bottom:0,overflow:"hidden"}}>
+        <div style={{position:"absolute",left:0,top:0,bottom:0,width:`${dx*100}%`,
+          background:`linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)`,
           transition:dg?"none":"width .3s",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-          {dx>.2&&<div style={{textAlign:"center",padding:8,opacity:Math.min(1,(dx-.2)*3),whiteSpace:"pre-line",minWidth:150}}>
-            <div style={{fontSize:11,color:sm.c,letterSpacing:3,lineHeight:2}}>{poems[cs]}</div></div>}</div></div>
+          {dx>.2&&<div style={{textAlign:"center",padding:10,opacity:Math.min(1,(dx-.2)*3),whiteSpace:"pre-line",minWidth:180}}>
+            <div style={{fontSize:"min(14px,3.5vw)",color:sm.c,letterSpacing:4,lineHeight:2.2}}>{poems[cs]}</div></div>}</div></div>
       <div onPointerDown={hs} onTouchStart={hs}
-        style={{position:"absolute",left:`${12+dx*66}%`,top:0,bottom:0,width:14,borderRadius:7,
-          background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"-2px 0 5px rgba(0,0,0,.12)",
+        style={{position:"absolute",left:`${12+dx*66}%`,top:0,bottom:0,width:16,borderRadius:8,
+          background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"-2px 0 6px rgba(0,0,0,.15)",
           cursor:"grab",transition:dg?"none":"all .3s",zIndex:5}}/></div>
-    <div style={{marginTop:12,fontSize:12,color:C.tl,letterSpacing:4,opacity:.45}}>← 拖动卷轴 →</div>
+    {/* Animated hint */}
+    <div style={{marginTop:14,display:"flex",alignItems:"center",gap:8,zIndex:2,
+      opacity:dx>0?.2:.6,transition:"opacity .3s"}}>
+      <span style={{fontSize:16,transform:pulse?"translateX(-4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☞</span>
+      <span style={{fontSize:13,color:C.tl,letterSpacing:4}}>拖动卷轴，展开花事</span>
+      <span style={{fontSize:16,transform:pulse?"translateX(4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☜</span>
+    </div>
     <button onClick={()=>{setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,200);},100);}}
-      style={{position:"absolute",bottom:14,border:"none",background:"transparent",
-        cursor:"pointer",fontSize:11,color:C.tl,opacity:.3}}>
+      style={{position:"absolute",bottom:"min(20px,4vh)",border:"none",background:"transparent",
+        cursor:"pointer",fontSize:12,color:C.tl,opacity:.35,letterSpacing:3,zIndex:2}}>
       {"直接进入"}</button>
   </div>);
 }
@@ -1330,14 +1363,36 @@ export default function App(){
   const mP=useMemo(()=>MTNS.map(m=>({...m,dd:d3.line().x(d=>proj(d)?.[0]).y(d=>proj(d)?.[1]).curve(d3.curveBasis)(m.co.map(c=>[c[0],c[1]]))})),[proj]);
   const sP=useMemo(()=>{const m=new Map();FLORA.forEach(f=>{const p=proj([f.lon,f.lat]);if(p)m.set(f.id,{x:(p[0]/W*100)+"%",y:(p[1]/H*100)+"%"});});return m;},[proj]);
 
+  const [dark,setDark]=useState(false);
+
   if(!entered)return <ScrollLanding onEnter={()=>setEntered(true)}/>;
 
-  return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",background:`linear-gradient(155deg,${C.bg},${C.bg2})`}} tabIndex={0}>
+  const dc=dark?{bg:"#1a1612",bg2:"#221e18",text:"#e0d8c8",tl:"#8a7a68",accent:"#d07050",border:"#3a4a50"}
+    :{bg:C.bg,bg2:C.bg2,text:C.text,tl:C.tl,accent:C.accent,border:C.border};
+
+  return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",
+    background:`linear-gradient(155deg,${dc.bg},${dc.bg2})`}} tabIndex={0}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
       @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
       @keyframes progress{0%{width:0;opacity:.5}50%{width:100%;opacity:1}100%{width:0;opacity:.5}}
-      *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:rgba(0,0,0,.04)}`}</style>
+      *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}
+      ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.15);border-radius:2px}
+      @media(max-width:768px){
+        .hx-title{font-size:13px!important}
+        .hx-tabs button{font-size:11px!important;padding:3px 8px!important}
+        .hx-filter button{font-size:11px!important;padding:4px 10px!important}
+        .hx-region button{font-size:11px!important;padding:3px 6px!important}
+        .hx-rank{width:140px!important}
+        .hx-nearby{width:160px!important}
+        .hx-banner{font-size:11px!important;max-width:92vw!important}
+      }
+      @media(max-width:480px){
+        .hx-title{font-size:12px!important}
+        .hx-tabs button{font-size:10px!important;padding:2px 6px!important}
+        .hx-rank{display:none!important}
+        .hx-wheel{width:160px!important;height:90px!important}
+      }`}</style>
 
     {ez>1.5&&<><div style={{position:"absolute",left:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070)"}}/>
       <div style={{position:"absolute",right:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#c8a070,#d4b088,#b08858)"}}/></>}
@@ -1377,7 +1432,7 @@ export default function App(){
       <div style={{display:"flex",alignItems:"center",gap:3}}>
         <div style={{width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
           display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:10}}>風</div>
-        <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}}>花信风</h1></div>
+        <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}} className="hx-title">花信风</h1></div>
       {/* Search */}
       <div style={{display:"flex",alignItems:"center",gap:4,marginTop:4}}>
         <button onClick={()=>{setShowSearch(!showSearch);if(showSearch)setSearchQ("");}}
@@ -1513,5 +1568,10 @@ export default function App(){
       background:"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
       fontSize:11,color:C.accent,display:"flex",alignItems:"center",gap:3,fontWeight:600,letterSpacing:1}}>
       🪷 <span>花签</span></button>
+    {/* Dark mode toggle */}
+    <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:240,zIndex:31,
+      border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
+      background:dark?"rgba(40,35,28,.8)":"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
+      fontSize:12,color:dark?"#e0d8c8":C.tl}}>{dark?"☀":"🌙"}</button>
   </div>);
 }
