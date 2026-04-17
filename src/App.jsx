@@ -552,21 +552,23 @@ function Mk({s,px,py,zoom,onClick,hl}){
   const [hov,setHov]=useState(false);const [sh,setSh]=useState(false);
   const st=s._st||{st:"...",l:1};const hot=st.l>=3,dead=st.l===0;const pred=s._pred;
   useEffect(()=>{const t=setTimeout(()=>setSh(true),25+s.id*10);return()=>clearTimeout(t);},[s.id]);
-  const base=hl?26:(hot?16:10);const sz=Math.max(base,base*Math.sqrt(zoom)/(hl?1.5:1.1));
-  // In species mode (hl), always show even if faded - just dimmer
+  // Fixed visual size: counter-scale against map zoom so markers stay same screen size
+  const base=hl?26:(hot?16:10);const sz=base;
+  const counterScale=1/zoom;// markers stay same visual size regardless of zoom
   if(dead&&zoom<2.5&&!hl)return null;
   return(<div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
-    style={{position:"absolute",left:px,top:py,transform:`translate(-50%,-50%) scale(${sh?(hov?1.15:1):0})`,
+    style={{position:"absolute",left:px,top:py,
+      transform:`translate(-50%,-50%) scale(${sh?(hov?counterScale*1.15:counterScale):0})`,
       opacity:sh?(dead?(hl?.35:.1):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
       width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}/>}
     <div style={{width:sz,height:sz,borderRadius:"50%",margin:"0 auto",background:dead?"#e0d8d0":"rgba(255,255,255,.85)",
-      border:`${Math.max(1.5,zoom*.4)}px solid ${dead?"#c0b8b0":s.c}55`,
-      boxShadow:dead?"none":`0 2px ${Math.max(3,zoom*2)}px ${s.c}33`,
+      border:`1.5px solid ${dead?"#c0b8b0":s.c}55`,
+      boxShadow:dead?"none":`0 2px 4px ${s.c}33`,
       display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
       {dead?<span style={{fontSize:sz*.4,opacity:.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?.8:.65)} co={s.c}/>}</div>
-    {(zoom>=1.8||hl)&&!dead&&<div style={{marginTop:2,fontSize:hl?11:Math.min(13,10+zoom*.5),color:C.text,whiteSpace:"nowrap",
+    {(zoom>=1.5||hl)&&!dead&&<div style={{marginTop:2,fontSize:hl?11:11,color:C.text,whiteSpace:"nowrap",
       textShadow:`0 1px 3px ${C.bg}`,fontWeight:600,letterSpacing:.5,opacity:hov?1:.65}}>{s.n.split("·")[1]||s.n}</div>}
     {hl&&!dead&&<div style={{fontSize:10,color:s.c,opacity:.7}}>{s._pred?s._pred.dateStr:s.pk[0]+"月"}</div>}
     {hov&&<div style={{position:"absolute",bottom:"calc(100% + 6px)",left:"50%",transform:"translateX(-50%)",
