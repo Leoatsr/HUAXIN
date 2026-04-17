@@ -1051,10 +1051,10 @@ function MoodCard({onClose}){
 
           <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.tl,opacity:.4,letterSpacing:3}}>
             · 每日一签 · 明日再会 ·</div>
-          <button onClick={()=>{const text=`花信风·每日花签\n今日得签：${card.name}\n${card.mood}\n「${card.poem}」\n${card.meaning}`;
-            if(navigator.share)navigator.share({title:"花信风·"+card.name,text}).catch(()=>{});
-            else{navigator.clipboard?.writeText(text);alert("已复制到剪贴板");}}}
-            style={{display:"block",margin:"10px auto 0",border:`1px solid ${qljsGold}44`,background:"transparent",
+          <button onClick={()=>{var text="花信风·每日花签\n今日得签："+card.name+"\n"+card.mood+"\n「"+card.poem+"」\n"+card.meaning;
+            if(navigator.share)navigator.share({title:"花信风·"+card.name,text:text}).catch(function(){});
+            else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
+            style={{display:"block",margin:"10px auto 0",border:"1px solid "+qljsGold+"44",background:"transparent",
               borderRadius:16,padding:"6px 20px",cursor:"pointer",fontSize:12,color:qljsGold,letterSpacing:2}}>
             📤 分享花签</button>
         </div>}
@@ -1332,14 +1332,14 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             <input value={note} onChange={e=>setNote(e.target.value)} placeholder="写一条花事笔记..."
               onKeyDown={e=>{if(e.key==="Enter")addNote();}}
               style={{flex:1,border:"1px solid #e8e0d4",borderRadius:6,padding:"6px 8px",fontSize:12,
-                background:"#faf6ef",outline:"none",fontFamily:"'Noto Serif SC',serif"}}/>
+                background:"#faf6ef",outline:"none"}} />
             <button onClick={addNote} style={{border:"none",background:C.accent,color:"#fff",borderRadius:6,
               padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:600}}>发送</button>
           </div>
         </div>
-          <button onClick={()=>{const text=`${s.n} · ${s.sp}\n${s.po}\n预测盛花期：${s._pred?.dateStr||""}`;
-            if(navigator.share)navigator.share({title:"花信风 · "+s.n,text}).catch(()=>{});
-            else{navigator.clipboard?.writeText(text);alert("已复制到剪贴板");}}}
+          <button onClick={()=>{var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"");
+            if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text}).catch(function(){});
+            else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
             style={{flex:1,border:"1.5px solid #e0dcd4",background:"#faf6ef",borderRadius:8,
               padding:"8px 12px",cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl,
               display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
@@ -1822,9 +1822,9 @@ export default function App(){
           </div>
           {/* Actions */}
           <div style={{display:"flex",gap:8}}>
-            <button onClick={()=>{const text=`花信风·行程规划\n${tripSpots.map((s,i)=>`${i+1}. ${s.n} · ${s.sp} · ${s._pred?.dateStr||""}`).join("\n")}\n全程约${tripDist}km`;
-              if(navigator.share)navigator.share({title:"花信风行程",text}).catch(()=>{});
-              else{navigator.clipboard?.writeText(text);alert("已复制");}}}
+            <button onClick={()=>{var text="花信风·行程规划\n"+tripSpots.map(function(s,i){return (i+1)+". "+s.n+" · "+s.sp+" · "+(s._pred?s._pred.dateStr:"");}).join("\n")+"\n全程约"+tripDist+"km";
+              if(navigator.share)navigator.share({title:"花信风行程",text:text}).catch(function(){});
+              else{navigator.clipboard.writeText(text);alert("已复制");}}}
               style={{flex:1,border:"1.5px solid #e0dcd4",background:dark?"#2a2620":"#faf6ef",borderRadius:8,
                 padding:"10px",cursor:"pointer",fontSize:13,fontWeight:600,color:C.accent,letterSpacing:1}}>
               📤 分享行程</button>
