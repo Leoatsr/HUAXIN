@@ -271,37 +271,36 @@ function InstrIcon({type,sz}){const s=sz||20;const o=.8;
   return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><circle cx="16" cy="16" r="6" fill="none" stroke="#a08050" strokeWidth="1.5"/><circle cx="16" cy="16" r="2" fill="#c8a060"/></g></svg>;
 }
 
-// ═══ Music Player: 网易云音乐 外链播放器 ═══
+// ═══ Music: minimal link to curated playlists ═══
 function MusicPlayer(){
-  const [collapsed,setCollapsed]=useState(true);
-  // 古风纯音乐歌单
-  const pid="2765891267";
-
-  if(collapsed)return(
-    <button onClick={()=>setCollapsed(false)} style={{position:"absolute",bottom:6,right:6,zIndex:36,
+  const [show,setShow]=useState(false);
+  const lists=[
+    {name:"古琴雅韵",url:"https://y.qq.com/n/ryqq/playlist/8522890842",icon:"guqin"},
+    {name:"古筝流水",url:"https://music.163.com/#/playlist?id=2765891267",icon:"guzheng"},
+    {name:"琵琶语",url:"https://y.qq.com/n/ryqq/playlist/7520374253",icon:"pipa"},
+  ];
+  if(!show)return(
+    <button onClick={()=>setShow(true)} style={{position:"absolute",bottom:8,right:8,zIndex:36,
       border:"none",borderRadius:"50%",width:44,height:44,cursor:"pointer",
-      background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.08)",
-      display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>
-      <InstrIcon type="guqin" sz={26}/>
-    </button>);
-
-  return(<div style={{position:"absolute",bottom:6,right:6,zIndex:36,
+      background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.06)",
+      display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <InstrIcon type="guqin" sz={26}/></button>);
+  return(<div style={{position:"absolute",bottom:8,right:8,zIndex:36,
     background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",
-    borderRadius:12,padding:"6px",boxShadow:"0 2px 12px rgba(0,0,0,.08)",width:340,overflow:"hidden"}}>
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 6px 4px"}}>
-      <div style={{display:"flex",alignItems:"center",gap:4}}>
-        <InstrIcon type="guzheng" sz={18}/>
-        <span style={{fontSize:11,color:C.tl,letterSpacing:2}}>古韵 · 网易云</span>
-      </div>
-      <button onClick={()=>setCollapsed(true)} style={{border:"none",background:"none",cursor:"pointer",fontSize:12,color:C.tl}}>▾</button>
+    borderRadius:12,padding:"10px 14px",boxShadow:"0 2px 12px rgba(0,0,0,.06)",width:200}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+      <span style={{fontSize:13,color:C.text,fontWeight:700,letterSpacing:2}}>推荐歌单</span>
+      <button onClick={()=>setShow(false)} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>{"×"}</button>
     </div>
-    <iframe frameBorder="no" marginWidth="0" marginHeight="0"
-      width="328" height="90" allow="autoplay"
-      src={`https://music.163.com/outchain/player?type=0&id=${pid}&auto=0&height=66`}
-      style={{borderRadius:8,border:"none"}}/>
-    <a href={`https://music.163.com/#/playlist?id=${pid}`} target="_blank" rel="noopener noreferrer"
-      style={{display:"block",textAlign:"center",fontSize:10,color:C.accent,marginTop:3,textDecoration:"none",letterSpacing:1}}>
-      在网易云中打开完整歌单 →</a>
+    {lists.map(l=>(
+      <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer"
+        style={{display:"flex",alignItems:"center",gap:8,padding:"8px 6px",
+          borderBottom:"1px solid #f0ece4",textDecoration:"none",cursor:"pointer"}}>
+        <InstrIcon type={l.icon} sz={22}/>
+        <span style={{fontSize:13,color:C.text,fontWeight:500}}>{l.name}</span>
+        <span style={{fontSize:11,color:C.accent,marginLeft:"auto"}}>{"▶"}</span>
+      </a>))}
+    <div style={{fontSize:10,color:C.tl,textAlign:"center",marginTop:6,letterSpacing:1}}>点击在音乐平台中播放</div>
   </div>);
 }
 
@@ -540,14 +539,14 @@ function Mk({s,px,py,zoom,onClick,hl}){
   const [hov,setHov]=useState(false);const [sh,setSh]=useState(false);
   const st=s._st||{st:"...",l:1};const hot=st.l>=3,dead=st.l===0;const pred=s._pred;
   useEffect(()=>{const t=setTimeout(()=>setSh(true),25+s.id*10);return()=>clearTimeout(t);},[s.id]);
-  // Fixed visual size: counter-scale against map zoom so markers stay same screen size
-  const base=hl?26:(hot?16:10);const sz=base;
-  const counterScale=1/zoom;// markers stay same visual size regardless of zoom
-  if(dead&&zoom<2.5&&!hl)return null;
+  const base=hl?28:(hot?18:12);const sz=base;
+  // Partial counter-scale: markers shrink slower than map grows
+  const cs=Math.max(.5,1/Math.sqrt(zoom));
+  if(dead&&!hl)return null;
   return(<div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
     style={{position:"absolute",left:px,top:py,
-      transform:`translate(-50%,-50%) scale(${sh?(hov?counterScale*1.15:counterScale):0})`,
-      opacity:sh?(dead?(hl?.35:.1):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
+      transform:`translate(-50%,-50%) scale(${sh?(hov?cs*1.12:cs):0})`,
+      opacity:sh?(dead?(hl?.35:.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
       width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}/>}
@@ -574,47 +573,73 @@ function Card({s,onClose}){const [v,setV]=useState(false);useEffect(()=>{setTime
   const cl=()=>{setV(false);setTimeout(onClose,120);};const st=s._st||{st:"...",l:1};const sm=SM[s.s];const pred=s._pred;
   const pct=s.th>0&&s._at!=null?Math.min(120,(s._at/s.th)*100):0;
   return(<div style={{position:"fixed",inset:0,zIndex:100,display:"flex",alignItems:"center",justifyContent:"center",
-    background:v?"rgba(40,30,20,.25)":"transparent",transition:"background .1s",backdropFilter:v?"blur(3px)":"none"}} onClick={cl}>
-    <div onClick={e=>e.stopPropagation()} style={{width:"min(460px,90vw)",transform:v?"none":"translateY(8px)",
-      opacity:v?1:0,transition:"all .15s"}}>
-      <div style={{height:10,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070,#b08858)",borderRadius:"6px 6px 0 0"}}/>
-      <div style={{background:"linear-gradient(180deg,#faf5ed,#f5ece0,#faf5ed)",padding:"18px 20px 14px",position:"relative"}}>
-        <div style={{position:"absolute",top:10,right:14,opacity:.8,transform:"rotate(-8deg)"}}><FI sp={s.sp} sz={36} co={s.c}/></div>
-        <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:2}}><span style={{fontSize:12,color:sm.c}}>{sm.i}</span>
-          <span style={{fontSize:11,color:sm.c,letterSpacing:3}}>{sm.l}季</span></div>
-        <h2 style={{fontSize:20,fontWeight:700,color:C.text,margin:0,letterSpacing:3}}>{s.n}</h2>
-        <div style={{fontSize:13,color:C.tl,marginTop:3}}>{s.sp}·{st.st}·{s.rg}</div>
-        <div style={{margin:"8px 0",padding:"6px 10px",background:`${s.c}0c`,borderLeft:`3px solid ${s.c}44`,
-          borderRadius:"0 5px 5px 0",fontSize:15,fontStyle:"italic",color:C.text,letterSpacing:3,lineHeight:1.5}}>「{s.po}」</div>
-        <div style={{fontSize:13,margin:"4px 0"}}><span style={{opacity:.35}}>建议：</span>{s.tp}</div>
-        {pred&&<div style={{margin:"8px 0",padding:"10px 12px",background:"rgba(192,96,64,.06)",borderRadius:6,
-          border:"1px solid rgba(192,96,64,.1)"}}>
-          <div style={{fontSize:13,fontWeight:700,color:C.accent,marginBottom:4}}>🔮 基于3年数据预测</div>
-          <div style={{fontSize:14,color:C.text}}>预测盛花期：<strong>{pred.dateStr}</strong>
-            {pred.daysUntil>0?<span style={{color:C.accent}}> ({pred.daysUntil}天后)</span>
-              :<span style={{color:"#5a8a50"}}> (已到/已过)</span>}</div>
-          <div style={{fontSize:11,color:C.tl,marginTop:4}}>
+    background:v?"rgba(40,30,20,.3)":"transparent",transition:"background .15s",backdropFilter:v?"blur(4px)":"none"}} onClick={cl}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(480px,92vw)",transform:v?"none":"translateY(10px)",
+      opacity:v?1:0,transition:"all .2s",borderRadius:12,overflow:"hidden",
+      boxShadow:"0 12px 40px rgba(0,0,0,.15)"}}>
+      {/* Top accent bar */}
+      <div style={{height:6,background:`linear-gradient(90deg,${s.c},${s.c}88,${s.c})`}}/>
+      <div style={{background:"#faf6ef",padding:"24px 28px 20px",position:"relative"}}>
+        {/* Flower stamp */}
+        <div style={{position:"absolute",top:16,right:20,opacity:.6}}><FI sp={s.sp} sz={40} co={s.c}/></div>
+        {/* Season + Region */}
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
+          <span style={{fontSize:16,color:sm.c}}>{sm.i}</span>
+          <span style={{fontSize:13,color:sm.c,fontWeight:600,letterSpacing:2}}>{sm.l}季</span>
+          <span style={{fontSize:12,color:C.tl,marginLeft:4}}>·</span>
+          <span style={{fontSize:12,color:C.tl}}>{s.rg}</span>
+        </div>
+        {/* Name */}
+        <h2 style={{fontSize:26,fontWeight:800,color:"#2a1e10",margin:"0 0 6px",letterSpacing:3}}>{s.n}</h2>
+        {/* Species + Status */}
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+          <span style={{fontSize:14,color:s.c,fontWeight:600}}>{s.sp}</span>
+          <span style={{fontSize:13,color:st.l>=3?"#2a7a40":st.l>=2?s.c:C.tl,
+            background:st.l>=3?"#e8f5e0":st.l>=2?`${s.c}15`:"#f0ece4",
+            padding:"2px 10px",borderRadius:12,fontWeight:600}}>{st.st}</span>
+        </div>
+        {/* Poem */}
+        <div style={{margin:"0 0 16px",padding:"10px 16px",background:`${s.c}08`,
+          borderLeft:`3px solid ${s.c}55`,borderRadius:"0 6px 6px 0"}}>
+          <div style={{fontSize:16,color:"#3a2818",letterSpacing:3,lineHeight:1.6,fontStyle:"italic"}}>
+            {"「"}{s.po}{"」"}</div>
+        </div>
+        {/* Tip */}
+        <div style={{fontSize:14,color:C.text,marginBottom:14}}>
+          <span style={{color:C.tl}}>建议：</span>{s.tp}</div>
+        {/* Prediction box */}
+        {pred&&<div style={{margin:"0 0 14px",padding:"14px 16px",background:"#fdf8f2",borderRadius:8,
+          border:"1px solid #e8ddd0"}}>
+          <div style={{fontSize:14,fontWeight:700,color:C.accent,marginBottom:6,display:"flex",alignItems:"center",gap:4}}>
+            <span style={{fontSize:16}}>🔮</span> 基于3年数据预测</div>
+          <div style={{fontSize:16,color:C.text,lineHeight:1.6}}>预测盛花期：
+            <strong style={{fontSize:18,color:"#2a1e10"}}>{pred.dateStr}</strong>
+            {pred.daysUntil>0?<span style={{color:C.accent,fontWeight:600}}>{" "}({pred.daysUntil}天后)</span>
+              :<span style={{color:"#2a7a40",fontWeight:600}}>{" "}(已到/已过)</span>}</div>
+          <div style={{fontSize:12,color:C.tl,marginTop:6,lineHeight:1.5}}>
             历史数据：{s.hist?.join(" / ")} · 置信度 <strong>{pred.confidence}%</strong>
-            {pred.daysUntil<15&&pred.daysUntil>0?<span style={{color:C.accent,fontWeight:700}}> ← 临近！精度高</span>:""}
+            {pred.daysUntil<15&&pred.daysUntil>0&&<span style={{color:C.accent,fontWeight:700}}>{" "}← 临近！精度高</span>}
           </div>
         </div>}
-        <div style={{margin:"6px 0",padding:"6px 8px",background:"rgba(0,0,0,.01)",borderRadius:4}}>
-          <div style={{display:"flex",justifyContent:"space-between",fontSize:11,opacity:.5,marginBottom:2}}>
-            <span>{s._at||0}°C·d</span><span>阈值{s.th}</span></div>
-          <div style={{height:6,borderRadius:3,background:"rgba(0,0,0,.03)",overflow:"hidden"}}>
-            <div style={{height:"100%",borderRadius:3,width:`${Math.min(100,pct)}%`,
-              background:pct>=100?`linear-gradient(90deg,${s.c},#e8a040)`:`linear-gradient(90deg,${s.c}88,${s.c})`,transition:"width .4s"}}/></div>
+        {/* Progress bar */}
+        <div style={{margin:"0 0 14px",padding:"8px 12px",background:"#f8f4ee",borderRadius:6}}>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:C.tl,marginBottom:4}}>
+            <span>积温 {s._at||0}°C·d</span><span>阈值 {s.th}</span></div>
+          <div style={{height:8,borderRadius:4,background:"#ece6dc",overflow:"hidden"}}>
+            <div style={{height:"100%",borderRadius:4,width:`${Math.min(100,pct)}%`,
+              background:pct>=100?`linear-gradient(90deg,${s.c},#e8a040)`:`linear-gradient(90deg,${s.c}88,${s.c})`,
+              transition:"width .5s"}}/></div>
         </div>
         {/* Mafengwo link */}
         {s.mfw&&<a href={`https://www.mafengwo.cn/search/q.php?q=${encodeURIComponent(s.mfw)}`}
           target="_blank" rel="noopener noreferrer"
-          style={{display:"flex",alignItems:"center",justifyContent:"center",gap:3,
-            margin:"4px 0 0",padding:"5px 8px",background:"rgba(192,96,64,.08)",borderRadius:4,
-            color:C.accent,fontSize:13,fontWeight:600,textDecoration:"none",letterSpacing:1,
-            border:"1px solid rgba(192,96,64,.12)"}}>
+          style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,
+            padding:"10px 16px",background:"#f8f4ee",borderRadius:8,
+            color:C.accent,fontSize:14,fontWeight:600,textDecoration:"none",letterSpacing:2,
+            border:"1px solid #e8ddd0",transition:"background .2s"}}>
           🐝 查看马蜂窝景点详情 →</a>}
       </div>
-      <div style={{height:8,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070,#b08858)",borderRadius:"0 0 4px 4px"}}/></div></div>);
+      <div style={{height:6,background:`linear-gradient(90deg,${s.c},${s.c}88,${s.c})`}}/></div></div>);
 }
 
 function SpeciesWheel({onSelect,selected,spots}){
