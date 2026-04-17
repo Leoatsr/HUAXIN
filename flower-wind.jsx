@@ -32,7 +32,7 @@ const ic={"樱花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=
 "三角梅":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9"><path d="M12,3L6,14L18,14Z" fill={cl}/><path d="M12,4L8,13L16,13Z" fill={cl} opacity=".6"/><circle cx="12" cy="11" r="1.5" fill="#f0e8d0"/></g></svg>,
 "丁香花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="1.8" ry="3.5" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="1.2" fill="#e8d8f0"/>{[-3,3].map(x=><g key={x}>{[0,90,180,270].map(a=><ellipse key={a} cx={12+x} cy={8+Math.abs(x)} rx="1.2" ry="2.5" transform={`rotate(${a},${12+x},${8+Math.abs(x)})`} fill={cl} opacity=".6"/>)}</g>)}</g></svg>,
 "野花草甸":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><circle cx="8" cy="9" r="2.5" fill={cl}/><circle cx="12" cy="7" r="2.5" fill="#e8a040"/><circle cx="16" cy="9" r="2.5" fill="#d070a0"/></g></svg>};
-const alt={"高山杜鹃":"杜鹃花","云锦杜鹃":"杜鹃花","野杏花":"桃花","芍药":"牡丹","冬樱花":"樱花"};
+const alt={"高山杜鹃":"杜鹃花","云锦杜鹃":"杜鹃花","野杏花":"桃花","芍药":"牡丹","冬樱花":"樱花","苹果梨花":"梨花"};
 const r=ic[sp]||ic[alt[sp]];return r?r():<svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".8">{P5(4)}<circle cx="12" cy="12" r="2" fill="#f0d870"/></g></svg>;}
 
 // ── Flora Data with 3-year historical bloom dates ──
@@ -179,10 +179,43 @@ const FLORA=[
   {id:170,n:"青岛·中山公园",sp:"樱花",lat:36.06,lon:120.35,th:290,s:"spring",c:"#ffb7c5",rg:"华东",po:"青岛樱花大道",tp:"宜：海滨赏樱",pk:[4,4],hist:["04-10","04-08","04-15"],mfw:"中山公园"},
   // 西双版纳
   {id:171,n:"西双版纳·热带花卉园",sp:"三角梅",lat:22.00,lon:100.80,th:250,s:"winter",c:"#e040a0",rg:"西南",po:"版纳四季花不断",tp:"全年可赏",pk:[11,3],hist:["12-01","11-28","12-05"],mfw:"热带花卉园"},
+  // ── 秋色景点大补充 ──
+  {id:180,n:"杭州·北山路",sp:"银杏",lat:30.25,lon:120.14,th:380,s:"autumn",c:"#e8c840",rg:"华东",po:"北山路上金叶铺",tp:"十一月散步",pk:[11,11],hist:["11-15","11-12","11-18"],mfw:"北山路"},
+  {id:181,n:"四川·光雾山",sp:"彩林",lat:32.48,lon:106.95,th:365,s:"autumn",c:"#d86830",rg:"西南",po:"光雾彩林绝天下",tp:"十月秋色",pk:[10,11],hist:["10-25","10-22","11-01"],mfw:"光雾山"},
+  {id:182,n:"本溪·关门山",sp:"红枫",lat:41.10,lon:123.77,th:340,s:"autumn",c:"#d04030",rg:"东北",po:"辽东枫叶红似火",tp:"九月观枫",pk:[9,10],hist:["09-28","09-25","10-02"],mfw:"关门山"},
+  {id:183,n:"米亚罗",sp:"彩林",lat:31.93,lon:102.77,th:370,s:"autumn",c:"#d86830",rg:"西南",po:"米亚罗彩林天堂",tp:"十月越野",pk:[10,10],hist:["10-15","10-12","10-18"],mfw:"米亚罗"},
+  {id:184,n:"新疆·禾木",sp:"白桦林",lat:48.60,lon:87.10,th:345,s:"autumn",c:"#e0a828",rg:"西北",po:"禾木金秋图腾柱",tp:"九月童话村",pk:[9,10],hist:["09-20","09-18","09-25"],mfw:"禾木村"},
+  {id:185,n:"南京·栖霞寺",sp:"红枫",lat:32.15,lon:118.94,th:395,s:"autumn",c:"#d04030",rg:"华东",po:"栖霞红叶满古寺",tp:"十一月古寺",pk:[11,12],hist:["11-15","11-12","11-18"],mfw:"栖霞寺"},
+  {id:186,n:"北京·坡峰岭",sp:"黄栌",lat:39.70,lon:115.80,th:375,s:"autumn",c:"#d04830",rg:"华北",po:"坡峰红叶京郊艳",tp:"十月登高",pk:[10,11],hist:["10-25","10-22","10-28"],mfw:"坡峰岭"},
+  {id:187,n:"贵州·加榜梯田",sp:"油菜花",lat:25.74,lon:108.55,th:245,s:"spring",c:"#e8c840",rg:"西南",po:"梯田如练金波涌",tp:"宜：云海梯田",pk:[3,4],hist:["03-18","03-15","03-22"],mfw:"加榜梯田"},
+  {id:188,n:"江西·三清山",sp:"杜鹃花",lat:28.92,lon:118.08,th:305,s:"spring",c:"#e04070",rg:"华东",po:"三清杜鹃云中红",tp:"宜：云上赏花",pk:[4,5],hist:["04-25","04-22","04-28"],mfw:"三清山"},
+  {id:189,n:"武汉·大学樱花",sp:"樱花",lat:30.54,lon:114.36,th:278,s:"spring",c:"#ffb7c5",rg:"华中",po:"珞珈山下樱如雪",tp:"宜：高校赏樱",pk:[3,3],hist:["03-18","03-15","03-22"],mfw:"武汉大学樱花"},
+  {id:190,n:"贵州·万峰林",sp:"油菜花",lat:25.11,lon:105.00,th:235,s:"spring",c:"#e8c840",rg:"西南",po:"万峰林下金波涌",tp:"宜：喀斯特花海",pk:[2,3],hist:["02-25","02-22","03-02"],mfw:"万峰林"},
+  {id:191,n:"厦门·鼓浪屿",sp:"三角梅",lat:24.45,lon:118.07,th:280,s:"spring",c:"#e040a0",rg:"华东",po:"鼓浪屿上花满墙",tp:"全年可赏",pk:[3,6],hist:["03-15","03-12","03-18"],mfw:"鼓浪屿"},
+  {id:192,n:"青海湖",sp:"油菜花",lat:36.89,lon:99.68,th:410,s:"summer",c:"#f0d040",rg:"西北",po:"青海湖畔金万顷",tp:"七月最美",pk:[7,8],hist:["07-15","07-12","07-18"],mfw:"青海湖"},
+  {id:193,n:"延边·龙井",sp:"苹果梨花",lat:42.77,lon:129.43,th:300,s:"spring",c:"#d8ccc0",rg:"东北",po:"延边梨花雪满园",tp:"宜：朝鲜族村",pk:[4,5],hist:["04-25","04-22","04-28"],mfw:"龙井梨花"},
+  {id:194,n:"无锡·梅园",sp:"梅花",lat:31.55,lon:120.22,th:205,s:"spring",c:"#f0d0d8",rg:"华东",po:"荣氏梅园暗香浮",tp:"二月踏雪寻梅",pk:[2,3],hist:["02-20","02-18","02-25"],mfw:"梅园"},
+  {id:195,n:"上海·醉白池",sp:"牡丹",lat:31.03,lon:121.24,th:325,s:"spring",c:"#e868a0",rg:"华东",po:"松江醉白牡丹开",tp:"宜：古园赏花",pk:[4,5],hist:["04-15","04-12","04-18"],mfw:"醉白池"},
+  {id:196,n:"日照·海岸",sp:"樱花",lat:35.42,lon:119.52,th:295,s:"spring",c:"#ffb7c5",rg:"华东",po:"海滨樱花一片粉",tp:"宜：海景赏樱",pk:[3,4],hist:["03-30","03-28","04-03"],mfw:"日照海滨"},
+  {id:197,n:"威海·刘公岛",sp:"樱花",lat:37.51,lon:122.19,th:300,s:"spring",c:"#ffb7c5",rg:"华东",po:"刘公岛上樱花海",tp:"宜：海岛赏樱",pk:[4,4],hist:["04-10","04-08","04-15"],mfw:"刘公岛"},
+  {id:198,n:"鞍山·千山",sp:"梨花",lat:41.00,lon:123.11,th:275,s:"spring",c:"#d8ccc0",rg:"东北",po:"千山梨花满寺开",tp:"宜：古寺梨花",pk:[4,5],hist:["04-22","04-20","04-28"],mfw:"千山"},
+  {id:199,n:"泰山",sp:"红枫",lat:36.25,lon:117.10,th:365,s:"autumn",c:"#d04030",rg:"华东",po:"泰山红叶满岱岳",tp:"十月登山",pk:[10,11],hist:["10-18","10-15","10-22"],mfw:"泰山"},
+  {id:200,n:"北京·明十三陵",sp:"油菜花",lat:40.28,lon:116.23,th:280,s:"spring",c:"#e8c840",rg:"华北",po:"皇陵春色金万顷",tp:"宜：古陵花海",pk:[4,5],hist:["04-20","04-18","04-25"],mfw:"十三陵油菜花"},
+  {id:201,n:"成都·花舞人间",sp:"杜鹃花",lat:30.47,lon:103.60,th:285,s:"spring",c:"#e04070",rg:"西南",po:"花舞人间杜鹃海",tp:"宜：花海游玩",pk:[3,4],hist:["03-20","03-18","03-25"],mfw:"花舞人间"},
+  {id:202,n:"西岭雪山",sp:"杜鹃花",lat:30.72,lon:103.20,th:320,s:"spring",c:"#e04070",rg:"西南",po:"窗含西岭千秋雪",tp:"宜：雪山杜鹃",pk:[5,6],hist:["05-15","05-12","05-18"],mfw:"西岭雪山"},
+  {id:203,n:"峨眉山",sp:"高山杜鹃",lat:29.52,lon:103.33,th:315,s:"spring",c:"#d84070",rg:"西南",po:"峨眉云雾杜鹃红",tp:"宜：佛山赏花",pk:[4,5],hist:["04-25","04-22","04-28"],mfw:"峨眉山"},
+  {id:204,n:"庐山",sp:"樱花",lat:29.55,lon:115.98,th:285,s:"spring",c:"#ffb7c5",rg:"华东",po:"不识庐山真面目",tp:"宜：云中赏樱",pk:[3,4],hist:["03-28","03-25","04-02"],mfw:"庐山"},
+  {id:205,n:"张家界·天门山",sp:"红枫",lat:29.05,lon:110.47,th:380,s:"autumn",c:"#d04030",rg:"华中",po:"天门山色秋意浓",tp:"十一月绝壁",pk:[11,11],hist:["11-08","11-05","11-12"],mfw:"天门山"},
+  {id:206,n:"恩施·大峡谷",sp:"彩林",lat:30.40,lon:109.48,th:375,s:"autumn",c:"#d86830",rg:"华中",po:"恩施彩林秘境藏",tp:"十月秘境",pk:[10,11],hist:["10-28","10-25","11-02"],mfw:"恩施大峡谷"},
+  {id:207,n:"长白山·地下森林",sp:"彩林",lat:42.08,lon:128.05,th:340,s:"autumn",c:"#d86830",rg:"东北",po:"长白彩林秋意浓",tp:"九月秋色",pk:[9,10],hist:["09-22","09-18","09-28"],mfw:"长白山"},
+  {id:208,n:"婺源·石城",sp:"红枫",lat:29.35,lon:117.78,th:385,s:"autumn",c:"#d04030",rg:"华东",po:"石城红叶晨雾里",tp:"十一月古村",pk:[11,11],hist:["11-15","11-12","11-18"],mfw:"石城村"},
+  {id:209,n:"洛阳·隋唐城",sp:"牡丹",lat:34.65,lon:112.45,th:318,s:"spring",c:"#e868a0",rg:"华中",po:"隋唐花海倾国色",tp:"宜：国际花会",pk:[4,4],hist:["04-12","04-08","04-15"],mfw:"隋唐城遗址"},
+  {id:210,n:"菏泽·曹州牡丹园",sp:"牡丹",lat:35.23,lon:115.48,th:330,s:"spring",c:"#e868a0",rg:"华东",po:"曹州牡丹甲天下",tp:"宜：万亩花海",pk:[4,5],hist:["04-18","04-15","04-22"],mfw:"曹州牡丹园"},
 ];
 const FAT={1:325,2:288,3:260,4:295,5:305,6:315,7:340,8:275,9:250,10:305,11:350,12:380,13:310,14:340,15:300,16:295,20:510,21:660,22:430,23:390,24:370,25:640,40:410,41:375,42:375,43:360,44:385,45:395,46:375,60:32,61:125,
   100:285,101:280,102:270,103:300,104:265,105:280,106:200,107:215,108:385,109:395,110:385,111:390,112:405,113:645,114:635,115:275,116:260,117:280,118:295,119:495,120:270,121:200,122:185,
-  130:290,131:215,132:400,133:285,134:260,135:210,136:395,137:610,138:245,139:175,140:245,141:585,142:275,143:255,144:205,145:390,146:320,147:295,148:355,149:365,150:390,151:305,152:265,153:280,154:635,155:290,156:335,157:345,158:365,159:235,160:270,161:325,162:320,163:640,164:360,165:200,166:310,167:365,168:270,169:335,170:295,171:255};
+  130:290,131:215,132:400,133:285,134:260,135:210,136:395,137:610,138:245,139:175,140:245,141:585,142:275,143:255,144:205,145:390,146:320,147:295,148:355,149:365,150:390,151:305,152:265,153:280,154:635,155:290,156:335,157:345,158:365,159:235,160:270,161:325,162:320,163:640,164:360,165:200,166:310,167:365,168:270,169:335,170:295,171:255,
+  180:385,181:370,182:345,183:375,184:350,185:400,186:380,187:250,188:310,189:283,190:240,191:285,192:415,193:305,194:210,195:330,196:300,197:305,198:280,199:370,200:285,201:290,202:325,203:320,204:290,205:385,206:380,207:345,208:390,209:320,210:335};
 
 // ── Bloom prediction from 3-year history ──
 function predictBloom(f){
@@ -315,13 +348,13 @@ function MusicPlayer(){
 
   // Collapsed: show instrument icon
   if(collapsed)return(
-    <button onClick={()=>setCollapsed(false)} style={{position:"absolute",bottom:4,right:3,zIndex:36,
-      border:"none",borderRadius:"50%",width:32,height:32,cursor:"pointer",
-      background:"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.06)",
+    <button onClick={()=>setCollapsed(false)} style={{position:"absolute",bottom:6,right:6,zIndex:36,
+      border:"none",borderRadius:"50%",width:44,height:44,cursor:"pointer",
+      background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.08)",
       display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>
-      <InstrIcon type={playing?t.inst:"guqin"} sz={playing?20:18}/>
-      {playing&&<div style={{position:"absolute",top:-1,right:-1,width:7,height:7,borderRadius:"50%",
-        background:C.accent,border:"1.5px solid #faf5ed"}}/>}
+      <InstrIcon type={playing?t.inst:"guqin"} sz={playing?30:26}/>
+      {playing&&<div style={{position:"absolute",top:0,right:0,width:10,height:10,borderRadius:"50%",
+        background:C.accent,border:"2px solid #faf5ed",animation:"pulse 1.5s ease-in-out infinite"}}/>}
     </button>);
 
   return(<div style={{position:"absolute",bottom:4,right:3,zIndex:36,
@@ -359,50 +392,125 @@ function ZoomControls({wz,setWz}){
   </div>);
 }
 
-// ═══ Alert Banner: 8s, clickable, DATE-AWARE based on real predictions ═══
+// ═══ Alert Banner: 15s, clickable, DATE-AWARE + seasonal wisdom ═══
 function AlertBanner({onGo,flora}){
   const [sh,setSh]=useState(false);const [i,setI]=useState(0);
-  // Generate alerts from actual current flora status
   const alerts=useMemo(()=>{
-    const now=new Date();const cm=now.getMonth()+1;const cd=now.getDate();
+    const now=new Date();const cm=now.getMonth()+1;const cs=getSeason();
     const result=[];
     flora.forEach(f=>{
       const pred=f._pred;if(!pred)return;
       const du=pred.daysUntil;
-      // About to bloom (3-7 days)
-      if(du>=3&&du<=7) result.push({m:`【花信风】据天象推演，${f.n}${f.sp}将于${du}日后进入盛花期，${f.tp}。`,id:f.id,pri:3});
-      // Blooming now
-      if(du<=0&&du>=-10&&(f._st?.l||0)>=3) result.push({m:`【花信风】${f.n}${f.sp}正值盛花期，${f.po}，此时不赏更待何时。`,id:f.id,pri:4});
-      // About to wither (warn)
-      if(du<-8&&du>=-14&&(f._st?.l||0)>=3) result.push({m:`【急报】${f.n}${f.sp}花期渐近尾声，欲赏请趁本周。`,id:f.id,pri:5});
-      // Relay: if one faded, recommend next of same species
+      if(du>=3&&du<=7) result.push({m:`【花信风】${f.n}${f.sp}将于${du}日后进入盛花期`,id:f.id,pri:3});
+      if(du<=0&&du>=-10&&(f._st?.l||0)>=3) result.push({m:`【花信风】${f.n}${f.sp}正值盛花期 · ${f.po}`,id:f.id,pri:4});
+      if(du<-8&&du>=-14&&(f._st?.l||0)>=3) result.push({m:`【急报】${f.n}${f.sp}花期渐近尾声，欲赏请趁本周`,id:f.id,pri:5});
       if(du<-14&&(f._st?.l||0)<=1){
         const next=flora.find(x=>x.sp===f.sp&&x.id!==f.id&&x._pred&&x._pred.daysUntil>0&&x._pred.daysUntil<30);
-        if(next) result.push({m:`【接力】${f.n.split("·")[1]}${f.sp}已谢，${next.n}正在接力，${next.tp}。`,id:next.id,pri:2});
+        if(next) result.push({m:`【接力】${f.n.split("·")[1]||f.n}${f.sp}已谢，${next.n}正在接力绽放`,id:next.id,pri:2});
       }
     });
-    // Sort by priority (higher = more urgent)
+    // Add seasonal wisdom alerts
+    const seasonalTips={
+      spring:[{m:"【花信】春风二十四番，应候而至，踏青赏花正当时",pri:1},{m:"【雅事】古人云：三月桃花雨，四月梨花雪，五月牡丹开",pri:1},{m:"【花信】谷雨前后，种瓜点豆，亦是牡丹盛时",pri:1}],
+      summer:[{m:"【雅事】荷香清露，最宜月下小酌",pri:1},{m:"【花信】接天莲叶无穷碧，七月最是赏荷时",pri:1},{m:"【提醒】暑气蒸腾，薰衣草花海宜清晨前往",pri:1}],
+      autumn:[{m:"【雅事】霜降后红叶最艳，西风不胜银杏金",pri:1},{m:"【花信】九月桂花十月菊，十一月红枫正当时",pri:1},{m:"【提醒】赏红叶需观气温骤降，色差越大越艳",pri:1}],
+      winter:[{m:"【雅事】暗香浮动月黄昏，寻梅需踏雪而行",pri:1},{m:"【花信】冬至前后雾凇最盛，吉林可期",pri:1},{m:"【提醒】南方冬樱十二月盛开，无量山茶山一绝",pri:1}],
+    };
+    (seasonalTips[cs]||[]).forEach(t=>result.push({...t,id:1}));
     result.sort((a,b)=>b.pri-a.pri);
-    // Fallback alerts if nothing dynamic
     if(result.length===0){
-      result.push({m:"【花信风】点击花卉图标查看盛花期预测，基于3年历史数据推算。",id:1,pri:0});
-      result.push({m:"【花信风】滚轮缩放、方向键漫游，发现中国每一处花事。",id:1,pri:0});
+      result.push({m:"【花信风】点击花卉图标查看盛花期预测，基于3年历史数据推算",id:1,pri:0});
+      result.push({m:"【花信风】滚轮缩放、方向键漫游，发现中国每一处花事",id:1,pri:0});
     }
-    return result.slice(0,8);
+    return result.slice(0,15);
   },[flora]);
 
   useEffect(()=>{const t=setTimeout(()=>setSh(true),1200);
-    const iv=setInterval(()=>{setSh(false);setTimeout(()=>{setI(j=>(j+1)%alerts.length);setSh(true);},300);},8000);
+    const iv=setInterval(()=>{setSh(false);setTimeout(()=>{setI(j=>(j+1)%alerts.length);setSh(true);},400);},15000);
     return()=>{clearTimeout(t);clearInterval(iv);};},[alerts.length]);
-  return(<div onClick={()=>onGo(alerts[i%alerts.length].id)} style={{position:"absolute",top:4,left:"50%",transform:`translateX(-50%) translateY(${sh?0:-8}px)`,
-    opacity:sh?1:0,transition:"all .35s",zIndex:32,background:"rgba(250,245,237,.92)",backdropFilter:"blur(8px)",
-    padding:"4px 10px",borderRadius:12,boxShadow:"0 1px 6px rgba(0,0,0,.04)",cursor:"pointer",
-    fontSize:13,color:C.text,maxWidth:"min(540px,85vw)",textAlign:"center",letterSpacing:1,lineHeight:1.3}}>
-    {alerts[i%alerts.length].m}<span style={{fontSize:7,color:C.accent,marginLeft:4}}>查看 →</span></div>);
+  return(<div onClick={()=>onGo(alerts[i%alerts.length].id)} style={{position:"absolute",top:8,left:"50%",transform:`translateX(-50%) translateY(${sh?0:-8}px)`,
+    opacity:sh?1:0,transition:"all .4s",zIndex:32,background:"rgba(250,245,237,.95)",backdropFilter:"blur(8px)",
+    padding:"7px 18px",borderRadius:18,boxShadow:"0 2px 10px rgba(0,0,0,.05)",cursor:"pointer",
+    fontSize:13,color:C.text,maxWidth:"min(680px,88vw)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",letterSpacing:1.5}}>
+    {alerts[i%alerts.length].m}<span style={{fontSize:10,color:C.accent,marginLeft:6}}>查看 →</span></div>);
 }
 
-// ═══ Scroll Landing ═══
-function ScrollLanding({onEnter}){
+// ═══ Daily Mood Card (心情签) — random fortune/mood drawing ═══
+const MOOD_CARDS=[
+  {name:"桃花签",emoji:"🌸",color:"#f8a0b0",mood:"柔情似水",poem:"桃之夭夭，灼灼其华",meaning:"今日宜遇良人，温柔以待万物。不争不抢，花开自有时。"},
+  {name:"梅花签",emoji:"❄",color:"#f0d0d8",mood:"孤傲清高",poem:"零落成泥碾作尘，只有香如故",meaning:"今日宜独处，凌寒而立。不随波逐流，坚守心中本色。"},
+  {name:"牡丹签",emoji:"🌺",color:"#e868a0",mood:"富贵雍容",poem:"唯有牡丹真国色，花开时节动京城",meaning:"今日宜展露锋芒，自信从容。花王加冕，万众瞩目。"},
+  {name:"兰花签",emoji:"🌿",color:"#a8c890",mood:"幽谷独芳",poem:"芝兰生于深林，不以无人而不芳",meaning:"今日宜静心修身，不慕外物。香在暗处，自有知音。"},
+  {name:"莲花签",emoji:"🪷",color:"#f080a0",mood:"出淤泥而不染",poem:"濯清涟而不妖，中通外直",meaning:"今日宜心怀澄澈，不随俗流。出于尘世，归于本真。"},
+  {name:"菊花签",emoji:"🌼",color:"#e8c840",mood:"淡泊归隐",poem:"采菊东篱下，悠然见南山",meaning:"今日宜隐退休憩，与自然同行。功名利禄，皆可暂放。"},
+  {name:"杜鹃签",emoji:"🌹",color:"#e04070",mood:"思念如火",poem:"子规夜半犹啼血，不信东风唤不回",meaning:"今日宜表达心意，情真意切。有思念便化作行动。"},
+  {name:"樱花签",emoji:"🌸",color:"#ffb7c5",mood:"转瞬即逝",poem:"花开堪折直须折，莫待无花空折枝",meaning:"今日宜把握当下，莫待春归。短暂但灿烂，方是真意。"},
+  {name:"桂花签",emoji:"🌼",color:"#f0c848",mood:"暗香盈袖",poem:"暗淡轻黄体性柔，情疏迹远只香留",meaning:"今日宜低调内敛，以德服人。不显山不露水，自有芬芳。"},
+  {name:"茉莉签",emoji:"🤍",color:"#f0f0e8",mood:"纯洁无瑕",poem:"一卉能熏一室香，炎天犹觉玉肌凉",meaning:"今日宜保持初心，简单纯粹。身处纷扰，心自清凉。"},
+  {name:"银杏签",emoji:"🍂",color:"#e8c840",mood:"岁月静好",poem:"满城尽带黄金甲",meaning:"今日宜缓步慢行，珍惜当下光阴。金色洒落，皆为馈赠。"},
+  {name:"枫叶签",emoji:"🍁",color:"#d04030",mood:"热烈深情",poem:"霜叶红于二月花",meaning:"今日宜燃烧自己，照亮他人。历经风霜，方显本色。"},
+  {name:"薰衣草签",emoji:"💜",color:"#9070b0",mood:"浪漫温柔",poem:"紫色花海接天涯",meaning:"今日宜追寻浪漫，相信美好。远方有风，亦有花。"},
+  {name:"向日葵签",emoji:"🌻",color:"#f0a020",mood:"阳光积极",poem:"朝朝向日，不惧风雨",meaning:"今日宜心向光明，积极向上。有太阳处，便是归处。"},
+  {name:"丁香签",emoji:"💟",color:"#c090d0",mood:"愁思绵长",poem:"芭蕉不展丁香结，同向春风各自愁",meaning:"今日宜理清心绪，放下执念。心结自解，春风自来。"},
+];
+
+function MoodCard({onClose}){
+  const [card,setCard]=useState(null);
+  const [revealed,setRevealed]=useState(false);
+  const [shaking,setShaking]=useState(false);
+  
+  const dailySeed=useMemo(()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();},[]);
+  
+  useEffect(()=>{(async()=>{
+    try{const r=await window.storage?.get("mood_"+dailySeed);
+      if(r?.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setRevealed(true);return;}}catch{}
+  })();},[dailySeed]);
+
+  const draw=async()=>{
+    setShaking(true);
+    setTimeout(async()=>{
+      const picked=MOOD_CARDS[Math.floor(Math.abs(Math.sin(dailySeed*0.618))*MOOD_CARDS.length)%MOOD_CARDS.length];
+      setCard(picked);setShaking(false);
+      setTimeout(()=>setRevealed(true),400);
+      try{await window.storage?.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
+    },1200);
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:150,display:"flex",alignItems:"center",justifyContent:"center",
+    background:"rgba(30,20,15,.5)",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(380px,88vw)",padding:"24px 28px",
+      background:"linear-gradient(180deg,#faf5ed,#f5ece0,#faf5ed)",
+      borderRadius:14,boxShadow:"0 8px 32px rgba(0,0,0,.2)",position:"relative",
+      border:"2px solid rgba(180,150,100,.2)"}}>
+      <button onClick={onClose} style={{position:"absolute",top:10,right:12,border:"none",background:"none",
+        cursor:"pointer",fontSize:18,color:C.tl,padding:0}}>×</button>
+      {!card&&<div style={{textAlign:"center",padding:"20px 0"}}>
+        <div style={{fontSize:56,marginBottom:16,animation:shaking?"shake .15s infinite":"none"}}>🪷</div>
+        <h2 style={{fontSize:22,fontWeight:900,color:C.text,letterSpacing:6,marginBottom:6}}>每日花签</h2>
+        <div style={{fontSize:12,color:C.tl,letterSpacing:2,marginBottom:24,lineHeight:1.6}}>
+          一花一世界 · 一签一解语<br/>抽一支今日花签，得一段今日心语</div>
+        <button onClick={draw} disabled={shaking} style={{border:"none",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
+          color:"#fff",borderRadius:20,padding:"10px 28px",cursor:shaking?"default":"pointer",
+          fontSize:14,fontWeight:700,letterSpacing:3,
+          boxShadow:`0 4px 14px ${C.accent}44`}}>
+          {shaking?"摇动中...":"🎐 摇签"}</button>
+      </div>}
+      {card&&<div style={{textAlign:"center",padding:"12px 0",opacity:revealed?1:0,transform:revealed?"translateY(0)":"translateY(10px)",transition:"all .5s"}}>
+        <div style={{fontSize:62,marginBottom:8}}>{card.emoji}</div>
+        <div style={{fontSize:14,color:card.color,letterSpacing:4,marginBottom:3,fontWeight:600}}>今日得签</div>
+        <h2 style={{fontSize:28,fontWeight:900,color:C.text,letterSpacing:8,marginBottom:4}}>{card.name}</h2>
+        <div style={{fontSize:14,color:card.color,letterSpacing:3,marginBottom:16,fontWeight:600}}>·{card.mood}·</div>
+        <div style={{padding:"12px 16px",background:`${card.color}12`,borderLeft:`3px solid ${card.color}`,
+          borderRadius:"0 6px 6px 0",marginBottom:12,fontSize:14,color:C.text,letterSpacing:2.5,
+          lineHeight:1.7,fontStyle:"italic",textAlign:"left"}}>「{card.poem}」</div>
+        <div style={{fontSize:13,color:C.text,letterSpacing:1.5,lineHeight:1.8,padding:"4px 8px"}}>{card.meaning}</div>
+        <div style={{marginTop:16,fontSize:10,color:C.tl,opacity:.55,letterSpacing:2}}>
+          · 每日一签 · 明日再会 ·</div>
+      </div>}
+    </div></div>);
+}
+
+
   const cs=getSeason();const sm=SM[cs];
   const poems={spring:"桃花一簇开无主\n可爱深红爱浅红",summer:"小荷才露尖尖角\n早有蜻蜓立上头",autumn:"停车坐爱枫林晚\n霜叶红于二月花",winter:"忽如一夜春风来\n千树万树梨花开"};
   const [dx,setDx]=useState(0);const [dg,setDg]=useState(false);const [en,setEn]=useState(false);const sr=useRef(null);const cr=useRef(null);
@@ -442,10 +550,11 @@ function Mk({s,px,py,zoom,onClick,hl}){
   const st=s._st||{st:"...",l:1};const hot=st.l>=3,dead=st.l===0;const pred=s._pred;
   useEffect(()=>{const t=setTimeout(()=>setSh(true),25+s.id*10);return()=>clearTimeout(t);},[s.id]);
   const base=hl?26:(hot?16:10);const sz=Math.max(base,base*Math.sqrt(zoom)/(hl?1.5:1.1));
+  // In species mode (hl), always show even if faded - just dimmer
   if(dead&&zoom<2.5&&!hl)return null;
   return(<div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
     style={{position:"absolute",left:px,top:py,transform:`translate(-50%,-50%) scale(${sh?(hov?1.15:1):0})`,
-      opacity:sh?(dead?.1:1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
+      opacity:sh?(dead?(hl?.35:.1):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
       width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}/>}
@@ -543,12 +652,14 @@ function SpeciesWheel({onSelect,selected,spots}){
 // ═══ MAIN ═══
 export default function App(){
   const [entered,setEntered]=useState(false);const [geo,setGeo]=useState(null);
+  // Auto-show mood card once per day on entry
   const [flora]=useState(()=>FLORA.map(f=>{const pred=predictBloom(f);return{...f,_at:FAT[f.id]||200,_st:calcSt(FAT[f.id]||200,f.th,pred),_pred:pred};}));
   const [page,setPage]=useState("map");const [filter,setFilter]=useState("current");
   const [region,setRegion]=useState("all");const [sel,setSel]=useState(null);
   const [drag,setDrag]=useState(null);const [pan,setPan]=useState({x:0,y:0});
   const [wz,setWz]=useState(1);const [wc,setWc]=useState([104.5,35]);
   const [selSp,setSelSp]=useState("牡丹");const [userLoc,setUserLoc]=useState(null);const [locAsked,setLocAsked]=useState(false);
+  const [showMood,setShowMood]=useState(false);
   const [nearbyMonth,setNearbyMonth]=useState(0);
   const mapRef=useRef(null);const touchD=useRef(null);
   const W=1000,H=850;const cs=getSeason();const cr=REGIONS.find(r=>r.id===region)||REGIONS[0];
@@ -560,13 +671,20 @@ export default function App(){
     .then(r=>r.json()).then(setGeo).catch(()=>{
       fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000.json").then(r=>r.json()).then(setGeo).catch(()=>{});});},[]);
 
+  // Auto-show mood card once per day
+  useEffect(()=>{if(!entered)return;(async()=>{
+    const d=new Date();const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+    try{const r=await window.storage?.get("moodShown_"+seed);
+      if(!r?.value){setTimeout(()=>{setShowMood(true);
+        window.storage?.set("moodShown_"+seed,"1");},1200);}}catch{}
+  })();},[entered]);
+
   const requestLoc=()=>{if(locAsked)return;setLocAsked(true);
     navigator.geolocation?.getCurrentPosition(p=>{
       const loc={lat:p.coords.latitude,lon:p.coords.longitude};
       setUserLoc(loc);
-      // Zoom to city level (moderate, not too close)
-      setWz(3.5);setWc([loc.lon,loc.lat]);setRegion("all");
-    },()=>{const loc={lat:39.9,lon:116.4};setUserLoc(loc);setWz(3.5);setWc([loc.lon,loc.lat]);setRegion("all");});};
+      setWz(2.5);setWc([loc.lon,loc.lat]);setRegion("all");
+    },()=>{const loc={lat:39.9,lon:116.4};setUserLoc(loc);setWz(2.5);setWc([loc.lon,loc.lat]);setRegion("all");});};
 
   // Navigate to a spot by id (for alert banner clicks)
   const goToSpot=useCallback((id)=>{
@@ -579,13 +697,12 @@ export default function App(){
     return flora.map(f=>{let at=f._at,st=f._st;
       if(filter.startsWith("future")){
         const months=filter==="future1"?1:filter==="future3"?3:6;
-        const startM=cm+(filter==="future1"?0:filter==="future3"?1:3);
-        const endM=cm+months;
-        // Only show flowers whose predicted bloom is IN THE FUTURE
+        // future1: 0-30 days, future3: 30-90 days, future6: 90-180 days (non-overlapping)
+        const minDays=filter==="future1"?0:filter==="future3"?30:90;
+        const maxDays=filter==="future1"?30:filter==="future3"?90:180;
         const pred=f._pred;
-        const bloomInFuture=pred&&pred.daysUntil>0;
-        const inWindow=(()=>{for(let m=startM;m<=endM;m++){const mm=((m-1)%12)+1;if(mm>=f.pk[0]&&mm<=f.pk[1])return true;}return false;})();
-        if(inWindow&&bloomInFuture){at=FAT[f.id]||f.th;st={st:`预计${pred.dateStr}`,l:3};}
+        const bloomInFuture=pred&&pred.daysUntil>=minDays&&pred.daysUntil<=maxDays;
+        if(bloomInFuture){at=FAT[f.id]||f.th;st={st:`预计${pred.dateStr}`,l:3};}
         else st={st:"不在窗口",l:0};
       }else if(filter==="current"&&f.s!==cs)st={st:"非当季",l:0};
       else if(filter!=="current"&&filter!=="all"&&f.s!==filter)st={st:"非本季",l:0};
@@ -593,9 +710,11 @@ export default function App(){
     });},[flora,filter,cs,userLoc]);
 
   const spots=useMemo(()=>{let list=displayFlora;
-    if(page==="species")list=list.filter(f=>f.sp===selSp).map(f=>({...f,_st:calcSt(FAT[f.id]||200,f.th,f._pred)}));
+    if(page==="species"){
+      // Show ALL spots of this species, including faded ones (with current year prediction)
+      list=flora.filter(f=>f.sp===selSp).map(f=>({...f,_at:FAT[f.id]||200,_st:calcSt(FAT[f.id]||200,f.th,f._pred),_pred:f._pred}));
+    }
     if(page==="nearby"&&userLoc){
-      // Show ALL spots within 500km regardless of season (全年 mode)
       list=flora.map(f=>({...f,_at:FAT[f.id]||200,_st:calcSt(FAT[f.id]||200,f.th,f._pred),
         _dist:distKm(userLoc.lat,userLoc.lon,f.lat,f.lon),_pred:f._pred}))
         .filter(f=>(f._dist||9999)<500);
@@ -646,6 +765,7 @@ export default function App(){
   return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",background:`linear-gradient(155deg,${C.bg},${C.bg2})`}} tabIndex={0}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
       @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
+      @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
       *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:rgba(0,0,0,.04)}`}</style>
 
     {ez>1.5&&<><div style={{position:"absolute",left:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070)"}}/>
@@ -800,5 +920,12 @@ export default function App(){
       </div>);})()}
 
     {sel&&<Card s={sel} onClose={()=>setSel(null)}/>}
+    {showMood&&<MoodCard onClose={()=>setShowMood(false)}/>}
+    {/* Mood card trigger button (always visible top right area) */}
+    <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:12,right:180,zIndex:31,
+      border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
+      background:"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
+      fontSize:11,color:C.accent,display:"flex",alignItems:"center",gap:3,fontWeight:600,letterSpacing:1}}>
+      🪷 <span>花签</span></button>
   </div>);
 }
