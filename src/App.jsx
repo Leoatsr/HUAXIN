@@ -2,6 +2,119 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import * as d3 from "d3";
 
 const C={bg:"#f4ece0",bg2:"#ebe0d0",accent:"#c06040",accent2:"#a87050",text:"#3a2818",tl:"#8a7a68",border:"#4a8a98",river:"#4a88a0",mtn:"#8a7a5a"};
+
+// ═══ i18n 多语言 ═══
+const I18N={
+zh:{
+  title:"花信风",subtitle:"跟着天地节律 · 追一场中国色",
+  tab_map:"时令",tab_species:"花谱",tab_nearby:"附近",
+  current:"当季",yearly:"全年",future:"未来",month1:"1个月",month3:"3个月",halfyr:"半年",
+  blooming:"盛花期",early:"初花期",budding:"含苞待放",faded:"已谢",ending:"末花期",growing:"积温中",
+  pred_title:"基于3年数据预测",pred_bloom:"预测盛花期",pred_hist:"历史数据",pred_conf:"置信度",
+  near_high:"临近！精度高",arrived:"已到/已过",days_later:"天后",
+  fav:"收藏",faved:"已收藏",checkin:"打卡",checked:"已打卡",trip_add:"加入行程",trip_added:"已加入行程",
+  share:"分享",mfw:"查看马蜂窝景点详情",notes:"花友笔记",notes_empty:"还没有笔记",note_ph:"写一条笔记...",send:"发送",
+  trip:"行程规划",trip_stops:"站",trip_total:"全程约",trip_share:"分享行程",trip_clear:"清空",trip_empty:"还没有添加景点",
+  mood:"花签",mood_title:"每日花签",mood_draw:"求签",mood_drawing:"签筒摇动中...",mood_got:"今日得签",mood_share:"分享花签",
+  search_ph:"搜索景点或花种...",scroll_hint:"拖动卷轴，展开花事",enter:"直接进入",
+  rank:"花事排行",nearby_title:"附近花事",
+  guide:"入境指南",guide_title:"China Flower Travel Guide",
+  at:"积温",threshold:"阈值",real:"实时",sim:"模拟",suggest:"建议",
+  overview:"全览",region_ne:"东北",region_n:"华北",region_nw:"西北",region_e:"华东",region_c:"华中",region_sw:"西南",region_s:"华南",region_t:"青藏",
+},
+en:{
+  title:"Flower Wind",subtitle:"Follow nature's rhythm · Chase China's colors",
+  tab_map:"Seasonal",tab_species:"Species",tab_nearby:"Nearby",
+  current:"Now",yearly:"All Year",future:"Upcoming",month1:"1 Month",month3:"3 Months",halfyr:"6 Months",
+  blooming:"In Bloom",early:"Early Bloom",budding:"Budding",faded:"Faded",ending:"Late Bloom",growing:"Growing",
+  pred_title:"3-Year Data Prediction",pred_bloom:"Predicted Peak",pred_hist:"Historical",pred_conf:"Confidence",
+  near_high:"Imminent!",arrived:"Arrived",days_later:"days",
+  fav:"Save",faved:"Saved",checkin:"Check in",checked:"Checked",trip_add:"Add to Trip",trip_added:"In Trip",
+  share:"Share",mfw:"View on Mafengwo",notes:"Notes",notes_empty:"No notes yet",note_ph:"Write a note...",send:"Send",
+  trip:"Trip Plan",trip_stops:"stops",trip_total:"Total ~",trip_share:"Share Trip",trip_clear:"Clear",trip_empty:"No stops added",
+  mood:"Fortune",mood_title:"Daily Flower Fortune",mood_draw:"Draw",mood_drawing:"Drawing...",mood_got:"Today's Fortune",mood_share:"Share",
+  search_ph:"Search spots or flowers...",scroll_hint:"Drag scroll to explore",enter:"Enter directly",
+  rank:"Top Flowers",nearby_title:"Nearby Flowers",
+  guide:"Travel Guide",guide_title:"China Flower Travel Guide",
+  at:"Accum.Temp",threshold:"Threshold",real:"Live",sim:"Est.",suggest:"Tip",
+  overview:"All",region_ne:"NE",region_n:"N",region_nw:"NW",region_e:"E",region_c:"Central",region_sw:"SW",region_s:"S",region_t:"Tibet",
+},
+ja:{
+  title:"花信風",subtitle:"天地のリズムに従い · 中国の色を追う",
+  tab_map:"時令",tab_species:"花譜",tab_nearby:"付近",
+  current:"今季",yearly:"年間",future:"今後",month1:"1ヶ月",month3:"3ヶ月",halfyr:"半年",
+  blooming:"見頃",early:"咲き始め",budding:"蕾",faded:"散り",ending:"終わり頃",growing:"成長中",
+  pred_title:"3年データ予測",pred_bloom:"開花予測",pred_hist:"過去データ",pred_conf:"信頼度",
+  near_high:"間近！",arrived:"到来",days_later:"日後",
+  fav:"保存",faved:"保存済",checkin:"訪問記録",checked:"記録済",trip_add:"旅程に追加",trip_added:"追加済",
+  share:"共有",mfw:"馬蜂窩で見る",notes:"ノート",notes_empty:"ノートなし",note_ph:"ノートを書く...",send:"送信",
+  trip:"旅程計画",trip_stops:"箇所",trip_total:"総距離",trip_share:"旅程共有",trip_clear:"クリア",trip_empty:"スポット未追加",
+  mood:"花みくじ",mood_title:"毎日の花みくじ",mood_draw:"引く",mood_drawing:"準備中...",mood_got:"本日の運勢",mood_share:"共有",
+  search_ph:"スポットや花を検索...",scroll_hint:"巻物をドラッグして開く",enter:"直接入る",
+  rank:"花ランキング",nearby_title:"付近の花",
+  guide:"旅行ガイド",guide_title:"中国花旅ガイド",
+  at:"積算温度",threshold:"閾値",real:"実測",sim:"推定",suggest:"おすすめ",
+  overview:"全体",region_ne:"東北",region_n:"華北",region_nw:"西北",region_e:"華東",region_c:"華中",region_sw:"西南",region_s:"華南",region_t:"チベット",
+},
+ko:{
+  title:"화신풍",subtitle:"자연의 리듬을 따라 · 중국의 색을 찾다",
+  tab_map:"시령",tab_species:"화보",tab_nearby:"주변",
+  current:"이번 시즌",yearly:"연간",future:"앞으로",month1:"1개월",month3:"3개월",halfyr:"6개월",
+  blooming:"만개",early:"개화 초기",budding:"봉오리",faded:"낙화",ending:"말기",growing:"성장 중",
+  pred_title:"3년 데이터 예측",pred_bloom:"만개 예측일",pred_hist:"과거 데이터",pred_conf:"신뢰도",
+  near_high:"임박!",arrived:"도래",days_later:"일 후",
+  fav:"저장",faved:"저장됨",checkin:"체크인",checked:"완료",trip_add:"여행에 추가",trip_added:"추가됨",
+  share:"공유",mfw:"마펑워에서 보기",notes:"노트",notes_empty:"노트 없음",note_ph:"노트 작성...",send:"보내기",
+  trip:"여행 계획",trip_stops:"곳",trip_total:"총 거리",trip_share:"여행 공유",trip_clear:"초기화",trip_empty:"스팟 미추가",
+  mood:"꽃점",mood_title:"오늘의 꽃점",mood_draw:"뽑기",mood_drawing:"준비 중...",mood_got:"오늘의 운세",mood_share:"공유",
+  search_ph:"스팟이나 꽃 검색...",scroll_hint:"스크롤을 드래그하세요",enter:"바로 입장",
+  rank:"꽃 랭킹",nearby_title:"주변 꽃",
+  guide:"여행 가이드",guide_title:"중국 꽃 여행 가이드",
+  at:"적산온도",threshold:"임계값",real:"실시간",sim:"추정",suggest:"팁",
+  overview:"전체",region_ne:"동북",region_n:"화북",region_nw:"서북",region_e:"화동",region_c:"화중",region_sw:"서남",region_s:"화남",region_t:"티벳",
+},
+};
+
+// ═══ Inbound Travel Guide ═══
+function TravelGuide({onClose,lang}){
+  const t=I18N[lang]||I18N.zh;const isZh=lang==="zh";
+  return(<div style={{position:"fixed",inset:0,zIndex:120,display:"flex",justifyContent:"center",alignItems:"center",
+    background:"rgba(0,0,0,.3)",backdropFilter:"blur(4px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(520px,92vw)",maxHeight:"85vh",overflowY:"auto",
+      background:"#faf6ef",borderRadius:12,padding:"24px 28px",boxShadow:"0 8px 32px rgba(0,0,0,.15)",position:"relative"}}>
+      <button onClick={onClose} style={{position:"absolute",top:12,right:14,border:"none",background:"none",
+        cursor:"pointer",fontSize:18,color:"#8a7a68"}}>{"×"}</button>
+      <h2 style={{fontSize:22,fontWeight:800,letterSpacing:3,margin:"0 0 16px",color:"#3a2818"}}>
+        🌏 {isZh?"入境赏花指南":"China Flower Travel Guide"}</h2>
+      
+      {[
+        {icon:"✈️",title:isZh?"签证与入境":"Visa & Entry",
+          body:isZh?"中国对多国实施144小时/72小时过境免签。2024年起，法国、德国、意大利、荷兰、西班牙、马来西亚、泰国等国免签入境。请查阅最新政策。"
+          :"China offers 144h/72h visa-free transit for many countries. Since 2024, citizens of France, Germany, Italy, Netherlands, Spain, Malaysia, Thailand and more can enter visa-free. Check latest policies."},
+        {icon:"💳",title:isZh?"支付方式":"Payment",
+          body:isZh?"景区门票可用支付宝/微信支付（绑定境外Visa/Mastercard即可）。也可用现金人民币。部分景区支持信用卡。建议提前下载支付宝App。"
+          :"Use Alipay/WeChat Pay (link your Visa/Mastercard). Cash RMB also accepted. Some spots take credit cards. Download Alipay app beforehand."},
+        {icon:"🚄",title:isZh?"交通指南":"Transportation",
+          body:isZh?"高铁覆盖全国主要城市（12306.cn购票，支持外国护照）。花季热门线路：上海→杭州(45min)→婺源(2h)→黄山(1h)。建议使用高德地图导航。"
+          :"High-speed rail connects major cities (book on 12306.cn with passport). Popular flower routes: Shanghai→Hangzhou(45min)→Wuyuan(2h)→Huangshan(1h). Use Amap/Gaode for navigation."},
+        {icon:"📱",title:isZh?"必备APP":"Essential Apps",
+          body:isZh?"支付宝（支付+翻译）、高德地图（导航）、12306（火车票）、携程（酒店+门票）、翻译官（离线翻译）。中国可正常使用这些APP。"
+          :"Alipay (payment+translate), Amap (navigation), 12306 (train tickets), Trip.com (hotels), Google Translate (offline pack). These apps work normally in China."},
+        {icon:"🌸",title:isZh?"最佳赏花路线":"Best Flower Routes",
+          body:isZh?"春：洛阳牡丹→西安樱花→林芝桃花(3-4月)\n夏：伊犁薰衣草→青海湖油菜花(6-7月)\n秋：北京香山红叶→九寨沟彩林(10月)\n冬：南京梅花→昆明冬樱花(12-2月)"
+          :"Spring: Luoyang Peony→Xi'an Cherry Blossom→Linzhi Peach(Mar-Apr)\nSummer: Yili Lavender→Qinghai Lake Rapeseed(Jun-Jul)\nAutumn: Beijing Red Leaves→Jiuzhaigou(Oct)\nWinter: Nanjing Plum→Kunming Winter Cherry(Dec-Feb)"},
+        {icon:"🆘",title:isZh?"紧急联系":"Emergency",
+          body:isZh?"报警：110 · 急救：120 · 火警：119\n旅游投诉：12345\n外交部全球领保：+86-10-12308"
+          :"Police: 110 · Ambulance: 120 · Fire: 119\nTourism hotline: 12345\nConsular protection: +86-10-12308"},
+        {icon:"🗣",title:isZh?"实用花卉中文":"Useful Chinese",
+          body:"Cherry Blossom = 樱花 (yīng huā)\nPeach = 桃花 (táo huā)\nPeony = 牡丹 (mǔ dān)\nPlum = 梅花 (méi huā)\nLotus = 荷花 (hé huā)\nMaple = 红枫 (hóng fēng)\nGinkgo = 银杏 (yín xìng)\nLavender = 薰衣草 (xūn yī cǎo)\nRapeseed = 油菜花 (yóu cài huā)\nWhere is...? = ...在哪里？(zài nǎ lǐ?)"},
+      ].map((s,i)=>(
+        <div key={i} style={{marginBottom:14,padding:"12px 14px",background:"#f5f0e8",borderRadius:8}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#3a2818",marginBottom:6}}>{s.icon} {s.title}</div>
+          <div style={{fontSize:13,color:"#5a4a38",lineHeight:1.7,whiteSpace:"pre-line"}}>{s.body}</div>
+        </div>))}
+    </div></div>);
+}
 const SM={spring:{l:"春",i:"🌸",c:"#d4756b"},summer:{l:"夏",i:"🌿",c:"#5a8a50"},autumn:{l:"秋",i:"🍁",c:"#c8703a"},winter:{l:"冬",i:"❄",c:"#6a8aaa"}};
 function getSeason(){const m=new Date().getMonth();if(m>=2&&m<=4)return"spring";if(m>=5&&m<=7)return"summer";if(m>=8&&m<=10)return"autumn";return"winter";}
 function distKm(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dO=(d-b)*Math.PI/180;const x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dO/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
@@ -1125,7 +1238,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
       opacity:v?1:0,transition:"all .2s",borderRadius:12,overflow:"hidden",
       boxShadow:"0 12px 40px rgba(0,0,0,.15)"}}>
       {/* Top accent bar */}
-      <div style={{height:6,background:`linear-gradient(90deg,${s.c},${s.c}88,${s.c})`}}/>
+      <div style={{height:6,background:"linear-gradient(90deg,"+s.c+","+s.c+"88,"+s.c+")"}}/>
       {/* Generative landscape header */}
       <div style={{position:"relative",overflow:"hidden"}}>
         <LandscapeSVG season={s.s} color={s.c} w={480} h={80}/>
@@ -1233,7 +1346,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             📤 分享</button>
         </div>
       </div>
-      <div style={{height:6,background:`linear-gradient(90deg,${s.c},${s.c}88,${s.c})`}}/></div></div>);
+      <div style={{height:6,background:"linear-gradient(90deg,"+s.c+","+s.c+"88,"+s.c+")"}}/></div></div>);
 }
 
 function SpeciesWheel({onSelect,selected,spots}){
@@ -1429,6 +1542,8 @@ export default function App(){
   const sP=useMemo(()=>{const m=new Map();FLORA.forEach(f=>{const p=proj([f.lon,f.lat]);if(p)m.set(f.id,{x:(p[0]/W*100)+"%",y:(p[1]/H*100)+"%"});});return m;},[proj]);
 
   const [dark,setDark]=useState(false);
+  const [lang,setLang]=useState("zh");const [showGuide,setShowGuide]=useState(false);
+  const t=I18N[lang]||I18N.zh;
 
   if(!entered)return <ScrollLanding onEnter={()=>setEntered(true)}/>;
 
@@ -1497,7 +1612,7 @@ export default function App(){
       <div style={{display:"flex",alignItems:"center",gap:3}}>
         <div style={{width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
           display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:10}}>風</div>
-        <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}} className="hx-title">花信风</h1></div>
+        <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}} className="hx-title">{t.title}</h1></div>
       {/* Search */}
       <div style={{display:"flex",alignItems:"center",gap:4,marginTop:4}}>
         <button onClick={()=>{setShowSearch(!showSearch);if(showSearch)setSearchQ("");}}
@@ -1513,7 +1628,7 @@ export default function App(){
 
     {/* Page tabs */}
     <div style={{position:"absolute",top:22,right:3,zIndex:30,display:"flex",gap:1,background:"rgba(250,245,237,.85)",borderRadius:7,padding:"1.5px"}}>
-      {[{k:"map",l:"时令",ic:"🗺"},{k:"species",l:"花谱",ic:"🌺"},{k:"nearby",l:"附近",ic:"📍"}].map(p=>(
+      {[{k:"map",l:t.tab_map,ic:"🗺"},{k:"species",l:t.tab_species,ic:"🌺"},{k:"nearby",l:t.tab_nearby,ic:"📍"}].map(p=>(
         <button key={p.k} onClick={()=>{setPage(p.k);if(p.k==="nearby")requestLoc();}}
           style={{border:"none",borderRadius:5,padding:"4px 10px",cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",gap:1,
             background:page===p.k?`${C.accent}18`:"transparent",color:page===p.k?C.accent:C.tl,fontWeight:page===p.k?700:400}}>
@@ -1536,12 +1651,12 @@ export default function App(){
       <div style={{display:"flex",background:"rgba(250,245,237,.88)",backdropFilter:"blur(6px)",borderRadius:10,padding:"1px",gap:1}}>
         <button onClick={()=>setFilter("current")} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
           background:filter==="current"?`${SM[cs].c}18`:"transparent",color:filter==="current"?SM[cs].c:"#999",fontWeight:filter==="current"?700:400}}>
-          {SM[cs].i}当季</button>
+          {SM[cs].i}{t.current}</button>
         <button onClick={()=>setFilter(filter==="current"||filter.startsWith("future")?"all":filter)} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
           background:!filter.startsWith("future")&&filter!=="current"?`${C.accent}18`:"transparent",
-          color:!filter.startsWith("future")&&filter!=="current"?C.accent:"#999"}}>🗺全年</button>
+          color:!filter.startsWith("future")&&filter!=="current"?C.accent:"#999"}}>🗺{t.yearly}</button>
         <button onClick={()=>setFilter(filter.startsWith("future")?filter:"future1")} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
-          background:filter.startsWith("future")?"#5a8a5022":"transparent",color:filter.startsWith("future")?"#3a6a30":"#999"}}>🔮未来</button>
+          background:filter.startsWith("future")?"#5a8a5022":"transparent",color:filter.startsWith("future")?"#3a6a30":"#999"}}>🔮{t.future}</button>
         {Object.keys(favs).length>0&&<button onClick={()=>setFilter(filter==="favs"?"current":"favs")} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
           background:filter==="favs"?"#e0605022":"transparent",color:filter==="favs"?"#e06050":"#999"}}>
           ♥{Object.keys(favs).length}</button>}
@@ -1585,7 +1700,7 @@ export default function App(){
     {page==="nearby"&&userLoc&&<div style={{position:"absolute",left:3,top:42,bottom:40,zIndex:25,
       background:"rgba(250,245,237,.9)",backdropFilter:"blur(8px)",borderRadius:6,
       padding:"6px",boxShadow:"0 1px 6px rgba(0,0,0,.04)",width:200,overflowY:"auto"}}>
-      <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>📍 附近花事</div>
+      <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>{`📍 ${t.nearby_title}`}</div>
       <div style={{fontSize:12,color:C.tl,marginBottom:5}}>共{spots.length}个 · 500km内</div>
       {spots.filter(s=>(s._st?.l||0)>=1).slice(0,20).map((s,i)=>{
         const sm=SM[s.s];
@@ -1614,7 +1729,7 @@ export default function App(){
       if(!li.length)return null;
       return(<div style={{position:"absolute",right:3,top:44,zIndex:25,background:"rgba(250,245,237,.82)",
         borderRadius:4,padding:"4px 5px",maxHeight:"min(230px,36vh)",overflowY:"auto",width:180}}>
-        <div style={{fontSize:10,color:C.tl,marginBottom:4,letterSpacing:2}}>花事排行</div>
+        <div style={{fontSize:10,color:C.tl,marginBottom:4,letterSpacing:2}}>{`${t.rank}`}</div>
         {li.map((s,i)=>(
           <div key={s.id} onClick={()=>setSel(s)} style={{display:"flex",alignItems:"center",gap:2,padding:"1.5px 0",cursor:"pointer"}}>
             <span style={{fontSize:11,fontWeight:700,color:i<3?C.accent:C.tl,width:8}}>{i+1}</span>
@@ -1732,5 +1847,19 @@ export default function App(){
       border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
       background:dark?"rgba(40,35,28,.8)":"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
       fontSize:12,color:dark?"#e0d8c8":C.tl}}>{dark?"☀":"🌙"}</button>
+    {/* Language switcher */}
+    <div style={{position:"absolute",top:12,right:290,zIndex:31,display:"flex",gap:1,
+      background:"rgba(250,245,237,.9)",borderRadius:16,padding:"2px",boxShadow:"0 1px 6px rgba(0,0,0,.05)"}}>
+      {[{k:"zh",l:"中"},{k:"en",l:"EN"},{k:"ja",l:"JP"},{k:"ko",l:"KR"}].map(x=>(
+        <button key={x.k} onClick={()=>setLang(x.k)} style={{border:"none",borderRadius:14,padding:"3px 8px",
+          cursor:"pointer",fontSize:10,fontWeight:lang===x.k?700:400,letterSpacing:0,
+          background:lang===x.k?`${C.accent}18`:"transparent",color:lang===x.k?C.accent:C.tl}}>{x.l}</button>))}
+    </div>
+    {/* Travel guide button (non-Chinese) */}
+    {lang!=="zh"&&<button onClick={()=>setShowGuide(true)} style={{position:"absolute",top:12,right:390,zIndex:31,
+      border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
+      background:"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
+      fontSize:11,color:C.accent,fontWeight:600}}>🌏 {t.guide}</button>}
+    {showGuide&&<TravelGuide onClose={()=>setShowGuide(false)} lang={lang}/>}
   </div>);
 }
