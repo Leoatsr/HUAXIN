@@ -773,6 +773,8 @@ function InstrIcon({type,sz}){const s=sz||20;const o=.8;
   if(type==="erhu")return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><rect x="15" y="4" width="2" height="22" rx="1" fill="#8a6a40"/><circle cx="16" cy="24" r="4.5" fill="none" stroke="#a08050" strokeWidth="1.5"/><rect x="13" y="22" width="6" height="5" rx="1" fill="#d8c8a0" opacity=".5"/><line x1="15.5" y1="6" x2="15.5" y2="22" stroke="#d0b880" strokeWidth=".4"/><line x1="16.5" y1="6" x2="16.5" y2="22" stroke="#d0b880" strokeWidth=".4"/><rect x="12" y="6" width="8" height="1.5" rx=".5" fill="#a08050"/></g></svg>;
   if(type==="xiao")return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><rect x="14.5" y="3" width="3" height="26" rx="1.5" fill="#c8a860"/>{[10,13,16,19,22].map(y=><circle key={y} cx="16" cy={y} r=".8" fill="#8a6a40"/>)}<circle cx="16" cy="5" r="1" fill="#a08050"/></g></svg>;
   if(type==="dizi")return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><rect x="3" y="14.5" width="26" height="3" rx="1.5" fill="#c8b060"/>{[8,12,16,20,24].map(x=><circle key={x} cx={x} cy="16" r=".7" fill="#8a6a40"/>)}</g></svg>;
+  if(type==="yangqin")return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><path d="M5,14 L27,10 L27,22 L5,18 Z" fill="#b08458" stroke="#7a5020" strokeWidth=".5"/>{[0,1,2,3,4,5,6,7].map(i=>(<line key={i} x1={6+i*2.6} y1={14+i*.1} x2={26-i*.1} y2={10+i*.2} stroke="#d0b880" strokeWidth=".3"/>))}<rect x="13" y="22" width="2" height="7" rx="1" fill="#8a6a40"/><rect x="17" y="22" width="2" height="7" rx="1" fill="#8a6a40"/></g></svg>;
+  if(type==="ruan")return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><circle cx="16" cy="20" r="7" fill="#c8a060" stroke="#8a5820" strokeWidth=".6"/><rect x="14.5" y="4" width="3" height="14" rx="1" fill="#a07838"/>{[6,9,12].map(y=>(<line key={y} x1="13" y1={y} x2="19" y2={y} stroke="#8a5820" strokeWidth=".5"/>))}<circle cx="16" cy="20" r="2" fill="#6a3808"/>{[14.5,16,17.5].map(x=>(<line key={x} x1={x} y1="13" x2={x} y2="26" stroke="#d0b880" strokeWidth=".3"/>))}</g></svg>;
   return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><circle cx="16" cy="16" r="6" fill="none" stroke="#a08050" strokeWidth="1.5"/><circle cx="16" cy="16" r="2" fill="#c8a060"/></g></svg>;
 }
 
@@ -945,13 +947,28 @@ function MusicPlayer(){
   },[show,selInst,ti,playing,filteredTracks.length]);
 
   if(!show)return(
-    <button onClick={()=>setShow(true)} style={{position:"absolute",bottom:8,right:8,zIndex:36,
-      border:"none",borderRadius:"50%",width:46,height:46,cursor:"pointer",
-      background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.06)",
-      display:"flex",alignItems:"center",justifyContent:"center"}}>
-      <InstrIcon type={playing?t.inst:"guqin"} sz={playing?28:24}/>
-      {playing&&<div style={{position:"absolute",top:0,right:0,width:10,height:10,borderRadius:"50%",
-        background:C.accent,border:"2px solid #faf5ed"}}></div>}
+    <button onClick={()=>setShow(true)} title={playing?t.name+" · "+INST_LABEL[t.inst]:"国乐"}
+      style={{position:"absolute",bottom:80,right:8,zIndex:36,
+      border:playing?"2px solid "+C.accent:"1.5px solid #e0dcd4",borderRadius:28,
+      padding:playing?"6px 12px 6px 8px":"8px 10px",cursor:"pointer",
+      background:"rgba(250,245,237,.98)",boxShadow:"0 3px 12px rgba(0,0,0,.08)",
+      display:"flex",alignItems:"center",gap:playing?8:0,minHeight:48}}>
+      <div style={{position:"relative"}}>
+        <InstrIcon type={playing?t.inst:"guqin"} sz={32}/>
+        {playing&&<div style={{position:"absolute",top:-3,right:-3,width:10,height:10,borderRadius:"50%",
+          background:C.accent,border:"2px solid #faf5ed"}}></div>}
+      </div>
+      {playing&&<>
+        <div style={{textAlign:"left",minWidth:0,maxWidth:130}}>
+          <div style={{fontSize:12,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
+          <div style={{fontSize:10,color:C.accent,letterSpacing:1}}>{INST_LABEL[t.inst]} · 正在演奏</div>
+        </div>
+        {/* Audio wave animation */}
+        <div style={{display:"flex",alignItems:"flex-end",gap:2,height:16,marginLeft:2}}>
+          {[0,1,2].map(i=>(<div key={i} style={{width:2,height:8+i*2,background:C.accent,borderRadius:1,
+            animation:"playwave .6s ease-in-out infinite",animationDelay:(i*.15)+"s"}}></div>))}
+        </div>
+      </>}
     </button>);
 
   return(<div style={{position:"absolute",bottom:8,right:8,zIndex:36,
@@ -1081,125 +1098,569 @@ const MOOD_CARDS=[
 function MoodCard({onClose}){
   const [card,setCard]=useState(null);
   const [revealed,setRevealed]=useState(false);
-  const [shaking,setShaking]=useState(false);
-  const [scrollOpen,setScrollOpen]=useState(0);
+  const [stage,setStage]=useState("idle"); // idle → shaking → extracting → revealed
+  const [showShare,setShowShare]=useState(false);
   
   const dailySeed=useMemo(()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();},[]);
   
   useEffect(()=>{(async()=>{
     try{const r=window.storage?await window.storage.get("mood_"+dailySeed):null;
-      if(r&&r.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setScrollOpen(1);setRevealed(true);return;}}catch{}
+      if(r&&r.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setStage("revealed");setRevealed(true);return;}}catch{}
   })();},[dailySeed]);
 
-  // Animate scroll opening
-  useEffect(()=>{if(!card)return;let start=null;
-    const anim=(ts)=>{if(!start)start=ts;const p=Math.min(1,(ts-start)/1200);
-      setScrollOpen(p*p*(3-2*p));// ease in-out
-      if(p<1)requestAnimationFrame(anim);else setTimeout(()=>setRevealed(true),300);};
-    requestAnimationFrame(anim);},[card]);
-
   const draw=async()=>{
-    setShaking(true);
-    setTimeout(async()=>{
-      const picked=MOOD_CARDS[Math.floor(Math.abs(Math.sin(dailySeed*0.618))*MOOD_CARDS.length)%MOOD_CARDS.length];
-      setCard(picked);setShaking(false);
-      try{if(window.storage)await window.storage.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
+    if(stage!=="idle")return;
+    setStage("shaking");
+    setTimeout(()=>{
+      setStage("extracting");
+      setTimeout(()=>{
+        const picked=MOOD_CARDS[Math.floor(Math.abs(Math.sin(dailySeed*0.618))*MOOD_CARDS.length)%MOOD_CARDS.length];
+        setCard(picked);
+        setTimeout(()=>{
+          setStage("revealed");
+          setRevealed(true);
+          try{if(window.storage)window.storage.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
+        },800);
+      },1200);
     },1500);
   };
 
-  // 千里江山图 color palette
-  const qljsBlue="#3a6b5a",qljsGreen="#4a8a6a",qljsGold="#c8a050",qljsSilk="#f5ece0";
+  const reset=()=>{setCard(null);setRevealed(false);setStage("idle");};
+  
+  // Inkwash palette
+  const ink="#2a2018",paper="#f5ede0",gold="#b08040",jade="#3a6b5a",vermillion="#a0301c";
 
   return(<div style={{position:"fixed",inset:0,zIndex:150,display:"flex",alignItems:"center",justifyContent:"center",
-    background:"rgba(20,15,10,.6)",backdropFilter:"blur(8px)"}} onClick={onClose}>
-    <div onClick={e=>e.stopPropagation()} style={{width:"min(520px,92vw)",position:"relative"}}>
-      {/* Scroll top roller */}
-      <div style={{height:16,background:"linear-gradient(90deg,"+qljsGold+",#e0c070,"+qljsGold+")",
-        borderRadius:"8px 8px 0 0",boxShadow:"0 2px 8px rgba(0,0,0,.15)",position:"relative",zIndex:2}}>
-        <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
-        <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
-      </div>
+    background:"rgba(20,15,10,.75)",backdropFilter:"blur(10px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(540px,94vw)",maxHeight:"94vh",position:"relative",
+      background:paper,borderRadius:8,overflow:"hidden",
+      boxShadow:"0 20px 60px rgba(0,0,0,.5),inset 0 0 120px rgba(200,160,80,.08)"}}>
+      
+      {/* Background: ink-wash bamboo grove */}
+      <svg viewBox="0 0 540 700" preserveAspectRatio="xMidYMid slice" 
+        style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:.15}}>
+        <defs><linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f5ede0"/><stop offset="50%" stopColor="#d8c8a0"/><stop offset="100%" stopColor="#a89870"/>
+        </linearGradient></defs>
+        <rect width="540" height="700" fill="url(#mist)"/>
+        {/* Distant mountains */}
+        <path d="M0,280 Q80,200 160,250 T320,240 T540,220 L540,700 L0,700 Z" fill="#8a7a5a" opacity=".3"/>
+        <path d="M0,340 Q120,280 240,320 T480,310 L540,330 L540,700 L0,700 Z" fill="#6a5a40" opacity=".25"/>
+        {/* Bamboo */}
+        {[60,130,440,500].map(x=>(<g key={x}>
+          <line x1={x} y1="180" x2={x+3} y2="600" stroke="#4a5a3a" strokeWidth="4"/>
+          {[220,280,340,400,460,520].map(y=>(<ellipse key={y} cx={x+(y%60?0:2)} cy={y} rx="3" ry="2" fill="#2a3a20"/>))}
+          {[200,260,320,380,440].map(y=>(<path key={y} d={"M"+x+","+y+" q10,-8 20,-5 q-5,8 -18,6"} fill="#3a5a30" opacity=".6"/>))}
+          {[250,310,370,430].map(y=>(<path key={y} d={"M"+x+","+y+" q-10,-8 -20,-5 q5,8 18,6"} fill="#3a5a30" opacity=".6"/>))}
+        </g>))}
+      </svg>
 
-      {/* Scroll body with 千里江山图 feel */}
-      <div style={{background:"linear-gradient(180deg,"+qljsSilk+",#f0e8d8,#e8e0d0,"+qljsSilk+")",
-        padding:card?"0":"28px 32px",overflow:"hidden",position:"relative",
-        maxHeight:card?(scrollOpen*420)+"px":"auto",transition:card?"none":"all .3s",
-        boxShadow:"inset 0 2px 8px rgba(0,0,0,.03)"}}>
+      {/* Content */}
+      <div style={{position:"relative",zIndex:1,padding:"32px 40px 28px"}}>
         
-        {/* Mountain silhouette decorations */}
-        <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,opacity:.06,
-          background:"#3a6b5a",
-          clipPath:"polygon(0 100%, 6% 38%, 12% 63%, 22% 19%, 31% 56%, 40% 25%, 50% 69%, 60% 13%, 70% 50%, 77% 31%, 87% 63%, 97% 23%, 100% 44%, 100% 100%)"}}></div>
+        {/* Title bar with seals */}
+        <div style={{textAlign:"center",marginBottom:20,position:"relative"}}>
+          <div style={{fontSize:10,color:gold,letterSpacing:6,marginBottom:2,fontWeight:500}}>· 花 · 信 · 雅 · 事 ·</div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"6px 0"}}>
+            <div style={{width:24,height:1,background:"linear-gradient(90deg,transparent,"+gold+")"}}></div>
+            <h2 style={{fontSize:22,fontWeight:900,color:ink,letterSpacing:12,margin:0,
+              fontFamily:"'Noto Serif SC',serif",textShadow:"0 1px 0 rgba(255,255,255,.5)"}}>花 信 签</h2>
+            <div style={{width:24,height:1,background:"linear-gradient(90deg,"+gold+",transparent)"}}></div>
+          </div>
+          <div style={{fontSize:11,color:"#8a6a40",letterSpacing:4,fontStyle:"italic"}}>
+            {stage==="idle"?"心诚则灵 · 一签一缘":stage==="shaking"?"签 筒 轻 摇 · 天 意 将 显":
+             stage==="extracting"?"签 出 · 静 待 天 意":"今 · 日 · 得 · 签"}</div>
+          {/* Red seal decoration */}
+          <div style={{position:"absolute",right:-2,top:-2,width:28,height:28,borderRadius:3,
+            background:vermillion,opacity:.85,display:"flex",alignItems:"center",justifyContent:"center",
+            fontSize:9,color:"#fff",letterSpacing:0,fontWeight:700,transform:"rotate(-8deg)",
+            boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}>花信</div>
+        </div>
 
-        {/* Before drawing */}
-        {!card&&<div style={{textAlign:"center",padding:"16px 0",position:"relative"}}>
-          <div style={{fontSize:60,marginBottom:12,animation:shaking?"shake .12s infinite":"none",
-            filter:"drop-shadow(0 2px 6px rgba(0,0,0,.1))"}}>🪷</div>
-          <h2 style={{fontSize:26,fontWeight:900,color:C.text,letterSpacing:10,marginBottom:4,
-            fontFamily:"'Noto Serif SC',serif"}}>每 日 花 签</h2>
-          <div style={{width:60,height:2,background:"linear-gradient(90deg,transparent,"+qljsGold+",transparent)",margin:"8px auto 14px"}}></div>
-          <div style={{fontSize:13,color:C.tl,letterSpacing:3,marginBottom:28,lineHeight:1.8}}>
-            一花一世界 · 一签一解语</div>
-          <button onClick={draw} disabled={shaking} style={{border:"1.5px solid "+qljsGold,
-            background:shaking?"transparent":"linear-gradient(135deg,"+qljsBlue+"18,"+qljsGreen+"18)",
-            color:C.text,borderRadius:28,padding:"12px 36px",cursor:shaking?"default":"pointer",
-            fontSize:15,fontWeight:600,letterSpacing:5,transition:"all .3s",
-            boxShadow:shaking?"none":"0 3px 12px "+qljsBlue+"22"}}>
-            {shaking?"签 筒 摇 动 中 ...":"🎐 求 签"}</button>
+        {/* IDLE: Show bamboo fortune tube */}
+        {stage==="idle"&&<div style={{textAlign:"center",padding:"8px 0 0"}}>
+          <svg viewBox="0 0 200 220" width="180" height="200" style={{display:"block",margin:"0 auto"}}>
+            <defs>
+              <linearGradient id="tube" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#6a4a20"/><stop offset="30%" stopColor="#a87840"/>
+                <stop offset="55%" stopColor="#c89858"/><stop offset="80%" stopColor="#a07838"/>
+                <stop offset="100%" stopColor="#5a3a10"/>
+              </linearGradient>
+              <linearGradient id="slip" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#d0a860"/><stop offset="50%" stopColor="#e8c880"/><stop offset="100%" stopColor="#b08848"/>
+              </linearGradient>
+            </defs>
+            {/* Tube shadow on ground */}
+            <ellipse cx="100" cy="205" rx="55" ry="6" fill="rgba(0,0,0,.2)"/>
+            {/* Bamboo slips sticking out top */}
+            <g style={{transformOrigin:"100px 180px",transform:"translateY(-80px)"}}>
+              {[0,1,2,3,4].map(i=>(
+                <rect key={i} x={80+i*8} y="0" width="4.5" height="50" rx="1" fill="url(#slip)" stroke="#7a5020" strokeWidth=".3"/>
+              ))}
+            </g>
+            {/* Main tube body */}
+            <path d="M60,60 L65,195 Q100,210 135,195 L140,60 Z" fill="url(#tube)" stroke="#5a3a10" strokeWidth="1"/>
+            {/* Bamboo joints/rings */}
+            {[85,130,170].map(y=>(<path key={y} d={"M62,"+y+" Q100,"+(y+8)+" 138,"+y} stroke="#4a2a10" strokeWidth="1.5" fill="none"/>))}
+            {/* Top rim */}
+            <ellipse cx="100" cy="62" rx="40" ry="7" fill="#4a2a10"/>
+            <ellipse cx="100" cy="61" rx="38" ry="5.5" fill="#8a5820"/>
+            {/* Characters on tube */}
+            <text x="100" y="115" textAnchor="middle" fontSize="14" fill="#6a3a08" fontWeight="900" letterSpacing="3" opacity=".7">求</text>
+            <text x="100" y="142" textAnchor="middle" fontSize="14" fill="#6a3a08" fontWeight="900" letterSpacing="3" opacity=".7">签</text>
+          </svg>
+          <div style={{fontSize:12,color:"#8a6a40",letterSpacing:4,margin:"8px 0 18px",lineHeight:1.8}}>
+            「 净心·默念·摇筒·一签 」</div>
+          <button onClick={draw}
+            style={{border:"1.5px solid "+gold,background:"linear-gradient(135deg,"+paper+","+paper+"dd)",
+              color:ink,borderRadius:40,padding:"12px 42px",cursor:"pointer",fontSize:14,fontWeight:600,
+              letterSpacing:8,boxShadow:"0 4px 14px rgba(180,140,70,.2),inset 0 1px 0 rgba(255,255,255,.6)",
+              transition:"all .2s",fontFamily:"'Noto Serif SC',serif"}}
+            onMouseEnter={e=>e.target.style.transform="translateY(-2px)"}
+            onMouseLeave={e=>e.target.style.transform=""}>
+            🎐 摇 · 签</button>
         </div>}
 
-        {/* After drawing - scroll content */}
-        {card&&<div style={{padding:"24px 32px",opacity:revealed?1:.3,transition:"opacity .8s"}}>
-          {/* Top: sign name and mood */}
-          <div style={{textAlign:"center",marginBottom:16}}>
-            <div style={{fontSize:48,marginBottom:6,filter:"drop-shadow(0 2px 4px rgba(0,0,0,.08))"}}>{card.emoji}</div>
-            <div style={{fontSize:11,color:qljsGold,letterSpacing:5,marginBottom:2}}>今 日 得 签</div>
-            <h2 style={{fontSize:32,fontWeight:900,color:C.text,letterSpacing:12,margin:"4px 0",
-              fontFamily:"'Noto Serif SC',serif"}}>{card.name}</h2>
-            <div style={{fontSize:14,color:card.color,letterSpacing:6,fontWeight:600}}>· {card.mood} ·</div>
+        {/* SHAKING animation */}
+        {stage==="shaking"&&<div style={{textAlign:"center",padding:"8px 0"}}>
+          <style>{"@keyframes shake2{0%,100%{transform:rotate(-6deg) translateX(-3px)}25%{transform:rotate(8deg) translateX(4px)}50%{transform:rotate(-8deg) translateX(-4px)}75%{transform:rotate(6deg) translateX(3px)}}"}</style>
+          <svg viewBox="0 0 200 220" width="180" height="200" style={{display:"block",margin:"0 auto",animation:"shake2 .18s infinite"}}>
+            <defs>
+              <linearGradient id="tube2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#6a4a20"/><stop offset="30%" stopColor="#a87840"/>
+                <stop offset="55%" stopColor="#c89858"/><stop offset="80%" stopColor="#a07838"/>
+                <stop offset="100%" stopColor="#5a3a10"/>
+              </linearGradient>
+              <linearGradient id="slip2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#d0a860"/><stop offset="50%" stopColor="#e8c880"/><stop offset="100%" stopColor="#b08848"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="100" cy="205" rx="55" ry="6" fill="rgba(0,0,0,.2)"/>
+            {[0,1,2,3,4,5,6].map(i=>(
+              <rect key={i} x={78+i*7.5} y={-10+Math.random()*20} width="4" height={48+Math.random()*6} rx="1" 
+                fill="url(#slip2)" stroke="#7a5020" strokeWidth=".3" transform={"rotate("+((i-3)*8)+",100,40)"}/>
+            ))}
+            <path d="M60,60 L65,195 Q100,210 135,195 L140,60 Z" fill="url(#tube2)" stroke="#5a3a10" strokeWidth="1"/>
+            {[85,130,170].map(y=>(<path key={y} d={"M62,"+y+" Q100,"+(y+8)+" 138,"+y} stroke="#4a2a10" strokeWidth="1.5" fill="none"/>))}
+            <ellipse cx="100" cy="62" rx="40" ry="7" fill="#4a2a10"/>
+          </svg>
+          <div style={{fontSize:13,color:gold,letterSpacing:6,marginTop:12,animation:"shake2 .18s infinite"}}>
+            · 叮 · 当 · 叮 · 当 ·</div>
+        </div>}
+
+        {/* EXTRACTING - one slip rising */}
+        {stage==="extracting"&&<div style={{textAlign:"center",padding:"8px 0",minHeight:220}}>
+          <style>{"@keyframes rise{0%{transform:translateY(30px);opacity:0}60%{transform:translateY(-40px);opacity:1}100%{transform:translateY(-60px);opacity:1}}"}</style>
+          <svg viewBox="0 0 200 240" width="180" height="220" style={{display:"block",margin:"0 auto"}}>
+            <ellipse cx="100" cy="225" rx="55" ry="6" fill="rgba(0,0,0,.2)"/>
+            {/* Rising slip */}
+            <g style={{animation:"rise 1.2s ease-out forwards"}}>
+              <rect x="96" y="20" width="8" height="90" rx="2" fill="#e8c880" stroke="#a07838" strokeWidth=".8"/>
+              <text x="100" y="45" textAnchor="middle" fontSize="8" fill="#6a3a08" fontWeight="700">第</text>
+              <text x="100" y="62" textAnchor="middle" fontSize="8" fill="#6a3a08" fontWeight="700">上</text>
+              <text x="100" y="79" textAnchor="middle" fontSize="8" fill="#6a3a08" fontWeight="700">上</text>
+              <text x="100" y="96" textAnchor="middle" fontSize="8" fill="#a0301c" fontWeight="700">签</text>
+            </g>
+            <path d="M60,80 L65,215 Q100,230 135,215 L140,80 Z" fill="#a87840" stroke="#5a3a10" strokeWidth="1"/>
+            <ellipse cx="100" cy="82" rx="40" ry="7" fill="#4a2a10"/>
+            <ellipse cx="100" cy="81" rx="38" ry="5.5" fill="#8a5820"/>
+          </svg>
+          <div style={{fontSize:12,color:gold,letterSpacing:6,marginTop:6}}>· 签 现 ·</div>
+        </div>}
+
+        {/* REVEALED - show the fortune */}
+        {stage==="revealed"&&card&&<div style={{padding:"0",animation:"fadeIn .8s"}}>
+          <style>{"@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}"}</style>
+          {/* Fortune card in scroll style */}
+          <div style={{background:"linear-gradient(180deg,#fbf4e4,#f0e6d0)",
+            border:"1px solid "+gold+"55",borderRadius:4,padding:"22px 24px 18px",
+            boxShadow:"0 2px 12px rgba(180,140,70,.15),inset 0 0 0 3px rgba(245,237,224,.6),inset 0 0 0 4px "+gold+"33",
+            position:"relative"}}>
+            {/* Corner decorations */}
+            {[{t:0,l:0},{t:0,r:0},{b:0,l:0},{b:0,r:0}].map((p,i)=>(
+              <div key={i} style={{position:"absolute",width:12,height:12,borderColor:gold,borderStyle:"solid",borderWidth:0,...p,
+                borderTopWidth:p.t===0?2:0,borderBottomWidth:p.b===0?2:0,
+                borderLeftWidth:p.l===0?2:0,borderRightWidth:p.r===0?2:0,opacity:.6}}></div>
+            ))}
+            {/* Flower emoji with halo */}
+            <div style={{textAlign:"center",marginBottom:10,position:"relative"}}>
+              <div style={{display:"inline-block",width:68,height:68,borderRadius:"50%",
+                background:"radial-gradient(circle,"+card.color+"44,transparent 70%)",
+                display:"flex",alignItems:"center",justifyContent:"center",fontSize:46,
+                filter:"drop-shadow(0 2px 6px "+card.color+"66)"}}>{card.emoji}</div>
+            </div>
+            {/* Sign rank (上上/上吉/中吉/中平) */}
+            <div style={{textAlign:"center",marginBottom:4}}>
+              <span style={{display:"inline-block",padding:"2px 14px",background:vermillion,color:"#fff8e8",
+                fontSize:11,letterSpacing:4,borderRadius:2,fontWeight:700}}>上 上 签</span>
+            </div>
+            {/* Sign name */}
+            <h3 style={{fontSize:26,fontWeight:900,color:ink,letterSpacing:10,textAlign:"center",margin:"10px 0 4px",
+              fontFamily:"'Noto Serif SC',serif"}}>{card.name}</h3>
+            <div style={{textAlign:"center",fontSize:13,color:card.color,letterSpacing:6,fontWeight:600,marginBottom:12}}>
+              · {card.mood} ·</div>
+            {/* Decorative divider with seal */}
+            <div style={{display:"flex",alignItems:"center",gap:8,margin:"10px auto",width:"80%"}}>
+              <div style={{flex:1,height:1,background:"linear-gradient(90deg,transparent,"+gold+"66)"}}></div>
+              <div style={{fontSize:11,color:gold,letterSpacing:3}}>◈</div>
+              <div style={{flex:1,height:1,background:"linear-gradient(90deg,"+gold+"66,transparent)"}}></div>
+            </div>
+            {/* Poem - calligraphy style */}
+            <div style={{textAlign:"center",padding:"8px 12px",margin:"8px 0"}}>
+              <div style={{fontSize:10,color:gold,letterSpacing:4,marginBottom:10,fontWeight:600}}>· 签 诗 ·</div>
+              <div style={{fontSize:18,color:ink,letterSpacing:5,lineHeight:2.2,
+                fontFamily:"'Noto Serif SC',serif",fontWeight:500,textShadow:"0 1px 0 rgba(255,255,255,.5)"}}>
+                {card.poem.split('，').map((line,i)=>(
+                  <div key={i} style={{margin:"2px 0"}}>{line}{i<card.poem.split('，').length-1?"，":""}</div>
+                ))}
+              </div>
+            </div>
+            {/* Interpretation */}
+            <div style={{padding:"12px 10px",margin:"10px 0 0",borderTop:"1px dashed "+gold+"44"}}>
+              <div style={{fontSize:10,color:gold,letterSpacing:4,marginBottom:8,textAlign:"center",fontWeight:600}}>· 解 签 ·</div>
+              <div style={{fontSize:13,color:ink,letterSpacing:2,lineHeight:2,textAlign:"center",
+                fontFamily:"'Noto Serif SC',serif"}}>{card.meaning}</div>
+            </div>
           </div>
-
-          {/* Divider line */}
-          <div style={{width:"80%",height:1,background:"linear-gradient(90deg,transparent,"+qljsGold+"66,transparent)",margin:"12px auto"}}></div>
-
-          {/* Poem in scroll style */}
-          <div style={{textAlign:"center",padding:"14px 20px",margin:"12px 0",position:"relative",
-            background:"linear-gradient(135deg,"+qljsBlue+"08,"+qljsGreen+"08)",borderRadius:8}}>
-            <div style={{fontSize:12,color:qljsGold,letterSpacing:4,marginBottom:8}}>题 辞</div>
-            <div style={{fontSize:18,color:C.text,letterSpacing:4,lineHeight:2,fontStyle:"italic",
-              fontFamily:"'Noto Serif SC',serif"}}>
-              {"「"}{card.poem}{"」"}</div>
+          
+          {/* Actions */}
+          <div style={{display:"flex",justifyContent:"center",gap:12,marginTop:16}}>
+            <button onClick={()=>setShowShare(true)}
+              style={{border:"1px solid "+gold+"66",background:"rgba(255,248,232,.6)",
+                borderRadius:20,padding:"8px 22px",cursor:"pointer",fontSize:12,color:ink,
+                letterSpacing:3,fontWeight:500}}>
+              📤 分享此签</button>
+            <div style={{fontSize:11,color:"#a89870",letterSpacing:3,display:"flex",alignItems:"center"}}>
+              · 每日一签 · 明日再求 ·</div>
           </div>
-
-          {/* Interpretation */}
-          <div style={{padding:"14px 16px",margin:"12px 0"}}>
-            <div style={{fontSize:12,color:qljsGold,letterSpacing:4,marginBottom:8,textAlign:"center"}}>解 签</div>
-            <div style={{fontSize:14,color:C.text,letterSpacing:2,lineHeight:2,textAlign:"center",
-              fontFamily:"'Noto Serif SC',serif"}}>{card.meaning}</div>
-          </div>
-
-          <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.tl,opacity:.4,letterSpacing:3}}>
-            · 每日一签 · 明日再会 ·</div>
-          <button onClick={()=>{var text="花信风·每日花签\n今日得签："+card.name+"\n"+card.mood+"\n「"+card.poem+"」\n"+card.meaning;
-            if(navigator.share)navigator.share({title:"花信风·"+card.name,text:text}).catch(function(){});
-            else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
-            style={{display:"block",margin:"10px auto 0",border:"1px solid "+qljsGold+"44",background:"transparent",
-              borderRadius:16,padding:"6px 20px",cursor:"pointer",fontSize:12,color:qljsGold,letterSpacing:2}}>
-            📤 分享花签</button>
         </div>}
       </div>
 
-      {/* Scroll bottom roller */}
-      <div style={{height:16,background:"linear-gradient(90deg,"+qljsGold+",#e0c070,"+qljsGold+")",
-        borderRadius:"0 0 8px 8px",boxShadow:"0 -1px 6px rgba(0,0,0,.1)",position:"relative",zIndex:2}}>
-        <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
-        <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
-      </div>
+      {/* Close */}
+      <button onClick={onClose} style={{position:"absolute",top:12,right:14,border:"none",
+        background:"rgba(0,0,0,.15)",color:"#fff",cursor:"pointer",fontSize:13,width:26,height:26,
+        borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",zIndex:3}}>{"×"}</button>
 
-      {/* Close button */}
-      <button onClick={onClose} style={{position:"absolute",top:22,right:12,border:"none",background:"rgba(255,255,255,.6)",
-        cursor:"pointer",fontSize:14,color:C.tl,padding:"2px 8px",borderRadius:10,zIndex:3}}>{"×"}</button>
+      {/* Share modal */}
+      {showShare&&<MoodShareCard card={card} onClose={()=>setShowShare(false)}/>}
     </div></div>);
+}
+
+// ═══ Mood Share Card: Generate shareable image with QR ═══
+function MoodShareCard({card,onClose}){
+  const [copying,setCopying]=useState(false);
+  const url=typeof window!=="undefined"?window.location.origin:"https://huaxin.app";
+  const qrUrl="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data="+encodeURIComponent(url)+"&bgcolor=f5ede0&color=2a2018&margin=4";
+  
+  const shareTo=(platform)=>{
+    const text="【花信风·"+card.name+"】\n"+card.mood+"\n「"+card.poem+"」\n"+card.meaning;
+    if(platform==="wx"||platform==="pyq"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开微信粘贴分享");}
+    else if(platform==="xhs"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开小红书APP粘贴发布");}
+    else if(platform==="wb"){window.open("https://service.weibo.com/share/share.php?title="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank");}
+    else if(platform==="tw"){window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank");}
+    else if(platform==="save"){downloadCard();}
+    else{if(navigator.share)navigator.share({title:"花信风·"+card.name,text:text,url:url}).catch(function(){});else{navigator.clipboard.writeText(text+"\n"+url);alert("已复制");}}
+  };
+
+  const downloadCard=()=>{
+    setCopying(true);
+    // Draw canvas
+    const canvas=document.createElement("canvas");
+    canvas.width=540;canvas.height=720;
+    const ctx=canvas.getContext("2d");
+    // Background
+    const bg=ctx.createLinearGradient(0,0,0,720);
+    bg.addColorStop(0,"#f5ede0");bg.addColorStop(1,"#e8d8b8");
+    ctx.fillStyle=bg;ctx.fillRect(0,0,540,720);
+    // Border
+    ctx.strokeStyle="#b08040";ctx.lineWidth=2;ctx.strokeRect(20,20,500,680);
+    ctx.lineWidth=1;ctx.strokeRect(28,28,484,664);
+    // Title
+    ctx.fillStyle="#2a2018";ctx.font="bold 42px 'Noto Serif SC',serif";ctx.textAlign="center";
+    ctx.fillText("花 信 签",270,100);
+    // Decorative line
+    ctx.strokeStyle="#b08040";ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(180,120);ctx.lineTo(360,120);ctx.stroke();
+    // Sign rank
+    ctx.fillStyle="#a0301c";ctx.fillRect(230,145,80,28);
+    ctx.fillStyle="#fff8e8";ctx.font="bold 14px sans-serif";ctx.fillText("上 上 签",270,165);
+    // Emoji substitute - flower symbol
+    ctx.fillStyle=card.color;ctx.beginPath();ctx.arc(270,230,40,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#fff";ctx.font="40px sans-serif";ctx.fillText(card.emoji,270,245);
+    // Sign name
+    ctx.fillStyle="#2a2018";ctx.font="bold 32px 'Noto Serif SC',serif";
+    ctx.fillText(card.name,270,320);
+    // Mood
+    ctx.fillStyle=card.color;ctx.font="18px 'Noto Serif SC',serif";
+    ctx.fillText("· "+card.mood+" ·",270,355);
+    // Poem
+    ctx.fillStyle="#2a2018";ctx.font="22px 'Noto Serif SC',serif";
+    const poemLines=card.poem.split('，');
+    poemLines.forEach((line,i)=>ctx.fillText(line+(i<poemLines.length-1?"，":""),270,420+i*40));
+    // Interpretation
+    ctx.fillStyle="#4a4030";ctx.font="15px 'Noto Serif SC',serif";
+    const meaning=card.meaning;const chars=[];let cur="";
+    for(let i=0;i<meaning.length;i++){cur+=meaning[i];if(cur.length>=18||i===meaning.length-1){chars.push(cur);cur="";}}
+    chars.forEach((line,i)=>ctx.fillText(line,270,530+i*26));
+    // Bottom: website + QR placeholder
+    ctx.fillStyle="#8a7a60";ctx.font="11px sans-serif";ctx.textAlign="left";
+    ctx.fillText("花信风 · 跟着天地节律追一场中国色",50,670);
+    ctx.fillText(url,50,688);
+    // QR placeholder
+    ctx.fillStyle="#2a2018";ctx.fillRect(440,625,70,70);
+    ctx.fillStyle="#f5ede0";ctx.fillRect(448,633,54,54);
+    ctx.fillStyle="#2a2018";ctx.font="bold 10px sans-serif";ctx.textAlign="center";
+    ctx.fillText("扫码",475,655);ctx.fillText("访问",475,670);
+    
+    // Try to load QR and draw it
+    const qrImg=new Image();qrImg.crossOrigin="anonymous";
+    qrImg.onload=()=>{ctx.drawImage(qrImg,440,625,70,70);finalize();};
+    qrImg.onerror=finalize;
+    qrImg.src=qrUrl;
+    
+    function finalize(){
+      canvas.toBlob(blob=>{
+        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([blob],"huaxin.png",{type:"image/png"})]})){
+          navigator.share({files:[new File([blob],"花信签-"+card.name+".png",{type:"image/png"})],title:"花信风",text:"我的花签"}).catch(function(){});
+        }else{
+          const a=document.createElement("a");
+          a.download="花信签-"+card.name+".png";
+          a.href=URL.createObjectURL(blob);
+          a.click();
+        }
+        setCopying(false);
+      },"image/png");
+    }
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(0,0,0,.6)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",borderRadius:14,
+      width:"min(360px,90vw)",padding:"22px 24px"}}>
+      <div style={{textAlign:"center",marginBottom:16}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#2a2018",letterSpacing:3}}>分享花签</div>
+        <div style={{fontSize:11,color:"#8a7a60",letterSpacing:2,marginTop:4}}>带二维码图片分享 · 多平台</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
+        {[
+          {k:"save",l:"保存图片",c:"#b08040",ic:"🖼"},
+          {k:"wx",l:"微信",c:"#07c160",ic:"💬"},
+          {k:"pyq",l:"朋友圈",c:"#07c160",ic:"👥"},
+          {k:"xhs",l:"小红书",c:"#fe2c55",ic:"📕"},
+          {k:"wb",l:"微博",c:"#e6162d",ic:"🔴"},
+          {k:"tw",l:"X/推特",c:"#000",ic:"𝕏"},
+          {k:"sys",l:"更多",c:"#8a7a68",ic:"⋯"},
+          {k:"close",l:"取消",c:"#c0c0c0",ic:"×"},
+        ].map(m=>(
+          <button key={m.k} onClick={()=>{if(m.k==="close")onClose();else shareTo(m.k);}}
+            disabled={copying&&m.k==="save"}
+            style={{border:"none",background:"transparent",cursor:"pointer",padding:"6px 2px",
+              display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+            <div style={{width:40,height:40,borderRadius:"50%",background:m.c,color:"#fff",
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,fontWeight:700,
+              boxShadow:"0 2px 6px "+m.c+"44"}}>
+              {copying&&m.k==="save"?"⏳":m.ic}</div>
+            <div style={{fontSize:10,color:"#4a4030"}}>{m.l}</div>
+          </button>))}
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ Spot Share Card: Generate shareable image with QR for scenic spot ═══
+function SpotShareCard({s,onClose}){
+  const [copying,setCopying]=useState(false);
+  const url=typeof window!=="undefined"?window.location.origin:"https://huaxin.app";
+  const qrUrl="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data="+encodeURIComponent(url)+"&bgcolor=f5ede0&color=2a2018&margin=4";
+  
+  const shareTo=(platform)=>{
+    const text="【花信风】"+s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"")+"\n——来自花信风";
+    if(platform==="wx"||platform==="pyq"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开微信粘贴分享");}
+    else if(platform==="xhs"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开小红书APP粘贴发布");}
+    else if(platform==="wb"){window.open("https://service.weibo.com/share/share.php?title="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank");}
+    else if(platform==="tw"){window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url),"_blank");}
+    else if(platform==="fb"){window.open("https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url)+"&quote="+encodeURIComponent(text),"_blank");}
+    else if(platform==="save"){downloadCard();return;}
+    else if(platform==="lk"){navigator.clipboard.writeText(url);alert("链接已复制");}
+    else{if(navigator.share)navigator.share({title:"花信风·"+s.n,text:text,url:url}).catch(function(){});else{navigator.clipboard.writeText(text+"\n"+url);alert("已复制");}}
+    onClose();
+  };
+
+  const downloadCard=()=>{
+    setCopying(true);
+    const canvas=document.createElement("canvas");
+    canvas.width=540;canvas.height=720;
+    const ctx=canvas.getContext("2d");
+    // Background gradient
+    const bg=ctx.createLinearGradient(0,0,0,720);
+    bg.addColorStop(0,"#f5ede0");bg.addColorStop(.5,s.c+"15");bg.addColorStop(1,"#e8d8b8");
+    ctx.fillStyle=bg;ctx.fillRect(0,0,540,720);
+    // Border
+    ctx.strokeStyle=s.c;ctx.lineWidth=2;ctx.strokeRect(20,20,500,680);
+    ctx.lineWidth=.5;ctx.strokeStyle="#b08040";ctx.strokeRect(28,28,484,664);
+    // Top band with color
+    ctx.fillStyle=s.c;ctx.fillRect(28,28,484,8);
+    // Season badge
+    const seasonMap={spring:"🌸 春",summer:"🪷 夏",autumn:"🍂 秋",winter:"❄ 冬"};
+    ctx.fillStyle="#fff";ctx.fillRect(50,60,70,28);ctx.strokeStyle=s.c;ctx.lineWidth=1;ctx.strokeRect(50,60,70,28);
+    ctx.fillStyle="#3a2818";ctx.font="bold 14px 'Noto Serif SC',serif";ctx.textAlign="center";
+    ctx.fillText(seasonMap[s.s]||"花",85,80);
+    // Flower circle
+    ctx.fillStyle=s.c+"33";ctx.beginPath();ctx.arc(270,175,55,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=s.c;ctx.beginPath();ctx.arc(270,175,42,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#fff";ctx.font="bold 28px 'Noto Serif SC',serif";ctx.fillText(s.sp,270,188);
+    // Spot name
+    ctx.fillStyle="#2a2018";ctx.font="bold 34px 'Noto Serif SC',serif";
+    ctx.fillText(s.n,270,280);
+    // Subtitle  
+    ctx.fillStyle=s.c;ctx.font="16px 'Noto Serif SC',serif";
+    ctx.fillText("· "+s.sp+" ·",270,310);
+    // Status
+    const status=s._st?s._st.st:"";
+    if(status){
+      ctx.fillStyle=s.c;ctx.fillRect(200,330,140,30);
+      ctx.fillStyle="#fff";ctx.font="bold 14px 'Noto Serif SC',serif";
+      ctx.fillText(status,270,350);
+    }
+    // Poem
+    ctx.fillStyle="#4a4030";ctx.font="italic 22px 'Noto Serif SC',serif";
+    const poemLines=s.po.split('，');
+    poemLines.forEach((line,i)=>ctx.fillText(line+(i<poemLines.length-1?"，":""),270,410+i*38));
+    // Divider
+    ctx.strokeStyle=s.c+"55";ctx.lineWidth=1;ctx.beginPath();
+    ctx.moveTo(140,490);ctx.lineTo(400,490);ctx.stroke();
+    // Prediction
+    if(s._pred){
+      ctx.fillStyle="#8a6a40";ctx.font="13px 'Noto Serif SC',serif";
+      ctx.fillText("🌸 预测盛花期",270,520);
+      ctx.fillStyle="#2a2018";ctx.font="bold 20px 'Noto Serif SC',serif";
+      ctx.fillText(s._pred.dateStr,270,550);
+      ctx.fillStyle="#8a6a40";ctx.font="12px 'Noto Serif SC',serif";
+      ctx.fillText("置信度 "+s._pred.confidence+"%",270,570);
+    }
+    // Tip
+    ctx.fillStyle="#5a4a38";ctx.font="14px 'Noto Serif SC',serif";
+    ctx.fillText(s.tp,270,605);
+    // Bottom
+    ctx.fillStyle="#8a7a60";ctx.font="11px sans-serif";ctx.textAlign="left";
+    ctx.fillText("花信风 · 跟着天地节律追一场中国色",50,665);
+    ctx.fillText(url,50,685);
+    // QR placeholder
+    ctx.fillStyle="#2a2018";ctx.fillRect(435,620,75,75);
+    ctx.fillStyle="#f5ede0";ctx.fillRect(443,628,59,59);
+    ctx.fillStyle="#2a2018";ctx.font="bold 10px sans-serif";ctx.textAlign="center";
+    ctx.fillText("扫码",473,652);ctx.fillText("访问",473,670);
+    
+    // Load and draw actual QR
+    const qrImg=new Image();qrImg.crossOrigin="anonymous";
+    qrImg.onload=()=>{ctx.drawImage(qrImg,438,623,70,70);finalize();};
+    qrImg.onerror=finalize;
+    qrImg.src=qrUrl;
+    
+    function finalize(){
+      canvas.toBlob(blob=>{
+        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([blob],"huaxin.png",{type:"image/png"})]})){
+          navigator.share({files:[new File([blob],s.n+".png",{type:"image/png"})],title:"花信风·"+s.n,text:s.po}).catch(function(){});
+        }else{
+          const a=document.createElement("a");
+          a.download="花信风-"+s.n+".png";
+          a.href=URL.createObjectURL(blob);
+          a.click();
+        }
+        setCopying(false);onClose();
+      },"image/png");
+    }
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(0,0,0,.6)",
+    display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(4px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"100%",maxWidth:480,
+      borderRadius:"14px 14px 0 0",padding:"22px 24px 28px"}}>
+      <div style={{textAlign:"center",marginBottom:16}}>
+        <div style={{fontSize:14,fontWeight:700,color:"#2a2018",letterSpacing:3}}>分享 · {s.n}</div>
+        <div style={{fontSize:11,color:"#8a7a60",letterSpacing:2,marginTop:4}}>带官网二维码的花卉卡片</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
+        {[
+          {k:"save",l:"保存图片",c:"#c06040",ic:"🖼"},
+          {k:"wx",l:"微信",c:"#07c160",ic:"💬"},
+          {k:"pyq",l:"朋友圈",c:"#07c160",ic:"👥"},
+          {k:"xhs",l:"小红书",c:"#fe2c55",ic:"📕"},
+          {k:"wb",l:"微博",c:"#e6162d",ic:"🔴"},
+          {k:"tw",l:"X/推特",c:"#000",ic:"𝕏"},
+          {k:"fb",l:"Facebook",c:"#4267b2",ic:"f"},
+          {k:"sys",l:"更多",c:"#8a7a68",ic:"⋯"},
+        ].map(m=>(
+          <button key={m.k} onClick={()=>shareTo(m.k)}
+            disabled={copying&&m.k==="save"}
+            style={{border:"none",background:"transparent",cursor:"pointer",padding:"6px 2px",
+              display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+            <div style={{width:44,height:44,borderRadius:"50%",background:m.c,color:"#fff",
+              display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,fontWeight:700,
+              boxShadow:"0 2px 8px "+m.c+"44"}}>
+              {copying&&m.k==="save"?"⏳":m.ic}</div>
+            <div style={{fontSize:11,color:"#4a4030"}}>{m.l}</div>
+          </button>))}
+      </div>
+      <button onClick={onClose} style={{display:"block",margin:"18px auto 0",
+        border:"none",background:"#f0ece4",borderRadius:20,padding:"8px 28px",
+        cursor:"pointer",fontSize:13,color:"#8a7a68"}}>取消</button>
+    </div>
+  </div>);
+}
+
+// ═══ Collapsible Nearby Panel ═══
+function NearbyPanel({spots,sel,setSel,setWz,setWc,t}){
+  const [collapsed,setCollapsed]=useState(false);
+  const list=spots.filter(s=>((s._st&&s._st.l)||0)>=1).slice(0,20);
+  
+  if(collapsed)return(
+    <button onClick={()=>setCollapsed(false)} title="展开附近花事列表"
+      style={{position:"absolute",left:8,top:95,zIndex:25,
+        border:"1px solid #e0dcd4",background:"rgba(250,245,237,.95)",borderRadius:8,
+        padding:"8px 10px",cursor:"pointer",boxShadow:"0 1px 6px rgba(0,0,0,.06)",
+        display:"flex",alignItems:"center",gap:6}}>
+      <span style={{fontSize:14}}>📍</span>
+      <span style={{fontSize:11,color:"#3a2818",fontWeight:700,letterSpacing:1}}>附近·{list.length}</span>
+      <span style={{fontSize:10,color:"#8a7a68"}}>▸</span>
+    </button>);
+  
+  return(<div style={{position:"absolute",left:8,top:95,maxHeight:"calc(100vh - 160px)",zIndex:25,
+    background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",borderRadius:8,
+    padding:"8px 8px 6px",boxShadow:"0 1px 8px rgba(0,0,0,.06)",width:200,overflowY:"auto",
+    border:"1px solid rgba(0,0,0,.04)"}}>
+    {/* Header with collapse */}
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6,
+      paddingBottom:5,borderBottom:"1px solid #ece6dc"}}>
+      <div>
+        <div style={{fontSize:12,color:"#3a2818",letterSpacing:2,fontWeight:700}}>📍 {t.nearby_title}</div>
+        <div style={{fontSize:10,color:"#8a7a68"}}>共{spots.length}个 · 500km内</div>
+      </div>
+      <button onClick={()=>setCollapsed(true)} title="收起"
+        style={{border:"none",background:"none",cursor:"pointer",color:"#8a7a68",fontSize:12,padding:2}}>◂</button>
+    </div>
+    {list.map(s=>{
+      const sm=SM[s.s];
+      return(<div key={s.id} onClick={()=>{setSel(s);setWz(5);setWc([s.lon,s.lat]);}}
+        style={{display:"flex",alignItems:"center",gap:4,padding:"4px 3px",cursor:"pointer",
+          borderBottom:"1px solid rgba(0,0,0,.03)",borderRadius:3,
+          background:(sel&&sel.id)===s.id?s.c+"15":"transparent"}}>
+        <div style={{width:20,height:20,flexShrink:0,borderRadius:"50%",
+          background:"rgba(255,255,255,.8)",border:"1px solid "+s.c+"44",
+          display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <FI sp={s.sp} sz={13} co={s.c}/></div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:12,color:"#3a2818",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+            {s.n.split("·")[1]||s.n}</div>
+          <div style={{fontSize:10,color:"#8a7a68",display:"flex",gap:3}}>
+            <span>{Math.round(s._dist||0)}km</span>
+            <span style={{color:sm.c}}>{sm.i}{s.pk[0]}月</span>
+            <span style={{color:s.c}}>{(s._st?s._st.st:"")}</span>
+          </div>
+        </div>
+      </div>);
+    })}
+  </div>);
 }
 
 // ═══ Scroll Landing ═══
@@ -1453,47 +1914,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
               cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl}}>📤</button>
         </div>
         {/* Social share menu */}
-        {showShare&&<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(0,0,0,.35)",
-          display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(3px)"}}
-          onClick={()=>setShowShare(false)}>
-          <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"100%",maxWidth:480,
-            borderRadius:"14px 14px 0 0",padding:"20px 22px 28px",animation:"none"}}>
-            <div style={{fontSize:14,fontWeight:700,color:C.text,textAlign:"center",marginBottom:16,letterSpacing:3}}>分享到</div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
-              {[
-                {k:"wx",l:"微信",c:"#07c160",ic:"💬"},
-                {k:"pyq",l:"朋友圈",c:"#07c160",ic:"👥"},
-                {k:"xhs",l:"小红书",c:"#fe2c55",ic:"📕"},
-                {k:"wb",l:"微博",c:"#e6162d",ic:"🔴"},
-                {k:"tw",l:"X/推特",c:"#1da1f2",ic:"𝕏"},
-                {k:"fb",l:"Facebook",c:"#4267b2",ic:"f"},
-                {k:"lk",l:"复制链接",c:"#8a7a68",ic:"🔗"},
-                {k:"sys",l:"更多",c:"#8a7a68",ic:"⋯"},
-              ].map(m=>(
-                <button key={m.k} onClick={()=>{
-                  var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"")+"\n——来自花信风";
-                  var url=typeof window!=="undefined"?window.location.href:"";
-                  if(m.k==="wx"||m.k==="pyq"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开微信粘贴分享");}
-                  else if(m.k==="xhs"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开小红书APP粘贴发布");}
-                  else if(m.k==="wb"){var wb="https://service.weibo.com/share/share.php?title="+encodeURIComponent(text)+"&url="+encodeURIComponent(url);window.open(wb,"_blank");}
-                  else if(m.k==="tw"){var tw="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url);window.open(tw,"_blank");}
-                  else if(m.k==="fb"){var fb="https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url)+"&quote="+encodeURIComponent(text);window.open(fb,"_blank");}
-                  else if(m.k==="lk"){navigator.clipboard.writeText(url);alert("链接已复制");}
-                  else if(m.k==="sys"){if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text,url:url}).catch(function(){});else{navigator.clipboard.writeText(text);alert("已复制");}}
-                  setShowShare(false);
-                }} style={{border:"none",background:"transparent",cursor:"pointer",padding:"8px 2px",
-                  display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                  <div style={{width:44,height:44,borderRadius:"50%",background:m.c,color:"#fff",
-                    display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:700,
-                    boxShadow:"0 2px 8px "+m.c+"44"}}>{m.ic}</div>
-                  <div style={{fontSize:11,color:C.text}}>{m.l}</div>
-                </button>))}
-            </div>
-            <button onClick={()=>setShowShare(false)} style={{display:"block",margin:"18px auto 0",
-              border:"none",background:"#f0ece4",borderRadius:20,padding:"8px 28px",
-              cursor:"pointer",fontSize:13,color:C.tl}}>取消</button>
-          </div>
-        </div>}
+        {showShare&&<SpotShareCard s={s} onClose={()=>setShowShare(false)}/>}
         {isChecked&&<div style={{fontSize:11,color:"#c8a050",textAlign:"center",marginTop:4}}>
           🎉 打卡时间：{isChecked.date}</div>}
         {/* Community notes */}
@@ -1519,50 +1940,103 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
 function SpeciesWheel({onSelect,selected,spots}){
   const species=[...new Set(FLORA.map(f=>f.sp))];
   const [si,setSi]=useState(Math.max(0,species.indexOf(selected)));
+  const [showGrid,setShowGrid]=useState(false);
   const sel=i=>{setSi(i);onSelect(species[i]);};
-  useEffect(()=>{const h=e=>{if(e.key==="ArrowLeft"){setSi(i=>{const n=(i-1+species.length)%species.length;onSelect(species[n]);return n;});e.preventDefault();}
+  useEffect(()=>{const h=e=>{
+    if(showGrid)return;
+    if(e.key==="ArrowLeft"){setSi(i=>{const n=(i-1+species.length)%species.length;onSelect(species[n]);return n;});e.preventDefault();}
     else if(e.key==="ArrowRight"){setSi(i=>{const n=(i+1)%species.length;onSelect(species[n]);return n;});e.preventDefault();}};
-    window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h);},[species]);
+    window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h);},[species,showGrid]);
   const count=spots.filter(s=>s.sp===selected&&((s._st&&s._st.l)||0)>0).length;
   const prevSp=species[(si-1+species.length)%species.length];
   const nextSp=species[(si+1)%species.length];
   const prevFl=FLORA.find(f=>f.sp===prevSp);
   const nextFl=FLORA.find(f=>f.sp===nextSp);
   const curFl=FLORA.find(f=>f.sp===selected);
-  return(<div style={{position:"absolute",bottom:8,right:8,zIndex:28,width:260,height:110,
-    background:"rgba(250,245,237,.96)",borderRadius:12,padding:"10px 14px",
-    boxShadow:"0 2px 14px rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:6}}>
-    {/* Previous */}
-    <button onClick={()=>sel((si-1+species.length)%species.length)}
-      style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:42,height:42,
-        cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-        opacity:.6,padding:0}}>
-      <FI sp={prevSp} sz={22} co={(prevFl&&prevFl.c)}/>
-      <div style={{fontSize:9,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{prevSp.slice(0,3)}</div>
-    </button>
-    <div style={{fontSize:16,color:C.tl,opacity:.5}}>‹</div>
-    {/* Current selected - BIG */}
-    <div style={{flex:1,textAlign:"center",padding:"0 4px"}}>
-      <div style={{display:"flex",justifyContent:"center",marginBottom:2}}>
-        <div style={{width:54,height:54,borderRadius:"50%",background:"rgba(255,255,255,.95)",
-          border:"2.5px solid "+((curFl&&curFl.c)||C.accent),boxShadow:"0 2px 8px "+((curFl&&curFl.c)||C.accent)+"33",
-          display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <FI sp={selected} sz={34} co={(curFl&&curFl.c)}/>
+  
+  return(<>
+    {/* Grid view - all flowers */}
+    {showGrid&&<div style={{position:"fixed",inset:0,zIndex:105,background:"rgba(20,15,10,.6)",
+      display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}}
+      onClick={()=>setShowGrid(false)}>
+      <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"min(640px,92vw)",
+        maxHeight:"82vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+        boxShadow:"0 20px 60px rgba(0,0,0,.3)"}}>
+        {/* Header */}
+        <div style={{padding:"16px 22px",borderBottom:"1px solid #ece6dc",display:"flex",
+          justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}}>🌺 花 谱</div>
+            <div style={{fontSize:11,color:C.tl,marginTop:3}}>共 {species.length} 种 · 点击选择</div>
+          </div>
+          <button onClick={()=>setShowGrid(false)} style={{border:"none",background:"none",
+            cursor:"pointer",fontSize:18,color:C.tl}}>{"×"}</button>
+        </div>
+        {/* Grid */}
+        <div style={{flex:1,overflow:"auto",padding:"14px 18px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(88px,1fr))",gap:8}}>
+            {species.map((sp,i)=>{const fl=FLORA.find(f=>f.sp===sp);
+              const cnt=spots.filter(s=>s.sp===sp&&((s._st&&s._st.l)||0)>0).length;
+              const isSel=sp===selected;
+              return <button key={sp} onClick={()=>{sel(i);setShowGrid(false);}}
+                style={{border:"1.5px solid "+(isSel?((fl&&fl.c)||C.accent):"#ece6dc"),
+                  background:isSel?((fl&&fl.c)||C.accent)+"15":"#fff",
+                  borderRadius:10,padding:"10px 6px",cursor:"pointer",
+                  display:"flex",flexDirection:"column",alignItems:"center",gap:4,
+                  transition:"all .15s"}}>
+                <FI sp={sp} sz={26} co={(fl&&fl.c)}/>
+                <div style={{fontSize:11,fontWeight:isSel?700:500,color:isSel?((fl&&fl.c)||C.accent):C.text,
+                  letterSpacing:1,lineHeight:1.2}}>{sp}</div>
+                {cnt>0&&<div style={{fontSize:9,color:C.tl}}>{cnt}</div>}
+              </button>;})}
+          </div>
         </div>
       </div>
-      <div style={{fontSize:14,color:C.text,fontWeight:800,letterSpacing:2,lineHeight:1.1}}>{selected}</div>
-      <div style={{fontSize:10,color:C.accent,marginTop:1}}>{count}个观赏地</div>
+    </div>}
+    
+    {/* Compact wheel - always visible (but hidden when grid shown) */}
+    <div style={{position:"absolute",top:120,right:8,zIndex:28,width:260,
+      background:"rgba(250,245,237,.96)",borderRadius:12,padding:"8px 12px 10px",
+      boxShadow:"0 2px 14px rgba(0,0,0,.08)"}}>
+      {/* Top: all-flowers button */}
+      <button onClick={()=>setShowGrid(true)} style={{display:"block",width:"100%",
+        border:"none",background:C.accent+"14",color:C.accent,borderRadius:6,
+        padding:"4px 8px",cursor:"pointer",fontSize:11,fontWeight:700,letterSpacing:2,
+        marginBottom:8}}>☰ 查看全部 {species.length} 种</button>
+      {/* Navigator row */}
+      <div style={{display:"flex",alignItems:"center",gap:4}}>
+        <button onClick={()=>sel((si-1+species.length)%species.length)}
+          style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:40,height:40,
+            cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+            opacity:.6,padding:0}}>
+          <FI sp={prevSp} sz={20} co={(prevFl&&prevFl.c)}/>
+          <div style={{fontSize:8,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{prevSp.slice(0,3)}</div>
+        </button>
+        <div style={{fontSize:14,color:C.tl,opacity:.5}}>‹</div>
+        <div style={{flex:1,textAlign:"center"}}>
+          <div style={{display:"flex",justifyContent:"center",marginBottom:2}}>
+            <div style={{width:48,height:48,borderRadius:"50%",background:"rgba(255,255,255,.95)",
+              border:"2.5px solid "+((curFl&&curFl.c)||C.accent),
+              boxShadow:"0 2px 8px "+((curFl&&curFl.c)||C.accent)+"33",
+              display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <FI sp={selected} sz={30} co={(curFl&&curFl.c)}/>
+            </div>
+          </div>
+          <div style={{fontSize:13,color:C.text,fontWeight:800,letterSpacing:2,lineHeight:1.1}}>{selected}</div>
+          <div style={{fontSize:10,color:C.accent,marginTop:1}}>{count}个观赏地</div>
+        </div>
+        <div style={{fontSize:14,color:C.tl,opacity:.5}}>›</div>
+        <button onClick={()=>sel((si+1)%species.length)}
+          style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:40,height:40,
+            cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+            opacity:.6,padding:0}}>
+          <FI sp={nextSp} sz={20} co={(nextFl&&nextFl.c)}/>
+          <div style={{fontSize:8,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{nextSp.slice(0,3)}</div>
+        </button>
+      </div>
+      <div style={{fontSize:9,color:C.tl,textAlign:"center",marginTop:4,opacity:.5}}>← → 切换</div>
     </div>
-    <div style={{fontSize:16,color:C.tl,opacity:.5}}>›</div>
-    {/* Next */}
-    <button onClick={()=>sel((si+1)%species.length)}
-      style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:42,height:42,
-        cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-        opacity:.6,padding:0}}>
-      <FI sp={nextSp} sz={22} co={(nextFl&&nextFl.c)}/>
-      <div style={{fontSize:9,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{nextSp.slice(0,3)}</div>
-    </button>
-  </div>);
+  </>);
 }
 
 // ═══ MAIN ═══
@@ -1752,8 +2226,15 @@ export default function App(){
       @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
       @keyframes progress{0%{width:0;opacity:.5}50%{width:100%;opacity:1}100%{width:0;opacity:.5}}
+      @keyframes playwave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.6)}}
       *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}
       ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.15);border-radius:2px}
+      /* HOVER EFFECTS */
+      button{transition:all .15s ease}
+      button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.08)}
+      .hx-monthbtn:hover{background:rgba(192,96,64,.14)!important;color:#c06040!important;transform:scale(1.08)}
+      .hx-monthbtn:active{transform:scale(.95)}
+      .hx-tabbtn:hover{background:rgba(192,96,64,.12)!important}
       @media(max-width:768px){
         .hx-title{font-size:13px!important}
         .hx-tabs button{font-size:11px!important;padding:3px 8px!important}
@@ -1861,20 +2342,23 @@ export default function App(){
     {page==="species"&&<div style={{position:"absolute",bottom:5,left:"50%",transform:"translateX(-50%)",zIndex:30,
       display:"flex",background:"rgba(250,245,237,.85)",borderRadius:8,padding:"1px",gap:1}}>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const has=FLORA.filter(f=>f.sp===selSp&&f.pk[0]<=m&&f.pk[1]>=m).length>0;
-        return <button key={m} style={{border:"none",borderRadius:7,padding:"3px 7px",fontSize:11,cursor:has?"pointer":"default",
+        return <button key={m} className={has?"hx-monthbtn":""} title={has?`${m}月盛开`:"此月无花"}
+          style={{border:"none",borderRadius:7,padding:"3px 7px",fontSize:11,cursor:has?"pointer":"default",
           background:has?C.accent+"18":"transparent",color:has?C.accent:"#ddd",fontWeight:has?700:400}}>{m}月</button>;})}</div>}
 
     {page==="nearby"&&<div style={{position:"absolute",bottom:5,left:"50%",transform:"translateX(-50%)",zIndex:30,
       display:"flex",background:"rgba(250,245,237,.9)",borderRadius:8,padding:"2px",gap:2,flexWrap:"wrap",justifyContent:"center",maxWidth:"min(420px,88vw)"}}>
       {(()=>{const cm=new Date().getMonth()+1;const nm=cm===12?1:cm+1;const shortcuts=[
-        {l:"本月",v:cm},{l:"下月",v:nm},{l:"全年",v:0}];
+        {l:"本月",v:cm,t:`${cm}月当季`},{l:"下月",v:nm,t:`${nm}月即将盛开`},{l:"全年",v:0,t:"全部花期"}];
         return shortcuts.map(s=>(
-          <button key={s.l} onClick={()=>setNearbyMonth(s.v)} style={{border:"none",borderRadius:8,padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:700,
+          <button key={s.l} className="hx-monthbtn" title={s.t} onClick={()=>setNearbyMonth(s.v)}
+            style={{border:"none",borderRadius:8,padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:700,
             background:nearbyMonth===s.v?C.accent+"22":"transparent",color:nearbyMonth===s.v?C.accent:C.text,letterSpacing:2}}>
             {s.l}</button>));})()}
       <div style={{width:1,background:"#e0dcd4",margin:"2px 4px"}}></div>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>(
-        <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:6,padding:"4px 7px",cursor:"pointer",fontSize:11,
+        <button key={m} className="hx-monthbtn" title={`${m}月花事`} onClick={()=>setNearbyMonth(m)}
+          style={{border:"none",borderRadius:6,padding:"4px 7px",cursor:"pointer",fontSize:11,
           background:nearbyMonth===m?C.accent+"18":"transparent",color:nearbyMonth===m?C.accent:"#aaa"}}>{m}月</button>))}</div>}
 
     {/* Region nav - hidden in nearby mode */}
@@ -1898,33 +2382,7 @@ export default function App(){
       </div></div>}
 
     {/* Nearby: scrollable list panel on left */}
-    {page==="nearby"&&userLoc&&<div style={{position:"absolute",left:3,top:42,bottom:40,zIndex:25,
-      background:"rgba(250,245,237,.9)",backdropFilter:"blur(8px)",borderRadius:6,
-      padding:"6px",boxShadow:"0 1px 6px rgba(0,0,0,.04)",width:200,overflowY:"auto"}}>
-      <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>{"📍 "+t.nearby_title}</div>
-      <div style={{fontSize:12,color:C.tl,marginBottom:5}}>共{spots.length}个 · 500km内</div>
-      {spots.filter(s=>((s._st&&s._st.l)||0)>=1).slice(0,20).map((s,i)=>{
-        const sm=SM[s.s];
-        return(<div key={s.id} onClick={()=>{setSel(s);setWz(5);setWc([s.lon,s.lat]);}}
-          style={{display:"flex",alignItems:"center",gap:3,padding:"4px 3px",cursor:"pointer",
-            borderBottom:"1px solid rgba(0,0,0,.03)",borderRadius:3,
-            background:(sel&&sel.id)===s.id?s.c+"15":"transparent"}}>
-          <div style={{width:18,height:18,flexShrink:0,borderRadius:"50%",
-            background:"rgba(255,255,255,.8)",border:"1px solid "+s.c+"44",
-            display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <FI sp={s.sp} sz={13} co={s.c}/></div>
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:12,color:C.text,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
-              {s.n.split("·")[1]||s.n}</div>
-            <div style={{fontSize:11,color:C.tl,display:"flex",gap:3}}>
-              <span>{Math.round(s._dist||0)}km</span>
-              <span style={{color:sm.c}}>{sm.i}{s.pk[0]}月</span>
-              <span style={{color:s.c}}>{(s._st?s._st.st:"")}</span>
-            </div>
-          </div>
-        </div>);
-      })}
-    </div>}
+    {page==="nearby"&&userLoc&&<NearbyPanel spots={spots} sel={sel} setSel={setSel} setWz={setWz} setWc={setWc} t={t}/>}
 
     {page==="map"&&(()=>{const li=spots.filter(s=>((s._st&&s._st.l)||0)>=2).sort((a,b)=>((b._st&&b._st.l)||0)-((a._st&&a._st.l)||0)).slice(0,8);
       if(!li.length)return null;
@@ -2055,20 +2513,42 @@ export default function App(){
       border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
       background:dark?"rgba(40,35,28,.85)":"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
       fontSize:12,color:dark?"#e0d8c8":C.tl}}>{dark?"☀":"🌙"}</button>
-    {/* Language switcher */}
-    <div style={{position:"absolute",top:12,right:60,zIndex:32,display:"flex",gap:1,
-      background:"rgba(250,245,237,.95)",borderRadius:16,padding:"3px",boxShadow:"0 1px 6px rgba(0,0,0,.08)"}}>
-      {[{k:"zh",l:"中"},{k:"en",l:"EN"},{k:"ja",l:"JP"},{k:"ko",l:"KR"}].map(x=>(
-        <button key={x.k} onClick={()=>setLang(x.k)} style={{border:"none",borderRadius:14,padding:"4px 10px",
-          cursor:"pointer",fontSize:11,fontWeight:lang===x.k?700:500,letterSpacing:0,
-          background:lang===x.k?C.accent+"26":"transparent",color:lang===x.k?C.accent:C.tl,
-          transition:"all .15s"}}>{x.l}</button>))}
-    </div>
-    {/* Travel guide button (non-Chinese) */}
-    {lang!=="zh"&&<button onClick={()=>setShowGuide(true)} style={{position:"absolute",top:12,right:210,zIndex:31,
-      border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
-      background:"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
-      fontSize:11,color:C.accent,fontWeight:600}}>🌏 {t.guide}</button>}
+    {/* Language switcher - compact dropdown */}
+    <LangSwitcher lang={lang} setLang={setLang} t={t} setShowGuide={setShowGuide}/>
     {showGuide&&<TravelGuide onClose={()=>setShowGuide(false)} lang={lang}/>}
   </div>);
+}
+
+// ═══ Language switcher (compact dropdown) ═══
+function LangSwitcher({lang,setLang,t,setShowGuide}){
+  const [open,setOpen]=useState(false);
+  const langs=[{k:"zh",l:"中文",f:"🇨🇳"},{k:"en",l:"English",f:"🇺🇸"},{k:"ja",l:"日本語",f:"🇯🇵"},{k:"ko",l:"한국어",f:"🇰🇷"}];
+  const cur=langs.find(x=>x.k===lang)||langs[0];
+  return(<>
+    <button onClick={()=>setOpen(!open)} style={{position:"absolute",top:55,left:12,zIndex:35,
+      border:"1px solid #e0dcd4",background:"rgba(250,245,237,.95)",borderRadius:14,
+      padding:"4px 10px",cursor:"pointer",fontSize:11,color:"#3a2818",letterSpacing:1,
+      boxShadow:"0 1px 5px rgba(0,0,0,.06)",display:"flex",alignItems:"center",gap:4}}>
+      {cur.f} <span style={{fontWeight:600}}>{cur.l}</span> <span style={{fontSize:9,color:"#8a7a68"}}>▾</span>
+    </button>
+    {open&&<div style={{position:"absolute",top:85,left:12,zIndex:36,
+      background:"#faf6ef",borderRadius:10,padding:"4px",minWidth:140,
+      boxShadow:"0 4px 20px rgba(0,0,0,.15)",border:"1px solid #e0dcd4"}}>
+      {langs.map(x=>(
+        <button key={x.k} onClick={()=>{setLang(x.k);setOpen(false);}}
+          style={{display:"flex",alignItems:"center",gap:8,width:"100%",
+            border:"none",background:lang===x.k?"#c06040"+"18":"transparent",
+            borderRadius:6,padding:"8px 12px",cursor:"pointer",fontSize:12,
+            color:lang===x.k?"#c06040":"#3a2818",fontWeight:lang===x.k?700:500,textAlign:"left"}}>
+          <span style={{fontSize:14}}>{x.f}</span>{x.l}{lang===x.k&&<span style={{marginLeft:"auto",color:"#c06040"}}>✓</span>}
+        </button>))}
+      {lang!=="zh"&&<button onClick={()=>{setShowGuide(true);setOpen(false);}}
+        style={{display:"flex",alignItems:"center",gap:8,width:"100%",
+          border:"none",background:"transparent",borderRadius:6,padding:"8px 12px",
+          cursor:"pointer",fontSize:12,color:"#c06040",fontWeight:600,textAlign:"left",
+          borderTop:"1px solid #ece6dc",marginTop:4}}>
+        🌏 {t.guide}</button>}
+    </div>}
+    {open&&<div onClick={()=>setOpen(false)} style={{position:"fixed",inset:0,zIndex:34}}/>}
+  </>);
 }
