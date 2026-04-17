@@ -868,7 +868,7 @@ function MusicPlayer(){
       </div>
     </div>
     {playing&&<div style={{height:3,borderRadius:2,background:"#ece6dc",overflow:"hidden"}}>
-      <div style={{height:"100%",width:"60%",borderRadius:2,background:`linear-gradient(90deg,${C.accent},${C.accent2})`,
+      <div style={{height:"100%",width:"60%",borderRadius:2,background:"linear-gradient(90deg,"+C.accent+","+C.accent2+")",
         animation:"progress 3s linear infinite"}}/>
     </div>}
   </div>);
@@ -923,7 +923,7 @@ function AlertBanner({onGo,flora}){
   useEffect(()=>{const t=setTimeout(()=>setSh(true),1200);
     const iv=setInterval(()=>{setSh(false);setTimeout(()=>{setI(j=>(j+1)%alerts.length);setSh(true);},400);},15000);
     return()=>{clearTimeout(t);clearInterval(iv);};},[alerts.length]);
-  return(<div onClick={()=>onGo(alerts[i%alerts.length].id)} style={{position:"absolute",top:8,left:"50%",transform:`translateX(-50%) translateY(${sh?0:-8}px)`,
+  return(<div onClick={()=>onGo(alerts[i%alerts.length].id)} style={{position:"absolute",top:8,left:"50%",transform:"translateX(-50%) translateY("+(sh?0:-8)+"px)",
     opacity:sh?1:0,transition:"all .4s",zIndex:32,background:"rgba(250,245,237,.95)",backdropFilter:"blur(8px)",
     padding:"7px 18px",borderRadius:18,boxShadow:"0 2px 10px rgba(0,0,0,.05)",cursor:"pointer",
     fontSize:13,color:C.text,maxWidth:"min(680px,88vw)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",letterSpacing:1.5}}>
@@ -985,22 +985,22 @@ function MoodCard({onClose}){
     background:"rgba(20,15,10,.6)",backdropFilter:"blur(8px)"}} onClick={onClose}>
     <div onClick={e=>e.stopPropagation()} style={{width:"min(520px,92vw)",position:"relative"}}>
       {/* Scroll top roller */}
-      <div style={{height:16,background:`linear-gradient(90deg,${qljsGold},#e0c070,${qljsGold})`,
+      <div style={{height:16,background:"linear-gradient(90deg,"+qljsGold+",#e0c070,"+qljsGold+")",
         borderRadius:"8px 8px 0 0",boxShadow:"0 2px 8px rgba(0,0,0,.15)",position:"relative",zIndex:2}}>
         <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
         <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
       </div>
 
       {/* Scroll body with 千里江山图 feel */}
-      <div style={{background:`linear-gradient(180deg,${qljsSilk},#f0e8d8,#e8e0d0,${qljsSilk})`,
+      <div style={{background:"linear-gradient(180deg,"+qljsSilk+",#f0e8d8,#e8e0d0,"+qljsSilk+")",
         padding:card?"0":"28px 32px",overflow:"hidden",position:"relative",
         maxHeight:card?`${scrollOpen*420}px`:"auto",transition:card?"none":"all .3s",
         boxShadow:"inset 0 2px 8px rgba(0,0,0,.03)"}}>
         
         {/* Mountain silhouette decorations */}
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,opacity:.06,
-          background:`url("data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 800 80" xmlns="http://www.w3.org/2000/svg"><path d="M0,80 L50,30 L100,50 L180,15 L250,45 L320,20 L400,55 L480,10 L560,40 L620,25 L700,50 L780,18 L800,35 L800,80Z" fill="#3a6b5a"/></svg>')}")`,
-          backgroundSize:"cover"}}/>
+          background:"#3a6b5a",
+          clipPath:"polygon(0 100%, 6% 38%, 12% 63%, 22% 19%, 31% 56%, 40% 25%, 50% 69%, 60% 13%, 70% 50%, 77% 31%, 87% 63%, 97% 23%, 100% 44%, 100% 100%)"}}></div>
 
         {/* Before drawing */}
         {!card&&<div style={{textAlign:"center",padding:"16px 0",position:"relative"}}>
@@ -1008,11 +1008,11 @@ function MoodCard({onClose}){
             filter:"drop-shadow(0 2px 6px rgba(0,0,0,.1))"}}>🪷</div>
           <h2 style={{fontSize:26,fontWeight:900,color:C.text,letterSpacing:10,marginBottom:4,
             fontFamily:"'Noto Serif SC',serif"}}>每 日 花 签</h2>
-          <div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${qljsGold},transparent)`,margin:"8px auto 14px"}}></div>
+          <div style={{width:60,height:2,background:"linear-gradient(90deg,transparent,"+qljsGold+",transparent)",margin:"8px auto 14px"}}></div>
           <div style={{fontSize:13,color:C.tl,letterSpacing:3,marginBottom:28,lineHeight:1.8}}>
             一花一世界 · 一签一解语</div>
-          <button onClick={draw} disabled={shaking} style={{border:`1.5px solid ${qljsGold}`,
-            background:shaking?"transparent":`linear-gradient(135deg,${qljsBlue}18,${qljsGreen}18)`,
+          <button onClick={draw} disabled={shaking} style={{border:"1.5px solid "+qljsGold,
+            background:shaking?"transparent":"linear-gradient(135deg,"+qljsBlue+"18,"+qljsGreen+"18)",
             color:C.text,borderRadius:28,padding:"12px 36px",cursor:shaking?"default":"pointer",
             fontSize:15,fontWeight:600,letterSpacing:5,transition:"all .3s",
             boxShadow:shaking?"none":`0 3px 12px ${qljsBlue}22`}}>
@@ -1031,11 +1031,11 @@ function MoodCard({onClose}){
           </div>
 
           {/* Divider line */}
-          <div style={{width:"80%",height:1,background:`linear-gradient(90deg,transparent,${qljsGold}66,transparent)`,margin:"12px auto"}}></div>
+          <div style={{width:"80%",height:1,background:"linear-gradient(90deg,transparent,"+qljsGold+"66,transparent)",margin:"12px auto"}}></div>
 
           {/* Poem in scroll style */}
           <div style={{textAlign:"center",padding:"14px 20px",margin:"12px 0",position:"relative",
-            background:`linear-gradient(135deg,${qljsBlue}08,${qljsGreen}08)`,borderRadius:8}}>
+            background:"linear-gradient(135deg,"+qljsBlue+"08,"+qljsGreen+"08)",borderRadius:8}}>
             <div style={{fontSize:12,color:qljsGold,letterSpacing:4,marginBottom:8}}>题 辞</div>
             <div style={{fontSize:18,color:C.text,letterSpacing:4,lineHeight:2,fontStyle:"italic",
               fontFamily:"'Noto Serif SC',serif"}}>
@@ -1061,7 +1061,7 @@ function MoodCard({onClose}){
       </div>
 
       {/* Scroll bottom roller */}
-      <div style={{height:16,background:`linear-gradient(90deg,${qljsGold},#e0c070,${qljsGold})`,
+      <div style={{height:16,background:"linear-gradient(90deg,"+qljsGold+",#e0c070,"+qljsGold+")",
         borderRadius:"0 0 8px 8px",boxShadow:"0 -1px 6px rgba(0,0,0,.1)",position:"relative",zIndex:2}}>
         <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
         <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
@@ -1090,7 +1090,7 @@ function ScrollLanding({onEnter}){
     autumn:{s:"#e0d0b8",m1:"#8a6a30",m2:"#a08040",w:"#7090a0",t:"#c8703a"},
     winter:{s:"#e0dcd8",m1:"#6a7a80",m2:"#8a9098",w:"#8aa0b0",t:"#6a8aaa"}}[cs];
   return(<div ref={cr} style={{position:"fixed",inset:0,zIndex:200,
-    background:`linear-gradient(180deg,${qp.s},${qp.s}dd,${qp.s}aa)`,
+    background:"linear-gradient(180deg,"+qp.s+","+qp.s+"dd,"+qp.s+"aa)",
     display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
     opacity:en?0:1,transition:"opacity .3s",userSelect:"none",touchAction:"none"
   }} onPointerMove={hm} onPointerUp={he} onPointerLeave={he} onTouchMove={hm} onTouchEnd={he}>
@@ -1120,13 +1120,13 @@ function ScrollLanding({onEnter}){
     <div style={{position:"relative",width:"min(460px,80vw)",height:"min(140px,20vh)",zIndex:2}}>
       <div style={{position:"absolute",left:0,top:0,bottom:0,width:16,borderRadius:8,background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"2px 0 6px rgba(0,0,0,.15)",zIndex:5}}/>
       <div style={{position:"absolute",left:16,right:16,top:0,bottom:0,overflow:"hidden"}}>
-        <div style={{position:"absolute",left:0,top:0,bottom:0,width:`${dx*100}%`,
+        <div style={{position:"absolute",left:0,top:0,bottom:0,width:(dx*100)+"%",
           background:`linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)`,
           transition:dg?"none":"width .3s",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
           {dx>.2&&<div style={{textAlign:"center",padding:10,opacity:Math.min(1,(dx-.2)*3),whiteSpace:"pre-line",minWidth:180}}>
             <div style={{fontSize:"min(14px,3.5vw)",color:sm.c,letterSpacing:4,lineHeight:2.2}}>{poems[cs]}</div></div>}</div></div>
       <div onPointerDown={hs} onTouchStart={hs}
-        style={{position:"absolute",left:`${12+dx*66}%`,top:0,bottom:0,width:16,borderRadius:8,
+        style={{position:"absolute",left:(12+dx*66)+"%",top:0,bottom:0,width:16,borderRadius:8,
           background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"-2px 0 6px rgba(0,0,0,.15)",
           cursor:"grab",transition:dg?"none":"all .3s",zIndex:5}}/></div>
     {/* Animated hint */}
@@ -1158,9 +1158,9 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
       opacity:sh?(dead?(hl?.35:.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
-      width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}></div>}
+      width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:"radial-gradient(circle,"+s.c+"20,transparent 70%)",animation:"pulse 2.5s ease-in-out infinite"}}></div>}
     <div style={{width:sz,height:sz,borderRadius:"50%",margin:"0 auto",background:dead?"#e0d8d0":"rgba(255,255,255,.85)",
-      border:`1.5px solid ${dead?"#c0b8b0":s.c}55`,
+      border:"1.5px solid "+(dead?"#c0b8b0":s.c)+"55",
       boxShadow:dead?"none":`0 2px 4px ${s.c}33`,
       display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
       {dead?<span style={{fontSize:sz*.4,opacity:.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?.8:.65)} co={s.c}/>}
@@ -1192,7 +1192,7 @@ function LandscapeSVG({season,color,w,h}){
   // Seeded random based on color
   const seed=color?color.charCodeAt(1)*17+color.charCodeAt(3)*31:42;
   const r=(i)=>Math.abs(Math.sin(seed*0.618+i*2.718))*1;
-  return(<svg viewBox={`0 0 ${w} ${h}`} style={{width:"100%",height:h,display:"block"}}>
+  return(<svg viewBox={"0 0 "+w+" "+h} style={{width:"100%",height:h,display:"block"}}>
     <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stopColor={p.sky}/><stop offset="100%" stopColor={p.sky+"88"}/></linearGradient></defs>
     <rect width={w} height={h} fill="url(#sky)"/>
@@ -1261,11 +1261,11 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
           <span style={{fontSize:14,color:s.c,fontWeight:600}}>{s.sp}</span>
           <span style={{fontSize:13,color:st.l>=3?"#2a7a40":st.l>=2?s.c:C.tl,
-            background:st.l>=3?"#e8f5e0":st.l>=2?`${s.c}15`:"#f0ece4",
+            background:st.l>=3?"#e8f5e0":st.l>=2?s.c+"15":"#f0ece4",
             padding:"2px 10px",borderRadius:12,fontWeight:600}}>{st.st}</span>
         </div>
         {/* Poem */}
-        <div style={{margin:"0 0 16px",padding:"10px 16px",background:`${s.c}08`,
+        <div style={{margin:"0 0 16px",padding:"10px 16px",background:s.c+"08",
           borderLeft:`3px solid ${s.c}55`,borderRadius:"0 6px 6px 0"}}>
           <div style={{fontSize:16,color:"#3a2818",letterSpacing:3,lineHeight:1.6,fontStyle:"italic"}}>
             {"「"}{s.po}{"」"}</div>
@@ -1292,8 +1292,8 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
           <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:C.tl,marginBottom:4}}>
             <span>积温 {realAT!==null?realAT:(s._at||0)}°C·d {realAT!==null?"(实时)":"(模拟)"}</span><span>阈值 {s.th}</span></div>
           <div style={{height:8,borderRadius:4,background:"#ece6dc",overflow:"hidden"}}>
-            <div style={{height:"100%",borderRadius:4,width:`${Math.min(100,(realAT!==null?realAT:(s._at||0))/s.th*100)}%`,
-              background:pct>=100?`linear-gradient(90deg,${s.c},#e8a040)`:`linear-gradient(90deg,${s.c}88,${s.c})`,
+            <div style={{height:"100%",borderRadius:4,Math.min(100,(realAT!==null?realAT:(s._at||0))/s.th*100)+"%",
+              background:pct>=100?"linear-gradient(90deg,"+s.c+",#e8a040)":"linear-gradient(90deg,"+s.c+"88,"+s.c+")",
               transition:"width .5s"}}/></div>
         </div>
         {/* Mafengwo link */}
@@ -1306,15 +1306,15 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
           🐝 查看马蜂窝景点详情 →</a>}
         {/* Action buttons: Favorite + Share */}
         <div style={{display:"flex",gap:8,marginTop:12}}>
-          <button onClick={()=>onFav?.(s.id)} style={{flex:1,border:`1.5px solid ${isFav?"#e06050":"#e0dcd4"}`,
+          <button onClick={function(){if(onFav)onFav(s.id);}} style={{flex:1,border:"1.5px solid "+(isFav?"#e06050":"#e0dcd4"),
             background:isFav?"#fef5f4":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:isFav?"#e06050":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
             {isFav?"♥ 已收藏":"♡ 收藏"}</button>
-          <button onClick={()=>onAddTrip?.(s.id)} style={{flex:1,border:`1.5px solid ${inTrip?"#3a8a60":"#e0dcd4"}`,
+          <button onClick={function(){if(onAddTrip)onAddTrip(s.id);}} style={{flex:1,border:"1.5px solid "+(inTrip?"#3a8a60":"#e0dcd4"),
             background:inTrip?"#eef8f0":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:inTrip?"#3a8a60":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
             {inTrip?"✓ 已加入行程":"+ 加入行程"}</button>
-          <button onClick={()=>onCheckin?.(s.id)} style={{border:`1.5px solid ${isChecked?"#c8a050":"#e0dcd4"}`,
+          <button onClick={function(){if(onCheckin)onCheckin(s.id);}} style={{border:"1.5px solid "+(isChecked?"#c8a050":"#e0dcd4"),
             background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:isChecked?"#c8a050":C.tl}}>
             {isChecked?"📍已打卡":"📍打卡"}</button>
@@ -1551,7 +1551,7 @@ export default function App(){
     :{bg:C.bg,bg2:C.bg2,text:C.text,tl:C.tl,accent:C.accent,border:C.border};
 
   return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",
-    background:`linear-gradient(155deg,${dc.bg},${dc.bg2})`}} tabIndex={0}>
+    background:"linear-gradient(155deg,"+dc.bg+","+dc.bg2+")"}} tabIndex={0}>
     <style>{`@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
       @keyframes pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.35}50%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
@@ -1582,7 +1582,7 @@ export default function App(){
       <div style={{position:"absolute",left:"50%",top:"50%",width:W,height:H,marginLeft:-W/2,marginTop:-H/2,
         transform:`scale(${ez}) translate(${tx/ez}px,${ty/ez}px)`,
         transition:drag?"none":"transform .4s cubic-bezier(.22,1,.36,1)",transformOrigin:"center center"}}>
-        <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%",height:"100%",position:"absolute"}}>
+        <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"100%",position:"absolute"}}>
           {geo&&(geo.features||[geo]).map((f,i)=><path key={i} d={pathGen(f)||""} fill="#eee8dc" fillOpacity=".14"
             stroke={C.border} strokeWidth={f.properties?.name?.length>0?.2:.4} strokeLinejoin="round"
             opacity={f.properties?.name?.length>0?.18:.36}/>)}
@@ -1610,7 +1610,7 @@ export default function App(){
     {/* Title */}
     <div style={{position:"absolute",top:22,left:ez>1.5?12:3,zIndex:30}}>
       <div style={{display:"flex",alignItems:"center",gap:3}}>
-        <div style={{width:32,height:32,borderRadius:"50%",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
+        <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,"+C.accent+","+C.accent2+")",
           display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:10}}>風</div>
         <h1 style={{fontSize:16,fontWeight:900,color:C.text,letterSpacing:4}} className="hx-title">{t.title}</h1></div>
       {/* Search */}
@@ -1619,7 +1619,7 @@ export default function App(){
           style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl,padding:0}}>🔍</button>
         {showSearch&&<input value={searchQ} onChange={e=>setSearchQ(e.target.value)}
           placeholder="搜索景点或花种..."
-          style={{border:`1px solid ${C.border}33`,background:"rgba(250,245,237,.95)",borderRadius:8,
+          style={{border:"1px solid "+C.border+"33",background:"rgba(250,245,237,.95)",borderRadius:8,
             padding:"4px 10px",fontSize:13,color:C.text,width:160,outline:"none",
             fontFamily:"'Noto Serif SC',serif",letterSpacing:1}}/>}
         {searchQ&&<button onClick={()=>setSearchQ("")}
@@ -1631,7 +1631,7 @@ export default function App(){
       {[{k:"map",l:t.tab_map,ic:"🗺"},{k:"species",l:t.tab_species,ic:"🌺"},{k:"nearby",l:t.tab_nearby,ic:"📍"}].map(p=>(
         <button key={p.k} onClick={()=>{setPage(p.k);if(p.k==="nearby")requestLoc();}}
           style={{border:"none",borderRadius:5,padding:"4px 10px",cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",gap:1,
-            background:page===p.k?`${C.accent}18`:"transparent",color:page===p.k?C.accent:C.tl,fontWeight:page===p.k?700:400}}>
+            background:page===p.k?C.accent+"18":"transparent",color:page===p.k?C.accent:C.tl,fontWeight:page===p.k?700:400}}>
           <span style={{fontSize:12}}>{p.ic}</span>{p.l}</button>))}
     </div>
 
@@ -1641,19 +1641,19 @@ export default function App(){
       {(filter!=="current"&&!filter.startsWith("future"))&&<div style={{display:"flex",background:"rgba(250,245,237,.82)",borderRadius:7,padding:"1px",gap:1}}>
         {[{k:"all",l:"全部"},{k:"spring",l:"春"},{k:"summer",l:"夏"},{k:"autumn",l:"秋"},{k:"winter",l:"冬"}].map(m=>(
           <button key={m.k} onClick={()=>setFilter(m.k)} style={{border:"none",borderRadius:7,padding:"3px 8px",cursor:"pointer",fontSize:11,
-            background:filter===m.k?`${(SM[m.k]||{c:C.accent}).c}18`:"transparent",
+            background:filter===m.k?((SM[m.k]||{c:C.accent}).c)+"18":"transparent",
             color:filter===m.k?(SM[m.k]||{c:C.accent}).c:"#aaa",fontWeight:filter===m.k?700:400}}>
             {(SM[m.k]||{i:"🌺"}).i}{m.l}</button>))}</div>}
       {filter.startsWith("future")&&<div style={{display:"flex",background:"rgba(250,245,237,.82)",borderRadius:7,padding:"1px",gap:1}}>
         {[{k:"future1",l:"1个月"},{k:"future3",l:"3个月"},{k:"future6",l:"半年"}].map(m=>(
           <button key={m.k} onClick={()=>setFilter(m.k)} style={{border:"none",borderRadius:7,padding:"3px 10px",cursor:"pointer",fontSize:11,
-            background:filter===m.k?`${C.accent}18`:"transparent",color:filter===m.k?C.accent:"#aaa",fontWeight:filter===m.k?700:400}}>{m.l}</button>))}</div>}
+            background:filter===m.k?C.accent+"18":"transparent",color:filter===m.k?C.accent:"#aaa",fontWeight:filter===m.k?700:400}}>{m.l}</button>))}</div>}
       <div style={{display:"flex",background:"rgba(250,245,237,.88)",backdropFilter:"blur(6px)",borderRadius:10,padding:"1px",gap:1}}>
         <button onClick={()=>setFilter("current")} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
-          background:filter==="current"?`${SM[cs].c}18`:"transparent",color:filter==="current"?SM[cs].c:"#999",fontWeight:filter==="current"?700:400}}>
+          background:filter==="current"?SM[cs].c+"18":"transparent",color:filter==="current"?SM[cs].c:"#999",fontWeight:filter==="current"?700:400}}>
           {SM[cs].i}{t.current}</button>
         <button onClick={()=>setFilter(filter==="current"||filter.startsWith("future")?"all":filter)} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
-          background:!filter.startsWith("future")&&filter!=="current"?`${C.accent}18`:"transparent",
+          background:!filter.startsWith("future")&&filter!=="current"?C.accent+"18":"transparent",
           color:!filter.startsWith("future")&&filter!=="current"?C.accent:"#999"}}>🗺{t.yearly}</button>
         <button onClick={()=>setFilter(filter.startsWith("future")?filter:"future1")} style={{border:"none",borderRadius:10,padding:"5px 14px",cursor:"pointer",fontSize:13,
           background:filter.startsWith("future")?"#5a8a5022":"transparent",color:filter.startsWith("future")?"#3a6a30":"#999"}}>🔮{t.future}</button>
@@ -1666,15 +1666,15 @@ export default function App(){
       display:"flex",background:"rgba(250,245,237,.85)",borderRadius:8,padding:"1px",gap:1}}>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>{const has=FLORA.filter(f=>f.sp===selSp&&f.pk[0]<=m&&f.pk[1]>=m).length>0;
         return <button key={m} style={{border:"none",borderRadius:7,padding:"3px 7px",fontSize:11,cursor:has?"pointer":"default",
-          background:has?`${C.accent}18`:"transparent",color:has?C.accent:"#ddd",fontWeight:has?700:400}}>{m}月</button>;})}</div>}
+          background:has?C.accent+"18":"transparent",color:has?C.accent:"#ddd",fontWeight:has?700:400}}>{m}月</button>;})}</div>}
 
     {page==="nearby"&&<div style={{position:"absolute",bottom:5,left:"50%",transform:"translateX(-50%)",zIndex:30,
       display:"flex",background:"rgba(250,245,237,.85)",borderRadius:8,padding:"1px",gap:1,flexWrap:"wrap",justifyContent:"center",maxWidth:"min(340px,78vw)"}}>
       <button onClick={()=>setNearbyMonth(0)} style={{border:"none",borderRadius:7,padding:"3px 8px",cursor:"pointer",fontSize:11,
-        background:nearbyMonth===0?`${C.accent}18`:"transparent",color:nearbyMonth===0?C.accent:"#999"}}>全年</button>
+        background:nearbyMonth===0?C.accent+"18":"transparent",color:nearbyMonth===0?C.accent:"#999"}}>全年</button>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>(
         <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:8,padding:"4px 8px",cursor:"pointer",fontSize:12,
-          background:nearbyMonth===m?`${C.accent}18`:"transparent",color:nearbyMonth===m?C.accent:"#999"}}>{m}月</button>))}</div>}
+          background:nearbyMonth===m?C.accent+"18":"transparent",color:nearbyMonth===m?C.accent:"#999"}}>{m}月</button>))}</div>}
 
     {/* Region nav - hidden in nearby mode */}
     {page==="map"&&<div style={{position:"absolute",left:ez>1.5?10:2,bottom:5,zIndex:30,display:"flex",flexDirection:"column",gap:1,
@@ -1682,7 +1682,7 @@ export default function App(){
       {REGIONS.map(r=>(
         <button key={r.id} onClick={()=>{setRegion(r.id);if(r.id==="all"){setWz(1);setWc([104.5,35]);}}}
           style={{border:"none",borderRadius:3,padding:"4px 8px",cursor:"pointer",fontSize:13,fontWeight:region===r.id?800:500,
-            background:region===r.id?`${C.accent}18`:"transparent",color:region===r.id?C.accent:C.tl,letterSpacing:2}}>{r.n}</button>))}
+            background:region===r.id?C.accent+"18":"transparent",color:region===r.id?C.accent:C.tl,letterSpacing:2}}>{r.n}</button>))}
     </div>}
 
     {page==="species"&&<SpeciesWheel selected={selSp} onSelect={setSelSp} spots={displayFlora}/>}
@@ -1700,16 +1700,16 @@ export default function App(){
     {page==="nearby"&&userLoc&&<div style={{position:"absolute",left:3,top:42,bottom:40,zIndex:25,
       background:"rgba(250,245,237,.9)",backdropFilter:"blur(8px)",borderRadius:6,
       padding:"6px",boxShadow:"0 1px 6px rgba(0,0,0,.04)",width:200,overflowY:"auto"}}>
-      <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>{`📍 ${t.nearby_title}`}</div>
+      <div style={{fontSize:12,color:C.tl,marginBottom:5,letterSpacing:2,fontWeight:700}}>{"📍 "+t.nearby_title}</div>
       <div style={{fontSize:12,color:C.tl,marginBottom:5}}>共{spots.length}个 · 500km内</div>
       {spots.filter(s=>(s._st?.l||0)>=1).slice(0,20).map((s,i)=>{
         const sm=SM[s.s];
         return(<div key={s.id} onClick={()=>{setSel(s);setWz(5);setWc([s.lon,s.lat]);}}
           style={{display:"flex",alignItems:"center",gap:3,padding:"4px 3px",cursor:"pointer",
             borderBottom:"1px solid rgba(0,0,0,.03)",borderRadius:3,
-            background:sel?.id===s.id?`${s.c}15`:"transparent"}}>
+            background:(sel&&sel.id)===s.id?s.c+"15":"transparent"}}>
           <div style={{width:18,height:18,flexShrink:0,borderRadius:"50%",
-            background:"rgba(255,255,255,.8)",border:`1px solid ${s.c}44`,
+            background:"rgba(255,255,255,.8)",border:"1px solid "+s.c+"44",
             display:"flex",alignItems:"center",justifyContent:"center"}}>
             <FI sp={s.sp} sz={13} co={s.c}/></div>
           <div style={{flex:1,minWidth:0}}>
@@ -1718,7 +1718,7 @@ export default function App(){
             <div style={{fontSize:11,color:C.tl,display:"flex",gap:3}}>
               <span>{Math.round(s._dist||0)}km</span>
               <span style={{color:sm.c}}>{sm.i}{s.pk[0]}月</span>
-              <span style={{color:s.c}}>{s._st?.st}</span>
+              <span style={{color:s.c}}>{(s._st?s._st.st:"")}</span>
             </div>
           </div>
         </div>);
@@ -1729,14 +1729,14 @@ export default function App(){
       if(!li.length)return null;
       return(<div style={{position:"absolute",right:3,top:44,zIndex:25,background:"rgba(250,245,237,.82)",
         borderRadius:4,padding:"4px 5px",maxHeight:"min(230px,36vh)",overflowY:"auto",width:180}}>
-        <div style={{fontSize:10,color:C.tl,marginBottom:4,letterSpacing:2}}>{`${t.rank}`}</div>
+        <div style={{fontSize:10,color:C.tl,marginBottom:4,letterSpacing:2}}>{t.rank}</div>
         {li.map((s,i)=>(
           <div key={s.id} onClick={()=>setSel(s)} style={{display:"flex",alignItems:"center",gap:2,padding:"1.5px 0",cursor:"pointer"}}>
             <span style={{fontSize:11,fontWeight:700,color:i<3?C.accent:C.tl,width:8}}>{i+1}</span>
             <div style={{width:10,height:10,flexShrink:0}}><FI sp={s.sp} sz={10} co={s.c}/></div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:11,color:C.text,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.n.split("·")[1]||s.n}</div>
-              <div style={{fontSize:11,color:s.c}}>{s._st?.st}{s._pred?` · 预测${s._pred.dateStr}`:""}</div></div>
+              <div style={{fontSize:11,color:s.c}}>{(s._st?s._st.st:"")}{s._pred?" · 预测"+s._pred.dateStr:""}</div></div>
           </div>))}
       </div>);})()}
 
@@ -1786,7 +1786,7 @@ export default function App(){
               </div>
               {/* Flower icon */}
               <div style={{width:28,height:28,borderRadius:"50%",background:"rgba(255,255,255,.8)",
-                border:`1.5px solid ${s.c}55`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                border:"1.5px solid "+s.c+"55",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                 <FI sp={s.sp} sz={18} co={s.c}/></div>
               {/* Info */}
               <div style={{flex:1,minWidth:0}}>
@@ -1853,7 +1853,7 @@ export default function App(){
       {[{k:"zh",l:"中"},{k:"en",l:"EN"},{k:"ja",l:"JP"},{k:"ko",l:"KR"}].map(x=>(
         <button key={x.k} onClick={()=>setLang(x.k)} style={{border:"none",borderRadius:14,padding:"3px 8px",
           cursor:"pointer",fontSize:10,fontWeight:lang===x.k?700:400,letterSpacing:0,
-          background:lang===x.k?`${C.accent}18`:"transparent",color:lang===x.k?C.accent:C.tl}}>{x.l}</button>))}
+          background:lang===x.k?C.accent+"18":"transparent",color:lang===x.k?C.accent:C.tl}}>{x.l}</button>))}
     </div>
     {/* Travel guide button (non-Chinese) */}
     {lang!=="zh"&&<button onClick={()=>setShowGuide(true)} style={{position:"absolute",top:12,right:390,zIndex:31,
