@@ -994,7 +994,7 @@ function MoodCard({onClose}){
       {/* Scroll body with 千里江山图 feel */}
       <div style={{background:"linear-gradient(180deg,"+qljsSilk+",#f0e8d8,#e8e0d0,"+qljsSilk+")",
         padding:card?"0":"28px 32px",overflow:"hidden",position:"relative",
-        maxHeight:card?`${scrollOpen*420}px`:"auto",transition:card?"none":"all .3s",
+        maxHeight:card?(scrollOpen*420)+"px":"auto",transition:card?"none":"all .3s",
         boxShadow:"inset 0 2px 8px rgba(0,0,0,.03)"}}>
         
         {/* Mountain silhouette decorations */}
@@ -1015,7 +1015,7 @@ function MoodCard({onClose}){
             background:shaking?"transparent":"linear-gradient(135deg,"+qljsBlue+"18,"+qljsGreen+"18)",
             color:C.text,borderRadius:28,padding:"12px 36px",cursor:shaking?"default":"pointer",
             fontSize:15,fontWeight:600,letterSpacing:5,transition:"all .3s",
-            boxShadow:shaking?"none":`0 3px 12px ${qljsBlue}22`}}>
+            boxShadow:shaking?"none":"0 3px 12px "+qljsBlue+"22"}}>
             {shaking?"签 筒 摇 动 中 ...":"🎐 求 签"}</button>
         </div>}
 
@@ -1154,20 +1154,20 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
   if(dead&&!hl)return null;
   return(<div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)} onClick={onClick}
     style={{position:"absolute",left:px,top:py,
-      transform:`translate(-50%,-50%) scale(${sh?(hov?cs*1.12:cs):0})`,
+      transform:"translate(-50%,-50%) scale("+(sh?(hov?cs*1.12:cs):0)+")",
       opacity:sh?(dead?(hl?.35:.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
-      cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
+      cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?"drop-shadow(0 0 6px "+s.c+")":"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
       width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:"radial-gradient(circle,"+s.c+"20,transparent 70%)",animation:"pulse 2.5s ease-in-out infinite"}}></div>}
     <div style={{width:sz,height:sz,borderRadius:"50%",margin:"0 auto",background:dead?"#e0d8d0":"rgba(255,255,255,.85)",
       border:"1.5px solid "+(dead?"#c0b8b0":s.c)+"55",
-      boxShadow:dead?"none":`0 2px 4px ${s.c}33`,
+      boxShadow:dead?"none":"0 2px 4px "+s.c+"33",
       display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
       {dead?<span style={{fontSize:sz*.4,opacity:.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?.8:.65)} co={s.c}/>}
       {fav&&<div style={{position:"absolute",top:-2,right:-2,fontSize:8,color:"#e06050"}}>♥</div>}
       {checked&&<div style={{position:"absolute",bottom:-2,right:-2,fontSize:7,color:"#c8a050"}}>📍</div>}</div>
     {(zoom>=1.5||hl)&&!dead&&<div style={{marginTop:2,fontSize:hl?11:11,color:C.text,whiteSpace:"nowrap",
-      textShadow:`0 1px 3px ${C.bg}`,fontWeight:600,letterSpacing:.5,opacity:hov?1:.65}}>{s.n.split("·")[1]||s.n}</div>}
+      textShadow:"0 1px 3px "+C.bg,fontWeight:600,letterSpacing:.5,opacity:hov?1:.65}}>{s.n.split("·")[1]||s.n}</div>}
     {hl&&!dead&&<div style={{fontSize:10,color:s.c,opacity:.7}}>{s._pred?s._pred.dateStr:s.pk[0]+"月"}</div>}
     {hov&&<div style={{position:"absolute",bottom:"calc(100% + 6px)",left:"50%",transform:"translateX(-50%)",
       background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",padding:"8px 12px",borderRadius:8,
@@ -1175,7 +1175,7 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
       <div style={{fontSize:14,fontWeight:700,color:C.text,letterSpacing:2}}>{s.n}</div>
       <div style={{fontSize:12,color:dead?"#aaa":s.c,marginTop:2}}>{s.sp}·{st.st}</div>
       {pred&&<div style={{fontSize:11,color:C.accent,marginTop:2,fontWeight:600}}>
-        🌡 预测盛期：{pred.dateStr} {pred.daysUntil>0?`(${pred.daysUntil}天后)`:"(已到)"} · 置信度{pred.confidence}%</div>}
+        🌡 预测盛期：{pred.dateStr} {pred.daysUntil>0?"("+pred.daysUntil+"天后)":"(已到)"} · 置信度{pred.confidence}%</div>}
       {s._dist!=null&&<div style={{fontSize:11,color:C.accent,marginTop:2}}>距你{Math.round(s._dist)}km</div>}
     </div>}</div>);
 }
@@ -1266,7 +1266,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
         </div>
         {/* Poem */}
         <div style={{margin:"0 0 16px",padding:"10px 16px",background:s.c+"08",
-          borderLeft:`3px solid ${s.c}55`,borderRadius:"0 6px 6px 0"}}>
+          borderLeft:"3px solid "+s.c+"55",borderRadius:"0 6px 6px 0"}}>
           <div style={{fontSize:16,color:"#3a2818",letterSpacing:3,lineHeight:1.6,fontStyle:"italic"}}>
             {"「"}{s.po}{"」"}</div>
         </div>
@@ -1292,7 +1292,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
           <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:C.tl,marginBottom:4}}>
             <span>积温 {realAT!==null?realAT:(s._at||0)}°C·d {realAT!==null?"(实时)":"(模拟)"}</span><span>阈值 {s.th}</span></div>
           <div style={{height:8,borderRadius:4,background:"#ece6dc",overflow:"hidden"}}>
-            <div style={{height:"100%",borderRadius:4,Math.min(100,(realAT!==null?realAT:(s._at||0))/s.th*100)+"%",
+            <div style={{height:"100%",borderRadius:4,width:Math.min(100,(realAT!==null?realAT:(s._at||0))/s.th*100)+"%",
               background:pct>=100?"linear-gradient(90deg,"+s.c+",#e8a040)":"linear-gradient(90deg,"+s.c+"88,"+s.c+")",
               transition:"width .5s"}}/></div>
         </div>
@@ -1580,7 +1580,7 @@ export default function App(){
     <div ref={mapRef} onPointerDown={onPD} onPointerMove={onPM} onPointerUp={onPU} onPointerLeave={onPU}
       style={{position:"absolute",inset:0,cursor:ez>1.05||region!=="all"?(drag?"grabbing":"grab"):"default",touchAction:"none"}}>
       <div style={{position:"absolute",left:"50%",top:"50%",width:W,height:H,marginLeft:-W/2,marginTop:-H/2,
-        transform:`scale(${ez}) translate(${tx/ez}px,${ty/ez}px)`,
+        transform:"scale("+ez+") translate("+tx/ez+"px,"+ty/ez+"px)",
         transition:drag?"none":"transform .4s cubic-bezier(.22,1,.36,1)",transformOrigin:"center center"}}>
         <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:"100%",position:"absolute"}}>
           {geo&&(geo.features||[geo]).map((f,i)=><path key={i} d={pathGen(f)||""} fill="#eee8dc" fillOpacity=".14"
@@ -1793,7 +1793,7 @@ export default function App(){
                 <div style={{fontSize:14,fontWeight:700,color:dark?"#e0d8c8":C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{s.n}</div>
                 <div style={{fontSize:11,color:s.c,display:"flex",gap:6}}>
                   <span>{s.sp}</span>
-                  <span>{s._pred?.dateStr||`${s.pk[0]}月`}</span>
+                  <span>{(s._pred?s._pred.dateStr:s.pk[0]+"月")}</span>
                   <span style={{color:C.tl}}>{s.rg}</span>
                 </div>
               </div>
