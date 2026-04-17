@@ -271,111 +271,37 @@ function InstrIcon({type,sz}){const s=sz||20;const o=.8;
   return <svg viewBox="0 0 32 32" width={s} height={s}><g opacity={o}><circle cx="16" cy="16" r="6" fill="none" stroke="#a08050" strokeWidth="1.5"/><circle cx="16" cy="16" r="2" fill="#c8a060"/></g></svg>;
 }
 
-// ═══ Music: Web Audio API (always works, no external deps) ═══
-const MELODIES=[
-  {name:"高山流水",inst:"guzheng",bpm:72,scale:[261.6,293.7,329.6,392,440],melody:[4,3,2,0,-1,0,1,2,3,4,-1,3,2,1,0,-1,2,3,4,3,-1,-1,1,0]},
-  {name:"春江花月夜",inst:"pipa",bpm:80,scale:[392,440,523.3,587.3,659.3],melody:[3,2,1,0,-1,1,2,3,4,3,2,1,-1,-1,0,1,2,3,-1,2,1,0]},
-  {name:"梅花三弄",inst:"guqin",bpm:56,scale:[220,261.6,329.6,392,440],melody:[0,1,2,4,-1,-1,2,1,0,-1,0,1,-1,-1,2,3,2,1,0,-1,1,-1,2]},
-  {name:"二泉映月",inst:"erhu",bpm:66,scale:[196,220,261.6,293.7,329.6],melody:[1,0,2,3,-1,-1,4,3,2,0,-1,1,-1,0,2,0,1,-1,0,1,2,-1,-1,3]},
-  {name:"渔舟唱晚",inst:"guzheng",bpm:76,scale:[293.7,329.6,392,440,523.3],melody:[2,3,4,3,-1,2,1,0,-1,1,2,3,-1,4,3,2,-1,1,0,1,-1,-1,2,3]},
-  {name:"平湖秋月",inst:"guzheng",bpm:60,scale:[261.6,329.6,392,440,523.3],melody:[0,2,3,-1,4,3,2,0,-1,1,2,3,-1,-1,4,3,2,1,0,-1,1,2]},
-  {name:"阳关三叠",inst:"guqin",bpm:50,scale:[293.7,329.6,392,440,523.3],melody:[1,-1,2,3,-1,-1,4,3,-1,2,1,-1,0,1,2,-1,-1,3,2,1,-1,-1,0]},
-  {name:"彩云追月",inst:"pipa",bpm:88,scale:[392,440,523.3,587.3,659.3],melody:[4,3,2,1,2,3,-1,4,3,2,1,-1,0,1,2,3,-1,-1,4,3,2,1,0]},
-  {name:"广陵散",inst:"guqin",bpm:52,scale:[130.8,164.8,196,220,261.6],melody:[0,2,3,-1,-1,4,3,2,-1,0,-1,1,2,3,-1,-1,4,2,1,0,-1,-1,1]},
-  {name:"姑苏行",inst:"dizi",bpm:84,scale:[523.3,587.3,659.3,784,880],melody:[2,1,0,2,3,-1,4,3,2,1,-1,0,1,2,-1,3,4,3,2,-1,1,0,1,2]},
-];
-const INST_WAVE={"guzheng":"triangle","pipa":"sawtooth","guqin":"sine","erhu":"triangle","dizi":"square","xiao":"sine"};
-const INST_LABEL={"guqin":"古琴","guzheng":"古筝","pipa":"琵琶","erhu":"二胡","xiao":"箫","dizi":"竹笛"};
-
-let audioCtx=null;
-function playNote(freq,dur,wave,vol=0.08){
-  if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  const osc=audioCtx.createOscillator();const gain=audioCtx.createGain();
-  const now=audioCtx.currentTime;
-  osc.type=wave;osc.frequency.setValueAtTime(freq,now);
-  // Add slight vibrato for erhu
-  if(wave==="triangle"){const lfo=audioCtx.createOscillator();const lfoGain=audioCtx.createGain();
-    lfo.frequency.value=5;lfoGain.gain.value=2;lfo.connect(lfoGain);lfoGain.connect(osc.frequency);lfo.start(now);lfo.stop(now+dur);}
-  gain.gain.setValueAtTime(vol,now);
-  gain.gain.exponentialRampToValueAtTime(vol*0.8,now+0.05);
-  gain.gain.exponentialRampToValueAtTime(0.001,now+dur);
-  osc.connect(gain);gain.connect(audioCtx.destination);
-  osc.start(now);osc.stop(now+dur);
-}
-
+// ═══ Music Player: 网易云音乐 外链播放器 ═══
 function MusicPlayer(){
   const [collapsed,setCollapsed]=useState(true);
-  const [ti,setTi]=useState(0);
-  const [playing,setPlaying]=useState(false);
-  const timerRef=useRef(null);const niRef=useRef(0);const playRef=useRef(false);
+  // 古风纯音乐歌单
+  const pid="2765891267";
 
-  const t=MELODIES[ti%MELODIES.length];
-
-  const stop=useCallback(()=>{playRef.current=false;if(timerRef.current)clearTimeout(timerRef.current);setPlaying(false);},[]);
-
-  const playTrack=useCallback((idx)=>{
-    stop();const tr=MELODIES[idx%MELODIES.length];
-    niRef.current=0;playRef.current=true;setPlaying(true);
-    const wave=INST_WAVE[tr.inst]||"sine";
-    const beatMs=60000/tr.bpm;
-    const tick=()=>{
-      if(!playRef.current)return;
-      const noteIdx=tr.melody[niRef.current%tr.melody.length];
-      if(noteIdx>=0){
-        const freq=tr.scale[noteIdx%tr.scale.length];
-        const dur=beatMs/1000*(0.8+Math.random()*0.3);
-        playNote(freq,dur,wave,0.06+Math.random()*0.04);
-        // Occasional octave lower harmony
-        if(Math.random()>0.8)playNote(freq/2,dur*1.2,wave,0.02);
-      }
-      niRef.current++;
-      if(niRef.current>=tr.melody.length*3){
-        // Auto-advance
-        const next=(idx+1)%MELODIES.length;
-        setTi(next);playTrack(next);return;
-      }
-      const dt=noteIdx<0?beatMs*1.5+Math.random()*200:beatMs+Math.random()*beatMs*0.3;
-      timerRef.current=setTimeout(tick,dt);
-    };
-    // Start with low drone
-    if(tr.scale[0])playNote(tr.scale[0]/2,4,"sine",0.015);
-    tick();
-  },[stop]);
-
-  const toggle=()=>{if(playing)stop();else playTrack(ti);};
-  const next=()=>{const n=(ti+1)%MELODIES.length;setTi(n);if(playing)playTrack(n);};
-  const prev=()=>{const n=(ti-1+MELODIES.length)%MELODIES.length;setTi(n);if(playing)playTrack(n);};
-
-  // Collapsed: show instrument icon
   if(collapsed)return(
     <button onClick={()=>setCollapsed(false)} style={{position:"absolute",bottom:6,right:6,zIndex:36,
       border:"none",borderRadius:"50%",width:44,height:44,cursor:"pointer",
       background:"rgba(250,245,237,.95)",boxShadow:"0 2px 10px rgba(0,0,0,.08)",
       display:"flex",alignItems:"center",justifyContent:"center",padding:0}}>
-      <InstrIcon type={playing?t.inst:"guqin"} sz={playing?30:26}/>
-      {playing&&<div style={{position:"absolute",top:0,right:0,width:10,height:10,borderRadius:"50%",
-        background:C.accent,border:"2px solid #faf5ed",animation:"pulse 1.5s ease-in-out infinite"}}/>}
+      <InstrIcon type="guqin" sz={26}/>
     </button>);
 
-  return(<div style={{position:"absolute",bottom:4,right:3,zIndex:36,
-    background:"rgba(250,245,237,.95)",backdropFilter:"blur(8px)",
-    borderRadius:10,padding:"5px 6px",boxShadow:"0 1px 8px rgba(0,0,0,.06)",width:200}}>
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:3}}>
-      <div style={{display:"flex",alignItems:"center",gap:3}}>
-        <InstrIcon type={t.inst} sz={18}/>
-        <span style={{fontSize:7.5,color:C.tl,letterSpacing:1}}>{INST_LABEL[t.inst]||"器乐"}</span>
+  return(<div style={{position:"absolute",bottom:6,right:6,zIndex:36,
+    background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",
+    borderRadius:12,padding:"6px",boxShadow:"0 2px 12px rgba(0,0,0,.08)",width:340,overflow:"hidden"}}>
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"0 6px 4px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:4}}>
+        <InstrIcon type="guzheng" sz={18}/>
+        <span style={{fontSize:11,color:C.tl,letterSpacing:2}}>古韵 · 网易云</span>
       </div>
-      <button onClick={()=>setCollapsed(true)} style={{border:"none",background:"none",cursor:"pointer",fontSize:8,color:C.tl,padding:0}}>▾</button>
+      <button onClick={()=>setCollapsed(true)} style={{border:"none",background:"none",cursor:"pointer",fontSize:12,color:C.tl}}>▾</button>
     </div>
-    <div style={{display:"flex",alignItems:"center",gap:4}}>
-      <button onClick={prev} style={{border:"none",background:"none",cursor:"pointer",fontSize:9,color:C.tl,padding:1}}>⏮</button>
-      <button onClick={toggle} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.accent,padding:1}}>{playing?"⏸":"▶"}</button>
-      <button onClick={next} style={{border:"none",background:"none",cursor:"pointer",fontSize:9,color:C.tl,padding:1}}>⏭</button>
-      <div style={{flex:1,minWidth:0}}>
-        <div style={{fontSize:12,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
-        <div style={{fontSize:6.5,color:C.tl}}>{ti+1}/{MELODIES.length}首</div>
-      </div>
-    </div>
+    <iframe frameBorder="no" marginWidth="0" marginHeight="0"
+      width="328" height="90" allow="autoplay"
+      src={`https://music.163.com/outchain/player?type=0&id=${pid}&auto=0&height=66`}
+      style={{borderRadius:8,border:"none"}}/>
+    <a href={`https://music.163.com/#/playlist?id=${pid}`} target="_blank" rel="noopener noreferrer"
+      style={{display:"block",textAlign:"center",fontSize:10,color:C.accent,marginTop:3,textDecoration:"none",letterSpacing:1}}>
+      在网易云中打开完整歌单 →</a>
   </div>);
 }
 
@@ -458,55 +384,117 @@ function MoodCard({onClose}){
   const [card,setCard]=useState(null);
   const [revealed,setRevealed]=useState(false);
   const [shaking,setShaking]=useState(false);
+  const [scrollOpen,setScrollOpen]=useState(0);
   
   const dailySeed=useMemo(()=>{const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();},[]);
   
   useEffect(()=>{(async()=>{
     try{const r=await window.storage?.get("mood_"+dailySeed);
-      if(r?.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setRevealed(true);return;}}catch{}
+      if(r?.value){const c=JSON.parse(r.value);setCard(MOOD_CARDS.find(x=>x.name===c));setScrollOpen(1);setRevealed(true);return;}}catch{}
   })();},[dailySeed]);
+
+  // Animate scroll opening
+  useEffect(()=>{if(!card)return;let start=null;
+    const anim=(ts)=>{if(!start)start=ts;const p=Math.min(1,(ts-start)/1200);
+      setScrollOpen(p*p*(3-2*p));// ease in-out
+      if(p<1)requestAnimationFrame(anim);else setTimeout(()=>setRevealed(true),300);};
+    requestAnimationFrame(anim);},[card]);
 
   const draw=async()=>{
     setShaking(true);
     setTimeout(async()=>{
       const picked=MOOD_CARDS[Math.floor(Math.abs(Math.sin(dailySeed*0.618))*MOOD_CARDS.length)%MOOD_CARDS.length];
       setCard(picked);setShaking(false);
-      setTimeout(()=>setRevealed(true),400);
       try{await window.storage?.set("mood_"+dailySeed,JSON.stringify(picked.name));}catch{}
-    },1200);
+    },1500);
   };
 
+  // 千里江山图 color palette
+  const qljsBlue="#3a6b5a",qljsGreen="#4a8a6a",qljsGold="#c8a050",qljsSilk="#f5ece0";
+
   return(<div style={{position:"fixed",inset:0,zIndex:150,display:"flex",alignItems:"center",justifyContent:"center",
-    background:"rgba(30,20,15,.5)",backdropFilter:"blur(6px)"}} onClick={onClose}>
-    <div onClick={e=>e.stopPropagation()} style={{width:"min(380px,88vw)",padding:"24px 28px",
-      background:"linear-gradient(180deg,#faf5ed,#f5ece0,#faf5ed)",
-      borderRadius:14,boxShadow:"0 8px 32px rgba(0,0,0,.2)",position:"relative",
-      border:"2px solid rgba(180,150,100,.2)"}}>
-      <button onClick={onClose} style={{position:"absolute",top:10,right:12,border:"none",background:"none",
-        cursor:"pointer",fontSize:18,color:C.tl,padding:0}}>×</button>
-      {!card&&<div style={{textAlign:"center",padding:"20px 0"}}>
-        <div style={{fontSize:56,marginBottom:16,animation:shaking?"shake .15s infinite":"none"}}>🪷</div>
-        <h2 style={{fontSize:22,fontWeight:900,color:C.text,letterSpacing:6,marginBottom:6}}>每日花签</h2>
-        <div style={{fontSize:12,color:C.tl,letterSpacing:2,marginBottom:24,lineHeight:1.6}}>
-          一花一世界 · 一签一解语<br/>抽一支今日花签，得一段今日心语</div>
-        <button onClick={draw} disabled={shaking} style={{border:"none",background:`linear-gradient(135deg,${C.accent},${C.accent2})`,
-          color:"#fff",borderRadius:20,padding:"10px 28px",cursor:shaking?"default":"pointer",
-          fontSize:14,fontWeight:700,letterSpacing:3,
-          boxShadow:`0 4px 14px ${C.accent}44`}}>
-          {shaking?"摇动中...":"🎐 摇签"}</button>
-      </div>}
-      {card&&<div style={{textAlign:"center",padding:"12px 0",opacity:revealed?1:0,transform:revealed?"translateY(0)":"translateY(10px)",transition:"all .5s"}}>
-        <div style={{fontSize:62,marginBottom:8}}>{card.emoji}</div>
-        <div style={{fontSize:14,color:card.color,letterSpacing:4,marginBottom:3,fontWeight:600}}>今日得签</div>
-        <h2 style={{fontSize:28,fontWeight:900,color:C.text,letterSpacing:8,marginBottom:4}}>{card.name}</h2>
-        <div style={{fontSize:14,color:card.color,letterSpacing:3,marginBottom:16,fontWeight:600}}>·{card.mood}·</div>
-        <div style={{padding:"12px 16px",background:`${card.color}12`,borderLeft:`3px solid ${card.color}`,
-          borderRadius:"0 6px 6px 0",marginBottom:12,fontSize:14,color:C.text,letterSpacing:2.5,
-          lineHeight:1.7,fontStyle:"italic",textAlign:"left"}}>「{card.poem}」</div>
-        <div style={{fontSize:13,color:C.text,letterSpacing:1.5,lineHeight:1.8,padding:"4px 8px"}}>{card.meaning}</div>
-        <div style={{marginTop:16,fontSize:10,color:C.tl,opacity:.55,letterSpacing:2}}>
-          · 每日一签 · 明日再会 ·</div>
-      </div>}
+    background:"rgba(20,15,10,.6)",backdropFilter:"blur(8px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(520px,92vw)",position:"relative"}}>
+      {/* Scroll top roller */}
+      <div style={{height:16,background:`linear-gradient(90deg,${qljsGold},#e0c070,${qljsGold})`,
+        borderRadius:"8px 8px 0 0",boxShadow:"0 2px 8px rgba(0,0,0,.15)",position:"relative",zIndex:2}}>
+        <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
+        <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
+      </div>
+
+      {/* Scroll body with 千里江山图 feel */}
+      <div style={{background:`linear-gradient(180deg,${qljsSilk},#f0e8d8,#e8e0d0,${qljsSilk})`,
+        padding:card?"0":"28px 32px",overflow:"hidden",position:"relative",
+        maxHeight:card?`${scrollOpen*420}px`:"auto",transition:card?"none":"all .3s",
+        boxShadow:"inset 0 2px 8px rgba(0,0,0,.03)"}}>
+        
+        {/* Mountain silhouette decorations */}
+        <div style={{position:"absolute",bottom:0,left:0,right:0,height:80,opacity:.06,
+          background:`url("data:image/svg+xml,${encodeURIComponent('<svg viewBox="0 0 800 80" xmlns="http://www.w3.org/2000/svg"><path d="M0,80 L50,30 L100,50 L180,15 L250,45 L320,20 L400,55 L480,10 L560,40 L620,25 L700,50 L780,18 L800,35 L800,80Z" fill="#3a6b5a"/></svg>')}")`,
+          backgroundSize:"cover"}}/>
+
+        {/* Before drawing */}
+        {!card&&<div style={{textAlign:"center",padding:"16px 0",position:"relative"}}>
+          <div style={{fontSize:60,marginBottom:12,animation:shaking?"shake .12s infinite":"none",
+            filter:"drop-shadow(0 2px 6px rgba(0,0,0,.1))"}}>🪷</div>
+          <h2 style={{fontSize:26,fontWeight:900,color:C.text,letterSpacing:10,marginBottom:4,
+            fontFamily:"'Noto Serif SC',serif"}}>每 日 花 签</h2>
+          <div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${qljsGold},transparent)`,margin:"8px auto 14px"}}/>
+          <div style={{fontSize:13,color:C.tl,letterSpacing:3,marginBottom:28,lineHeight:1.8}}>
+            一花一世界 · 一签一解语</div>
+          <button onClick={draw} disabled={shaking} style={{border:`1.5px solid ${qljsGold}`,
+            background:shaking?"transparent":`linear-gradient(135deg,${qljsBlue}18,${qljsGreen}18)`,
+            color:C.text,borderRadius:28,padding:"12px 36px",cursor:shaking?"default":"pointer",
+            fontSize:15,fontWeight:600,letterSpacing:5,transition:"all .3s",
+            boxShadow:shaking?"none":`0 3px 12px ${qljsBlue}22`}}>
+            {shaking?"签 筒 摇 动 中 ...":"🎐 求 签"}</button>
+        </div>}
+
+        {/* After drawing - scroll content */}
+        {card&&<div style={{padding:"24px 32px",opacity:revealed?1:.3,transition:"opacity .8s"}}>
+          {/* Top: sign name and mood */}
+          <div style={{textAlign:"center",marginBottom:16}}>
+            <div style={{fontSize:48,marginBottom:6,filter:"drop-shadow(0 2px 4px rgba(0,0,0,.08))"}}>{card.emoji}</div>
+            <div style={{fontSize:11,color:qljsGold,letterSpacing:5,marginBottom:2}}>今 日 得 签</div>
+            <h2 style={{fontSize:32,fontWeight:900,color:C.text,letterSpacing:12,margin:"4px 0",
+              fontFamily:"'Noto Serif SC',serif"}}>{card.name}</h2>
+            <div style={{fontSize:14,color:card.color,letterSpacing:6,fontWeight:600}}>· {card.mood} ·</div>
+          </div>
+
+          {/* Divider line */}
+          <div style={{width:"80%",height:1,background:`linear-gradient(90deg,transparent,${qljsGold}66,transparent)`,margin:"12px auto"}}/>
+
+          {/* Poem in scroll style */}
+          <div style={{textAlign:"center",padding:"14px 20px",margin:"12px 0",position:"relative",
+            background:`linear-gradient(135deg,${qljsBlue}08,${qljsGreen}08)`,borderRadius:8}}>
+            <div style={{fontSize:9,color:qljsGold,letterSpacing:3,marginBottom:6}}>题 辞</div>
+            <div style={{fontSize:18,color:C.text,letterSpacing:4,lineHeight:2,fontStyle:"italic",
+              fontFamily:"'Noto Serif SC',serif"}}>
+              {"「"}{card.poem}{"」"}</div>
+          </div>
+
+          {/* Interpretation */}
+          <div style={{padding:"14px 16px",margin:"12px 0"}}>
+            <div style={{fontSize:9,color:qljsGold,letterSpacing:3,marginBottom:8,textAlign:"center"}}>解 签</div>
+            <div style={{fontSize:14,color:C.text,letterSpacing:2,lineHeight:2,textAlign:"center",
+              fontFamily:"'Noto Serif SC',serif"}}>{card.meaning}</div>
+          </div>
+
+          <div style={{textAlign:"center",marginTop:8,fontSize:10,color:C.tl,opacity:.4,letterSpacing:3}}>
+            · 每日一签 · 明日再会 ·</div>
+        </div>}
+      </div>
+
+      {/* Scroll bottom roller */}
+      <div style={{height:16,background:`linear-gradient(90deg,${qljsGold},#e0c070,${qljsGold})`,
+        borderRadius:"0 0 8px 8px",boxShadow:"0 -1px 6px rgba(0,0,0,.1)",position:"relative",zIndex:2}}>
+        <div style={{position:"absolute",left:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
+        <div style={{position:"absolute",right:8,top:3,width:8,height:8,borderRadius:"50%",background:"#b89050"}}/>
+      </div>
+
+      {/* Close button */}
+      <button onClick={onClose} style={{position:"absolute",top:22,right:12,border:"none",background:"rgba(255,255,255,.6)",
+        cursor:"pointer",fontSize:14,color:C.tl,padding:"2px 8px",borderRadius:10,zIndex:3}}>{"×"}</button>
     </div></div>);
 }
 
