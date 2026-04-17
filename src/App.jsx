@@ -121,19 +121,19 @@ function distKm(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dO=(d-b)*Math.PI/180;
 
 // ── Flora Icons ──
 function FI({sp,sz,co}){const s=sz||14,cl=co||"#e080a0";
-const P5=r=>[0,72,144,216,288].map(a=><ellipse key={a} cx="12" cy={12-r} rx="3" ry={r} transform={`rotate(${a},12,12)`} fill={cl}/>);
+const P5=r=>[0,72,144,216,288].map(a=><ellipse key={a} cx="12" cy={12-r} rx="3" ry={r} transform={"rotate("+a+",12,12)"} fill={cl}/>);
 const ic={"樱花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{P5(4.5)}<circle cx="12" cy="12" r="2.5" fill="#f8e0a0"/></g></svg>,
 "桃花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{P5(5)}<circle cx="12" cy="12" r="2" fill="#ffe0e8"/></g></svg>,
-"梅花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,72,144,216,288].map(a=><circle key={a} cx="12" cy="6.5" r="3.2" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="2.5" fill="#ffe088"/></g></svg>,
-"牡丹":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,45,90,135,180,225,270,315].map(a=><ellipse key={a} cx="12" cy="6" rx="3.5" ry="4.5" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#f8d870"/></g></svg>,
-"杜鹃花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,72,144,216,288].map(a=><path key={a} d="M12,3Q15,7 14,12Q12,10 10,12Q9,7 12,3" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#f8e0a0"/></g></svg>,
+"梅花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,72,144,216,288].map(a=><circle key={a} cx="12" cy="6.5" r="3.2" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="2.5" fill="#ffe088"/></g></svg>,
+"牡丹":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,45,90,135,180,225,270,315].map(a=><ellipse key={a} cx="12" cy="6" rx="3.5" ry="4.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#f8d870"/></g></svg>,
+"杜鹃花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,72,144,216,288].map(a=><path key={a} d="M12,3Q15,7 14,12Q12,10 10,12Q9,7 12,3" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#f8e0a0"/></g></svg>,
 "郁金香":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9"><path d="M12,2Q16,6 15,12Q12,14 12,14Q12,14 9,12Q8,6 12,2" fill={cl}/><path d="M12,14L12,22" stroke="#6a9a50" strokeWidth="1.5" fill="none"/></g></svg>,
-"油菜花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="2.5" ry="3.5" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#e8c020"/></g></svg>,
-"蓝花楹":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,51,103,154,206,257,309].map(a=><ellipse key={a} cx="12" cy="7" rx="2" ry="3.5" transform={`rotate(${a},12,12)`} fill={cl}/>)}</g></svg>,
+"油菜花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="2.5" ry="3.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="2" fill="#e8c020"/></g></svg>,
+"蓝花楹":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,51,103,154,206,257,309].map(a=><ellipse key={a} cx="12" cy="7" rx="2" ry="3.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}</g></svg>,
 "梨花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9" fill="#f0ece4" stroke={cl} strokeWidth=".3">{P5(4)}<circle cx="12" cy="12" r="2" fill="#d0e8a0"/></g></svg>,
 "荷花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g fill={cl} opacity=".85"><ellipse cx="12" cy="8" rx="3" ry="6"/><ellipse cx="8" cy="10" rx="2.5" ry="5" transform="rotate(-20,8,10)"/><ellipse cx="16" cy="10" rx="2.5" ry="5" transform="rotate(20,16,10)"/><circle cx="12" cy="14" r="2" fill="#f0d858"/></g></svg>,
 "薰衣草":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><path d="M12,22L12,8" stroke="#7a9a50" strokeWidth="1.2" fill="none"/>{[3,5,7,9,11].map(y=><g key={y}><ellipse cx="10" cy={y} rx="2" ry="1.2" fill={cl}/><ellipse cx="14" cy={y} rx="2" ry="1.2" fill={cl}/></g>)}</g></svg>,
-"格桑花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,45,90,135,180,225,270,315].map(a=><ellipse key={a} cx="12" cy="7" rx="2" ry="4" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="2.5" fill="#f0d060"/></g></svg>,
+"格桑花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,45,90,135,180,225,270,315].map(a=><ellipse key={a} cx="12" cy="7" rx="2" ry="4" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="2.5" fill="#f0d060"/></g></svg>,
 "银杏":()=><svg viewBox="0 0 24 24" width={s} height={s}><g fill={cl} opacity=".9"><path d="M12,20L12,12Q6,8 4,4Q8,2 12,6Q16,2 20,4Q18,8 12,12"/></g></svg>,
 "胡杨":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9"><path d="M12,22L12,10" stroke="#8a6a30" strokeWidth="2" fill="none"/><circle cx="8" cy="8" r="3.5" fill={cl}/><circle cx="16" cy="7" r="3" fill={cl}/><circle cx="12" cy="5" r="3.5" fill={cl} opacity=".8"/></g></svg>,
 "彩林":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><circle cx="7" cy="9" r="4" fill="#d86830"/><circle cx="17" cy="8" r="3.5" fill="#e8a030"/><circle cx="12" cy="6" r="4" fill="#c84020"/><path d="M12,22L12,12" stroke="#6a5030" strokeWidth="1.5" fill="none"/></g></svg>,
@@ -141,9 +141,9 @@ const ic={"樱花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=
 "红枫":()=><svg viewBox="0 0 24 24" width={s} height={s}><g fill={cl} opacity=".9"><path d="M12,2L14,8L20,8L15,12L17,19L12,15L7,19L9,12L4,8L10,8Z"/></g></svg>,
 "雾凇":()=><svg viewBox="0 0 24 24" width={s} height={s}><g stroke={cl} strokeWidth="1.5" fill="none" opacity=".8"><path d="M12,2L12,22M5,7L19,17M19,7L5,17"/><circle cx="12" cy="12" r="2" fill={cl}/></g></svg>,
 "黄栌":()=>ic["彩林"](),
-"桂花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,60,120,180,240,300].map(a=><circle key={a} cx="12" cy="9" r="1.8" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="1.5" fill="#f0d060"/></g></svg>,
+"桂花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9">{[0,60,120,180,240,300].map(a=><circle key={a} cx="12" cy="9" r="1.8" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="1.5" fill="#f0d060"/></g></svg>,
 "三角梅":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9"><path d="M12,3L6,14L18,14Z" fill={cl}/><path d="M12,4L8,13L16,13Z" fill={cl} opacity=".6"/><circle cx="12" cy="11" r="1.5" fill="#f0e8d0"/></g></svg>,
-"丁香花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="1.8" ry="3.5" transform={`rotate(${a},12,12)`} fill={cl}/>)}<circle cx="12" cy="12" r="1.2" fill="#e8d8f0"/>{[-3,3].map(x=><g key={x}>{[0,90,180,270].map(a=><ellipse key={a} cx={12+x} cy={8+Math.abs(x)} rx="1.2" ry="2.5" transform={`rotate(${a},${12+x},${8+Math.abs(x)})`} fill={cl} opacity=".6"/>)}</g>)}</g></svg>,
+"丁香花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="1.8" ry="3.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="1.2" fill="#e8d8f0"/>{[-3,3].map(x=><g key={x}>{[0,90,180,270].map(a=><ellipse key={a} cx={12+x} cy={8+Math.abs(x)} rx="1.2" ry="2.5" transform={"rotate("+a+","+(12+x)+","+(8+Math.abs(x))+")"} fill={cl} opacity=".6"/>)}</g>)}</g></svg>,
 "野花草甸":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><circle cx="8" cy="9" r="2.5" fill={cl}/><circle cx="12" cy="7" r="2.5" fill="#e8a040"/><circle cx="16" cy="9" r="2.5" fill="#d070a0"/></g></svg>};
 const alt={"高山杜鹃":"杜鹃花","云锦杜鹃":"杜鹃花","野杏花":"桃花","芍药":"牡丹","冬樱花":"樱花","苹果梨花":"梨花","凤凰花":"杜鹃花","紫荆花":"杜鹃花","朱槿":"杜鹃花","紫菜花":"薰衣草","杏花":"桃花","竹林":"白桦林","兰花":"薰衣草","菊花":"格桑花","山茶花":"牡丹","蜡梅":"梅花","辛夷花":"梅花","沙漠花":"油菜花","茶花":"牡丹",
   "向日葵":"油菜花","紫藤":"薰衣草","木棉花":"杜鹃花","玉兰花":"梅花","月季":"牡丹","海棠花":"桃花","水仙花":"郁金香","芦花":"格桑花","紫云英":"薰衣草","绣球花":"杜鹃花","睡莲":"荷花","紫薇花":"杜鹃花","合欢花":"桃花","栀子花":"梅花","茉莉花":"梅花","玫瑰":"牡丹","芙蓉花":"牡丹","虞美人":"杜鹃花","波斯菊":"格桑花","鸡蛋花":"郁金香","凌霄花":"杜鹃花","木槿花":"杜鹃花","石榴花":"杜鹃花","蔷薇":"桃花","百合":"郁金香","迎春花":"油菜花"};
@@ -708,7 +708,7 @@ function predictBloom(f){
   const daysUntil=predDoy-nowDoy;
   const confidence=daysUntil<=0?95:daysUntil<15?88:daysUntil<30?75:daysUntil<60?60:45;
   return{month:predMonth,day:predDay,daysUntil:Math.round(daysUntil),confidence,
-    dateStr:`${predMonth}月${predDay}日`};
+    dateStr:predMonth+"月"+predDay+"日"};
 }
 
 function calcSt(at,th,pred){
@@ -896,12 +896,12 @@ function AlertBanner({onGo,flora}){
     flora.forEach(f=>{
       const pred=f._pred;if(!pred)return;
       const du=pred.daysUntil;
-      if(du>=3&&du<=7) result.push({m:`【花信风】${f.n}${f.sp}将于${du}日后进入盛花期`,id:f.id,pri:3});
-      if(du<=0&&du>=-10&&(f._st?.l||0)>=3) result.push({m:`【花信风】${f.n}${f.sp}正值盛花期 · ${f.po}`,id:f.id,pri:4});
-      if(du<-8&&du>=-14&&(f._st?.l||0)>=3) result.push({m:`【急报】${f.n}${f.sp}花期渐近尾声，欲赏请趁本周`,id:f.id,pri:5});
+      if(du>=3&&du<=7) result.push({m:"【花信风】"+f.n+f.sp+"将于"+du+"日后进入盛花期",id:f.id,pri:3});
+      if(du<=0&&du>=-10&&(f._st?.l||0)>=3) result.push({m:"【花信风】"+f.n+f.sp+"正值盛花期 · "+f.po,id:f.id,pri:4});
+      if(du<-8&&du>=-14&&(f._st?.l||0)>=3) result.push({m:"【急报】"+f.n+f.sp+"花期渐近尾声，欲赏请趁本周",id:f.id,pri:5});
       if(du<-14&&(f._st?.l||0)<=1){
         const next=flora.find(x=>x.sp===f.sp&&x.id!==f.id&&x._pred&&x._pred.daysUntil>0&&x._pred.daysUntil<30);
-        if(next) result.push({m:`【接力】${f.n.split("·")[1]||f.n}${f.sp}已谢，${next.n}正在接力绽放`,id:next.id,pri:2});
+        if(next) result.push({m:"【接力】"+(f.n.split("·")[1]||f.n)+f.sp+"已谢，"+next.n+"正在接力绽放",id:next.id,pri:2});
       }
     });
     // Add seasonal wisdom alerts
@@ -1110,7 +1110,7 @@ function ScrollLanding({onEnter}){
       {/* Boats on water (春江) */}
       {cs==="spring"&&<><path d="M300,365 Q310,358 320,365" stroke={qp.m1} strokeWidth="1" fill="none" opacity=".2"/><line x1="310" y1="358" x2="310" y2="348" stroke={qp.m1} strokeWidth=".5" opacity=".15"/></>}
       {/* Flying birds */}
-      {[400,450,480].map((x,i)=><path key={`b${i}`} d={`M${x},${120+i*8} q5,-4 10,0 q5,4 10,0`} stroke={qp.m1} strokeWidth=".8" fill="none" opacity=".12"/>)}
+      {[400,450,480].map((x,i)=><path key={"b"+i} d={`M${x},${120+i*8} q5,-4 10,0 q5,4 10,0`} stroke={qp.m1} strokeWidth=".8" fill="none" opacity=".12"/>)}
     </svg>
     {/* Title */}
     <div style={{marginBottom:18,textAlign:"center",opacity:1-dx*1.5,transition:dg?"none":"all .3s",position:"relative",zIndex:2}}>
@@ -1121,7 +1121,7 @@ function ScrollLanding({onEnter}){
       <div style={{position:"absolute",left:0,top:0,bottom:0,width:16,borderRadius:8,background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"2px 0 6px rgba(0,0,0,.15)",zIndex:5}}/>
       <div style={{position:"absolute",left:16,right:16,top:0,bottom:0,overflow:"hidden"}}>
         <div style={{position:"absolute",left:0,top:0,bottom:0,width:(dx*100)+"%",
-          background:`linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)`,
+          background:"linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)",
           transition:dg?"none":"width .3s",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
           {dx>.2&&<div style={{textAlign:"center",padding:10,opacity:Math.min(1,(dx-.2)*3),whiteSpace:"pre-line",minWidth:180}}>
             <div style={{fontSize:"min(14px,3.5vw)",color:sm.c,letterSpacing:4,lineHeight:2.2}}>{poems[cs]}</div></div>}</div></div>
@@ -1223,8 +1223,8 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
   // Fetch real accumulated temperature from Open-Meteo
   useEffect(()=>{(async()=>{try{
     const now=new Date();const y=now.getFullYear();
-    const start=`${y}-01-01`;const end=now.toISOString().split("T")[0];
-    const url=`https://archive-api.open-meteo.com/v1/archive?latitude=${s.lat}&longitude=${s.lon}&start_date=${start}&end_date=${end}&daily=temperature_2m_mean&timezone=Asia/Shanghai`;
+    const start=y+"-01-01";const end=now.toISOString().split("T")[0];
+    const url="https://archive-api.open-meteo.com/v1/archive?latitude="+s.lat+"&longitude="+s.lon+"&start_date="+start+"&end_date="+end+"&daily=temperature_2m_mean&timezone=Asia/Shanghai";
     const res=await fetch(url);const data=await res.json();
     if(data.daily?.temperature_2m_mean){
       const at=data.daily.temperature_2m_mean.reduce((sum,t)=>sum+(t>5?t-5:0),0);
@@ -1297,7 +1297,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
               transition:"width .5s"}}/></div>
         </div>
         {/* Mafengwo link */}
-        {s.mfw&&<a href={`https://www.mafengwo.cn/search/q.php?q=${encodeURIComponent(s.mfw)}`}
+        {s.mfw&&<a href={"https://www.mafengwo.cn/search/q.php?q="+encodeURIComponent(s.mfw)}
           target="_blank" rel="noopener noreferrer"
           style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,
             padding:"10px 16px",background:"#f8f4ee",borderRadius:8,
@@ -1402,7 +1402,7 @@ export default function App(){
     if("Notification" in window&&Notification.permission==="granted"){
       const soon=flora.filter(f=>f._pred&&f._pred.daysUntil>=1&&f._pred.daysUntil<=3);
       if(soon.length>0){const s=soon[0];
-        new Notification("🌸 花信风提醒",{body:`${s.n}${s.sp}将于${s._pred.daysUntil}天后盛开！`,icon:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='24' font-size='24'>🌸</text></svg>"});
+        new Notification("🌸 花信风提醒",{body:s.n+s.sp+"将于"+s._pred.daysUntil+"天后盛开！",icon:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='24' font-size='24'>🌸</text></svg>"});
       }
     }
   },[entered,flora]);
@@ -1463,7 +1463,7 @@ export default function App(){
         const maxDays=filter==="future1"?30:filter==="future3"?90:180;
         const pred=f._pred;
         const bloomInFuture=pred&&pred.daysUntil>=minDays&&pred.daysUntil<=maxDays;
-        if(bloomInFuture){at=FAT[f.id]||f.th;st={st:`预计${pred.dateStr}`,l:3};}
+        if(bloomInFuture){at=FAT[f.id]||f.th;st={st:"预计"+pred.dateStr,l:3};}
         else st={st:"不在窗口",l:0};
       }else if(filter==="current"&&f.s!==cs)st={st:"非当季",l:0};
       else if(filter==="favs"&&!favs[f.id])st={st:"未收藏",l:0};
@@ -1586,12 +1586,12 @@ export default function App(){
           {geo&&(geo.features||[geo]).map((f,i)=><path key={i} d={pathGen(f)||""} fill="#eee8dc" fillOpacity=".14"
             stroke={C.border} strokeWidth={f.properties?.name?.length>0?.2:.4} strokeLinejoin="round"
             opacity={f.properties?.name?.length>0?.18:.36}/>)}
-          {rP.map((r,i)=>r.d&&<g key={`r${i}`}><path d={r.d} fill="none" stroke={C.river} strokeWidth={r.w*1.2} strokeLinecap="round" opacity=".2"/>
-            <path id={`rv${i}`} d={r.d} fill="none"/><text fontSize="8" fill={C.river} opacity=".25" fontWeight="600">
-              <textPath href={`#rv${i}`} startOffset="35%">{r.n}</textPath></text></g>)}
-          {mP.map((m,i)=>m.dd&&<g key={`m${i}`}><path d={m.dd} fill="none" stroke={C.mtn} strokeWidth=".7" opacity=".1"
-            strokeDasharray={m.d} strokeLinecap="round"/><path id={`mt${i}`} d={m.dd} fill="none"/>
-            <text fontSize="7" fill={C.mtn} opacity=".16" fontWeight="600"><textPath href={`#mt${i}`} startOffset="25%">{m.n}</textPath></text></g>)}
+          {rP.map((r,i)=>r.d&&<g key={"r"+i}><path d={r.d} fill="none" stroke={C.river} strokeWidth={r.w*1.2} strokeLinecap="round" opacity=".2"/>
+            <path id={"rv"+i} d={r.d} fill="none"/><text fontSize="8" fill={C.river} opacity=".25" fontWeight="600">
+              <textPath href={"#rv"+i} startOffset="35%">{r.n}</textPath></text></g>)}
+          {mP.map((m,i)=>m.dd&&<g key={"m"+i}><path d={m.dd} fill="none" stroke={C.mtn} strokeWidth=".7" opacity=".1"
+            strokeDasharray={m.d} strokeLinecap="round"/><path id={"mt"+i} d={m.dd} fill="none"/>
+            <text fontSize="7" fill={C.mtn} opacity=".16" fontWeight="600"><textPath href={"#mt"+i} startOffset="25%">{m.n}</textPath></text></g>)}
           {page==="nearby"&&userLoc&&(()=>{const p=proj([userLoc.lon,userLoc.lat]);
             return p?<g><circle cx={p[0]} cy={p[1]} r="8" fill="#4a90d9" opacity=".2"/>
               <circle cx={p[0]} cy={p[1]} r="4" fill="#4a90d9" stroke="#fff" strokeWidth="1.5"/>
