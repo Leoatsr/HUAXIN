@@ -146,7 +146,8 @@ const ic={"樱花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=
 "丁香花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="1.8" ry="3.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="1.2" fill="#e8d8f0"/>{[-3,3].map(x=><g key={x}>{[0,90,180,270].map(a=><ellipse key={a} cx={12+x} cy={8+Math.abs(x)} rx="1.2" ry="2.5" transform={"rotate("+a+","+(12+x)+","+(8+Math.abs(x))+")"} fill={cl} opacity=".6"/>)}</g>)}</g></svg>,
 "野花草甸":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><circle cx="8" cy="9" r="2.5" fill={cl}/><circle cx="12" cy="7" r="2.5" fill="#e8a040"/><circle cx="16" cy="9" r="2.5" fill="#d070a0"/></g></svg>};
 const alt={"高山杜鹃":"杜鹃花","云锦杜鹃":"杜鹃花","野杏花":"桃花","芍药":"牡丹","冬樱花":"樱花","苹果梨花":"梨花","凤凰花":"杜鹃花","紫荆花":"杜鹃花","朱槿":"杜鹃花","紫菜花":"薰衣草","杏花":"桃花","竹林":"白桦林","兰花":"薰衣草","菊花":"格桑花","山茶花":"牡丹","蜡梅":"梅花","辛夷花":"梅花","沙漠花":"油菜花","茶花":"牡丹",
-  "向日葵":"油菜花","紫藤":"薰衣草","木棉花":"杜鹃花","玉兰花":"梅花","月季":"牡丹","海棠花":"桃花","水仙花":"郁金香","芦花":"格桑花","紫云英":"薰衣草","绣球花":"杜鹃花","睡莲":"荷花","紫薇花":"杜鹃花","合欢花":"桃花","栀子花":"梅花","茉莉花":"梅花","玫瑰":"牡丹","芙蓉花":"牡丹","虞美人":"杜鹃花","波斯菊":"格桑花","鸡蛋花":"郁金香","凌霄花":"杜鹃花","木槿花":"杜鹃花","石榴花":"杜鹃花","蔷薇":"桃花","百合":"郁金香","迎春花":"油菜花"};
+  "向日葵":"油菜花","紫藤":"薰衣草","木棉花":"杜鹃花","玉兰花":"梅花","月季":"牡丹","海棠花":"桃花","水仙花":"郁金香","芦花":"格桑花","紫云英":"薰衣草","绣球花":"杜鹃花","睡莲":"荷花","紫薇花":"杜鹃花","合欢花":"桃花","栀子花":"梅花","茉莉花":"梅花","玫瑰":"牡丹","芙蓉花":"牡丹","虞美人":"杜鹃花","波斯菊":"格桑花","鸡蛋花":"郁金香","凌霄花":"杜鹃花","木槿花":"杜鹃花","石榴花":"杜鹃花","蔷薇":"桃花","百合":"郁金香","迎春花":"油菜花",
+  "牵牛花":"杜鹃花","金针花":"油菜花","蝴蝶兰":"杜鹃花","椰树":"白桦林"};
 const r=ic[sp]||ic[alt[sp]];return r?r():<svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".8">{P5(4)}<circle cx="12" cy="12" r="2" fill="#f0d870"/></g></svg>;}
 
 // ── Flora Data with 3-year historical bloom dates ──
@@ -678,6 +679,37 @@ const FLORA=[
   {id:488,n:"昌吉·天山",sp:"薰衣草",lat:43.80,lon:87.30,th:505,s:"summer",c:"#9070b0",rg:"西北",po:"天山北麓薰衣草",tp:"六月花海",pk:[6,7],hist:["06-15","06-12","06-18"],mfw:"昌吉"},
   // 西藏
   {id:489,n:"阿里·札达",sp:"格桑花",lat:31.47,lon:79.67,th:335,s:"summer",c:"#e060a0",rg:"西藏",po:"札达土林格桑遍",tp:"八月花甸",pk:[7,8],hist:["07-25","07-22","07-28"],mfw:"札达"},
+  // ── 第八批：台湾 + 南海 + 新花种 ──
+  // 台湾
+  {id:500,n:"台北·阳明山",sp:"樱花",lat:25.16,lon:121.54,th:260,s:"spring",c:"#ffb7c5",rg:"台湾",po:"阳明樱花满山开",tp:"宜：二月赏樱",pk:[2,3],hist:["02-20","02-18","02-25"],mfw:"阳明山"},
+  {id:501,n:"台北·士林官邸",sp:"玫瑰",lat:25.09,lon:121.53,th:360,s:"spring",c:"#e04060",rg:"台湾",po:"士林玫瑰花展开",tp:"宜：三月花展",pk:[3,4],hist:["03-15","03-12","03-18"],mfw:"士林官邸"},
+  {id:502,n:"台中·武陵农场",sp:"樱花",lat:24.38,lon:121.31,th:265,s:"spring",c:"#ffb7c5",rg:"台湾",po:"武陵樱花粉红海",tp:"宜：二月盛放",pk:[2,3],hist:["02-15","02-12","02-20"],mfw:"武陵农场"},
+  {id:503,n:"南投·九族文化村",sp:"樱花",lat:23.87,lon:120.94,th:258,s:"spring",c:"#ffb7c5",rg:"台湾",po:"九族樱花夜光华",tp:"宜：夜樱赏花",pk:[2,3],hist:["02-18","02-15","02-22"],mfw:"九族文化村"},
+  {id:504,n:"阿里山·神木",sp:"樱花",lat:23.51,lon:120.80,th:250,s:"spring",c:"#ffb7c5",rg:"台湾",po:"阿里山中樱花雨",tp:"宜：三月云雾",pk:[3,4],hist:["03-22","03-20","03-28"],mfw:"阿里山"},
+  {id:505,n:"台南·赤崁楼",sp:"凤凰花",lat:22.99,lon:120.20,th:530,s:"summer",c:"#e84030",rg:"台湾",po:"府城凤凰花如火",tp:"宜：六月盛放",pk:[5,7],hist:["05-25","05-22","05-28"],mfw:"赤崁楼"},
+  {id:506,n:"高雄·爱河",sp:"紫荆花",lat:22.63,lon:120.30,th:275,s:"spring",c:"#d070b0",rg:"台湾",po:"爱河紫荆映都市",tp:"宜：三月花开",pk:[3,4],hist:["03-15","03-12","03-18"],mfw:"爱河"},
+  {id:507,n:"花莲·六十石山",sp:"金针花",lat:23.34,lon:121.40,th:560,s:"summer",c:"#f0a020",rg:"台湾",po:"金针遍野如黄毯",tp:"宜：八月花海",pk:[8,9],hist:["08-15","08-12","08-20"],mfw:"六十石山"},
+  {id:508,n:"台东·知本",sp:"蝴蝶兰",lat:22.71,lon:121.06,th:310,s:"spring",c:"#c070c0",rg:"台湾",po:"蝴蝶兰花舞南台",tp:"全年可赏",pk:[2,5],hist:["03-10","03-08","03-15"],mfw:"知本"},
+  {id:509,n:"垦丁·鹅銮鼻",sp:"三角梅",lat:21.90,lon:120.85,th:240,s:"spring",c:"#e040a0",rg:"台湾",po:"鹅銮鼻三角梅灿",tp:"全年可赏",pk:[1,5],hist:["02-05","02-02","02-08"],mfw:"鹅銮鼻"},
+  {id:510,n:"宜兰·太平山",sp:"樱花",lat:24.51,lon:121.53,th:268,s:"spring",c:"#ffb7c5",rg:"台湾",po:"太平山樱映云霞",tp:"宜：四月晚樱",pk:[3,4],hist:["03-25","03-22","03-28"],mfw:"太平山"},
+  // 南海诸岛
+  {id:511,n:"三沙·永兴岛",sp:"三角梅",lat:16.83,lon:112.33,th:210,s:"spring",c:"#e040a0",rg:"南海",po:"南海明珠花盛开",tp:"全年可赏",pk:[1,12],hist:["03-01","02-28","03-05"],mfw:"永兴岛"},
+  {id:512,n:"西沙·赵述岛",sp:"椰树",lat:16.97,lon:112.28,th:450,s:"summer",c:"#5a8a50",rg:"南海",po:"椰风海韵赵述岛",tp:"全年可赏",pk:[1,12],hist:["03-01","03-01","03-01"],mfw:"赵述岛"},
+  {id:513,n:"南沙·永暑礁",sp:"椰树",lat:9.55,lon:112.90,th:480,s:"summer",c:"#5a8a50",rg:"南海",po:"永暑椰林守南疆",tp:"全年可赏",pk:[1,12],hist:["03-01","03-01","03-01"],mfw:"永暑礁"},
+  {id:514,n:"中沙·黄岩岛",sp:"椰树",lat:15.13,lon:117.76,th:475,s:"summer",c:"#5a8a50",rg:"南海",po:"黄岩椰影映蓝海",tp:"全年可赏",pk:[1,12],hist:["03-01","03-01","03-01"],mfw:"黄岩岛"},
+  // 牵牛花
+  {id:515,n:"北京·植物园牵牛",sp:"牵牛花",lat:40.02,lon:116.22,th:520,s:"summer",c:"#8060c0",rg:"华北",po:"牵牛花开满架紫",tp:"宜：夏晨赏花",pk:[6,9],hist:["06-20","06-18","06-25"],mfw:"北京植物园"},
+  {id:516,n:"上海·共青森林",sp:"牵牛花",lat:31.32,lon:121.55,th:500,s:"summer",c:"#8060c0",rg:"华东",po:"共青牵牛攀藤架",tp:"宜：夏日清晨",pk:[7,9],hist:["07-10","07-08","07-15"],mfw:"共青森林公园"},
+  // 其他新花种
+  {id:517,n:"厦门·园博苑",sp:"蓝花楹",lat:24.57,lon:118.03,th:420,s:"spring",c:"#7060c0",rg:"华东",po:"园博蓝花楹似梦",tp:"宜：四月紫云",pk:[4,5],hist:["04-15","04-12","04-18"],mfw:"园博苑"},
+  {id:518,n:"昆明·教场中路",sp:"蓝花楹",lat:25.05,lon:102.68,th:395,s:"spring",c:"#7060c0",rg:"西南",po:"教场蓝花楹紫雨",tp:"宜：四月漫步",pk:[3,5],hist:["04-10","04-08","04-15"],mfw:"教场中路"},
+  {id:519,n:"福州·金山寺",sp:"茉莉花",lat:26.06,lon:119.30,th:440,s:"summer",c:"#f0f0e0",rg:"华东",po:"金山茉莉满院香",tp:"宜：夏夜品香",pk:[6,8],hist:["06-20","06-18","06-25"],mfw:"金山寺"},
+  {id:520,n:"海口·东坡书院",sp:"鸡蛋花",lat:19.95,lon:110.28,th:495,s:"summer",c:"#f8e870",rg:"华南",po:"东坡书院鸡蛋香",tp:"全年可赏",pk:[4,10],hist:["05-10","05-08","05-15"],mfw:"东坡书院"},
+  {id:521,n:"西安·大唐芙蓉园",sp:"芙蓉花",lat:34.21,lon:108.97,th:470,s:"autumn",c:"#f0a0b8",rg:"西北",po:"大唐芙蓉映皇城",tp:"十月市花",pk:[9,10],hist:["10-05","10-02","10-08"],mfw:"大唐芙蓉园"},
+  {id:522,n:"苏州·狮子林",sp:"紫薇花",lat:31.32,lon:120.62,th:555,s:"summer",c:"#c050a0",rg:"华东",po:"狮子林畔紫薇开",tp:"七月盛放",pk:[7,9],hist:["07-12","07-10","07-18"],mfw:"狮子林"},
+  {id:523,n:"北京·植物园月季",sp:"月季",lat:40.00,lon:116.20,th:398,s:"spring",c:"#e06080",rg:"华北",po:"北京月季甲北方",tp:"五月花展",pk:[5,6],hist:["05-15","05-12","05-18"],mfw:"北京植物园月季园"},
+  {id:524,n:"杭州·太子湾",sp:"郁金香",lat:30.22,lon:120.13,th:280,s:"spring",c:"#e84060",rg:"华东",po:"太子湾畔郁金香",tp:"宜：三月花海",pk:[3,4],hist:["03-25","03-22","03-28"],mfw:"太子湾公园"},
+  {id:525,n:"乌鲁木齐·天山牧场",sp:"紫藤",lat:43.90,lon:87.58,th:320,s:"spring",c:"#9868c0",rg:"西北",po:"天山紫藤映雪峰",tp:"宜：五月花帘",pk:[5,6],hist:["05-18","05-15","05-22"],mfw:"天山牧场"},
 ];
 const FAT={1:325,2:288,3:260,4:295,5:305,6:315,7:340,8:275,9:250,10:305,11:350,12:380,13:310,14:340,15:300,16:295,20:510,21:660,22:430,23:390,24:370,25:640,40:410,41:375,42:375,43:360,44:385,45:395,46:375,60:32,61:125,
   100:285,101:280,102:270,103:300,104:265,105:280,106:200,107:215,108:385,109:395,110:385,111:390,112:405,113:645,114:635,115:275,116:260,117:280,118:295,119:495,120:270,121:200,122:185,
@@ -687,7 +719,8 @@ const FAT={1:325,2:288,3:260,4:295,5:305,6:315,7:340,8:275,9:250,10:305,11:350,1
   260:275,261:375,262:315,263:385,264:320,265:350,266:665,267:205,268:305,269:290,270:280,271:360,272:200,273:365,274:640,275:310,276:265,277:273,278:635,279:645,280:315,281:240,282:250,283:245,284:275,285:255,286:395,287:245,288:295,289:263,290:255,291:260,292:250,293:335,294:265,295:255,296:220,297:415,298:340,299:355,300:335,301:300,302:515,303:205,304:185,305:295,306:265,307:363,308:397,309:260,310:655,311:285,312:305,313:200,314:175,315:365,
   320:290,321:645,322:390,323:310,324:315,325:210,326:305,327:275,328:315,329:270,330:290,331:263,332:645,333:260,334:310,335:315,336:257,337:360,338:310,339:320,340:265,341:300,342:310,343:250,344:255,345:225,346:277,347:293,348:235,349:200,350:250,351:285,352:363,353:295,354:350,355:270,356:325,357:325,358:393,359:375,360:375,361:405,362:365,363:370,364:305,365:283,366:320,367:325,368:385,369:245,370:353,371:345,372:315,
   380:555,381:525,382:305,383:300,384:225,385:205,386:255,387:260,388:405,389:385,390:295,391:290,392:155,393:505,394:515,395:255,396:455,397:445,398:605,399:555,400:535,401:485,402:435,403:455,404:385,405:355,406:485,407:355,408:385,409:505,410:485,411:475,412:425,413:385,414:425,415:165,416:170,417:650,418:390,419:330,420:263,421:257,422:380,423:267,424:200,425:293,426:253,427:320,428:545,429:375,430:370,431:253,432:385,433:345,434:280,435:283,
-  440:293,441:277,442:283,443:280,444:370,445:388,446:645,447:535,448:375,449:315,450:390,451:640,452:210,453:363,454:300,455:305,456:313,457:647,458:363,459:310,460:295,461:305,462:223,463:260,464:255,465:250,466:253,467:257,468:605,469:240,470:260,471:315,472:310,473:625,474:295,475:425,476:320,477:370,478:255,479:325,480:375,481:315,482:515,483:285,484:335,485:530,486:390,487:270,488:510,489:340};
+  440:293,441:277,442:283,443:280,444:370,445:388,446:645,447:535,448:375,449:315,450:390,451:640,452:210,453:363,454:300,455:305,456:313,457:647,458:363,459:310,460:295,461:305,462:223,463:260,464:255,465:250,466:253,467:257,468:605,469:240,470:260,471:315,472:310,473:625,474:295,475:425,476:320,477:370,478:255,479:325,480:375,481:315,482:515,483:285,484:335,485:530,486:390,487:270,488:510,489:340,
+  500:265,501:363,502:270,503:263,504:255,505:535,506:280,507:565,508:315,509:245,510:273,511:215,512:455,513:485,514:480,515:525,516:510,517:425,518:400,519:445,520:500,521:475,522:560,523:403,524:285,525:325};
 
 // ── Bloom prediction from 3-year history ──
 function predictBloom(f){
@@ -777,42 +810,88 @@ function playN(freq,dur,type,vol,pan=0){
 }
 
 const TRACKS=[
-  {name:"高山流水",inst:"guzheng",bpm:68,
-   notes:[[4,1],[3,.5],[2,1],[0,1.5],[-1,1],[0,.5],[1,.5],[2,1],[3,1],[4,1.5],[-1,.5],[3,.5],[2,1],[1,.5],[0,1.5],[-1,1],[2,.5],[3,1],[4,1.5],[-1,1]]},
-  {name:"春江花月夜",inst:"pipa",bpm:76,
-   notes:[[3,1],[2,.5],[1,.5],[0,1],[-1,.5],[1,.5],[2,1],[3,.5],[4,1],[3,.5],[2,.5],[1,1],[-1,1],[0,.5],[1,1],[2,.5],[3,1.5],[-1,.5],[2,.5],[1,1],[0,1.5]]},
-  {name:"梅花三弄",inst:"guqin",bpm:48,
+  // 古琴 Guqin - the most ancient
+  {name:"梅花三弄",inst:"guqin",bpm:48,era:"晋·桓伊",
    notes:[[0,1.5],[1,1],[2,1.5],[4,2],[-1,1.5],[2,1],[1,1],[0,2],[-1,1],[0,1],[1,1.5],[-1,1.5],[2,1.5],[3,1],[2,1],[1,1],[0,2],[-1,1.5]]},
-  {name:"二泉映月",inst:"erhu",bpm:56,
-   notes:[[1,1],[0,1.5],[2,1],[3,1.5],[-1,1],[4,1],[3,.5],[2,1],[0,1.5],[-1,.5],[1,1],[0,.5],[2,.5],[0,1],[1,1.5],[-1,1],[0,1],[1,1],[2,1.5],[-1,1.5]]},
-  {name:"渔舟唱晚",inst:"guzheng",bpm:72,
+  {name:"高山流水",inst:"guqin",bpm:52,era:"春秋·伯牙",
+   notes:[[4,1],[3,.5],[2,1],[0,1.5],[-1,1],[0,.5],[1,.5],[2,1],[3,1],[4,1.5],[-1,.5],[3,.5],[2,1],[1,.5],[0,1.5],[-1,1]]},
+  {name:"广陵散",inst:"guqin",bpm:50,era:"东汉",
+   notes:[[0,1],[2,1],[4,1.5],[-1,.5],[3,1],[1,1],[0,1.5],[-1,1],[2,.5],[3,1],[4,1],[-1,.5],[2,1],[1,1],[0,2],[-1,1.5]]},
+  {name:"平沙落雁",inst:"guqin",bpm:46,era:"明代",
+   notes:[[2,1],[1,1],[0,1.5],[-1,1],[1,.5],[2,1],[3,1.5],[-1,1],[2,1],[1,.5],[0,1.5],[-1,1],[0,1],[1,1],[2,2],[-1,1.5]]},
+  // 古筝 Guzheng
+  {name:"渔舟唱晚",inst:"guzheng",bpm:72,era:"近代",
    notes:[[2,.5],[3,1],[4,.5],[3,1],[-1,.5],[2,.5],[1,1],[0,1.5],[-1,.5],[1,.5],[2,1],[3,.5],[-1,.5],[4,1],[3,.5],[2,1],[-1,.5],[1,1],[0,.5],[1,1.5],[-1,1]]},
-  {name:"姑苏行",inst:"dizi",bpm:80,
-   notes:[[2,.5],[1,.5],[0,1],[2,.5],[3,1],[-1,.5],[4,.5],[3,.5],[2,1],[1,.5],[-1,.5],[0,.5],[1,1],[2,.5],[-1,.5],[3,1],[4,.5],[3,.5],[2,1],[-1,.5],[1,.5],[0,1],[1,1.5]]},
+  {name:"汉宫秋月",inst:"guzheng",bpm:62,era:"传统",
+   notes:[[3,1],[2,.5],[1,1],[0,1.5],[-1,1],[2,.5],[3,1],[4,.5],[3,1],[-1,.5],[2,.5],[1,1],[0,2],[-1,1]]},
+  {name:"战台风",inst:"guzheng",bpm:96,era:"近代",
+   notes:[[4,.5],[3,.5],[2,.5],[3,.5],[4,.5],[-1,.25],[4,.5],[3,.5],[2,.5],[1,.5],[0,1],[-1,.5],[2,.5],[3,.5],[4,1],[-1,.5],[3,.5],[2,.5],[1,1],[0,1.5]]},
+  // 琵琶 Pipa
+  {name:"春江花月夜",inst:"pipa",bpm:76,era:"唐代·张若虚",
+   notes:[[3,1],[2,.5],[1,.5],[0,1],[-1,.5],[1,.5],[2,1],[3,.5],[4,1],[3,.5],[2,.5],[1,1],[-1,1],[0,.5],[1,1],[2,.5],[3,1.5],[-1,.5]]},
+  {name:"十面埋伏",inst:"pipa",bpm:108,era:"楚汉相争",
+   notes:[[4,.25],[3,.25],[2,.25],[1,.25],[0,.5],[-1,.25],[4,.25],[3,.5],[2,.25],[1,.25],[0,.5],[-1,.5],[2,.5],[3,.5],[4,.5],[3,.5],[2,.5],[1,.5],[0,1]]},
+  {name:"霸王卸甲",inst:"pipa",bpm:70,era:"楚霸王",
+   notes:[[0,1.5],[1,1],[2,1],[3,1.5],[-1,.5],[4,1],[3,.5],[2,1],[1,1.5],[0,2],[-1,1]]},
+  {name:"彝族舞曲",inst:"pipa",bpm:92,era:"近代·王惠然",
+   notes:[[2,.5],[3,.5],[4,.5],[3,.5],[2,1],[1,.5],[0,1],[-1,.5],[1,.5],[2,1],[3,.5],[4,1],[3,.5],[2,.5],[1,1]]},
+  // 二胡 Erhu
+  {name:"二泉映月",inst:"erhu",bpm:56,era:"民国·阿炳",
+   notes:[[1,1],[0,1.5],[2,1],[3,1.5],[-1,1],[4,1],[3,.5],[2,1],[0,1.5],[-1,.5],[1,1],[0,.5],[2,.5],[0,1],[1,1.5],[-1,1]]},
+  {name:"赛马",inst:"erhu",bpm:132,era:"近代·黄海怀",
+   notes:[[4,.25],[3,.25],[4,.25],[2,.25],[4,.5],[-1,.25],[3,.25],[2,.25],[1,.5],[0,.5],[-1,.25],[2,.25],[3,.25],[4,.5],[3,.5],[2,.5],[1,1]]},
+  {name:"江河水",inst:"erhu",bpm:58,era:"东北民间",
+   notes:[[2,1.5],[1,1],[0,1.5],[-1,.5],[2,.5],[1,1],[3,1],[2,.5],[1,1],[0,2],[-1,1.5]]},
+  {name:"良宵",inst:"erhu",bpm:78,era:"民国·刘天华",
+   notes:[[3,.5],[4,.5],[3,1],[2,.5],[1,.5],[0,1.5],[-1,.5],[2,.5],[3,1],[4,.5],[3,1],[2,1.5],[-1,1]]},
+  // 竹笛 Dizi
+  {name:"姑苏行",inst:"dizi",bpm:80,era:"近代·江先谓",
+   notes:[[2,.5],[1,.5],[0,1],[2,.5],[3,1],[-1,.5],[4,.5],[3,.5],[2,1],[1,.5],[-1,.5],[0,.5],[1,1],[2,.5],[-1,.5],[3,1]]},
+  {name:"牧民新歌",inst:"dizi",bpm:88,era:"近代·简广易",
+   notes:[[3,.5],[4,.5],[3,.5],[2,.5],[1,1],[-1,.5],[0,.5],[1,.5],[2,1],[3,.5],[4,1],[-1,.5],[2,.5],[1,.5],[0,1.5]]},
+  {name:"喜相逢",inst:"dizi",bpm:120,era:"近代·冯子存",
+   notes:[[4,.25],[3,.25],[2,.5],[3,.25],[4,.5],[-1,.25],[3,.25],[2,.25],[1,.5],[0,.5],[-1,.25],[2,.5],[3,.5],[4,1]]},
+  // 箫 Xiao
+  {name:"妆台秋思",inst:"xiao",bpm:52,era:"古曲",
+   notes:[[2,1.5],[1,1],[0,2],[-1,1],[2,.5],[3,1],[2,1],[1,1.5],[0,2],[-1,1]]},
+  // 扬琴 Yangqin
+  {name:"林冲夜奔",inst:"yangqin",bpm:98,era:"现代",
+   notes:[[3,.5],[4,.25],[3,.25],[2,.5],[1,.5],[0,1],[-1,.5],[2,.5],[3,.5],[4,.5],[3,.5],[2,1]]},
+  // 阮 Ruan
+  {name:"花好月圆",inst:"ruan",bpm:82,era:"近代·黄贻钧",
+   notes:[[2,.5],[3,.5],[4,1],[3,.5],[2,.5],[1,1],[-1,.5],[0,.5],[1,.5],[2,1],[3,.5],[4,1.5]]},
 ];
 const INST_CONF={
+  guqin:{wave:"sine",scale:[196,220,261.6,293.7,329.6],vol:.07},
   guzheng:{wave:"triangle",scale:[293.7,329.6,392,440,523.3],vol:.06},
   pipa:{wave:"sawtooth",scale:[392,440,523.3,587.3,659.3],vol:.04},
-  guqin:{wave:"sine",scale:[196,220,261.6,293.7,329.6],vol:.07},
   erhu:{wave:"triangle",scale:[220,261.6,293.7,329.6,392],vol:.05},
   dizi:{wave:"square",scale:[523.3,587.3,659.3,784,880],vol:.03},
+  xiao:{wave:"sine",scale:[349.2,392,440,523.3,587.3],vol:.04},
+  yangqin:{wave:"triangle",scale:[261.6,293.7,329.6,392,440],vol:.05},
+  ruan:{wave:"sawtooth",scale:[196,220,246.9,293.7,329.6],vol:.05},
 };
-const INST_LABEL={"guqin":"古琴","guzheng":"古筝","pipa":"琵琶","erhu":"二胡","dizi":"竹笛"};
+const INST_LABEL={"guqin":"古琴","guzheng":"古筝","pipa":"琵琶","erhu":"二胡","dizi":"竹笛","xiao":"洞箫","yangqin":"扬琴","ruan":"中阮"};
+const INST_EMOJI={"guqin":"🎋","guzheng":"🎼","pipa":"🪕","erhu":"🎻","dizi":"🎶","xiao":"🎵","yangqin":"🎹","ruan":"🎸"};
 
 function MusicPlayer(){
   const [show,setShow]=useState(false);
   const [ti,setTi]=useState(0);
   const [playing,setPlaying]=useState(false);
+  const [selInst,setSelInst]=useState("all"); // "all" or instrument key
   const tmRef=useRef(null);const niRef=useRef(0);const loopRef=useRef(0);const playRef=useRef(false);
-  const t=TRACKS[ti%TRACKS.length];
+
+  // Filtered track list based on selected instrument
+  const filteredTracks=selInst==="all"?TRACKS:TRACKS.filter(tr=>tr.inst===selInst);
+  const t=filteredTracks[ti%Math.max(1,filteredTracks.length)]||TRACKS[0];
 
   const stop=useCallback(()=>{playRef.current=false;if(tmRef.current)clearTimeout(tmRef.current);setPlaying(false);},[]);
 
-  const play=useCallback((idx)=>{
-    stop();const tr=TRACKS[idx%TRACKS.length];const ic=INST_CONF[tr.inst]||INST_CONF.guzheng;
+  const play=useCallback((idx,trackList)=>{
+    stop();const list=trackList||filteredTracks;if(!list.length)return;
+    const tr=list[idx%list.length];const ic=INST_CONF[tr.inst]||INST_CONF.guqin;
     niRef.current=0;loopRef.current=0;playRef.current=true;setPlaying(true);
     const beatMs=60000/tr.bpm;
-    // Low drone
     playN(ic.scale[0]/2,6,"sine",ic.vol*0.2);
     const tick=()=>{
       if(!playRef.current)return;
@@ -822,21 +901,48 @@ function MusicPlayer(){
         const d=dur*beatMs/1000;
         const pan=(Math.random()-.5)*.4;
         playN(freq,d,ic.wave,ic.vol,pan);
-        // Occasional harmony
         if(Math.random()>.75)playN(freq*1.5,d*.6,ic.wave,ic.vol*.25,pan);
       }
       niRef.current++;
       if(niRef.current>=tr.notes.length){niRef.current=0;loopRef.current++;
-        if(loopRef.current>=2){const next=(idx+1)%TRACKS.length;setTi(next);play(next);return;}
+        if(loopRef.current>=2){const next=(idx+1)%list.length;setTi(next);play(next,list);return;}
         playN(ic.scale[0]/2,5,"sine",ic.vol*0.15);
       }
       tmRef.current=setTimeout(tick,dur*beatMs+(ni<0?100:0));
     };tick();
-  },[stop]);
+  },[stop,filteredTracks]);
 
-  const toggle=()=>{if(playing)stop();else{getAC();play(ti);}};
-  const next=()=>{const n=(ti+1)%TRACKS.length;setTi(n);if(playing)play(n);};
-  const prev=()=>{const n=(ti-1+TRACKS.length)%TRACKS.length;setTi(n);if(playing)play(n);};
+  const toggle=()=>{if(playing)stop();else{getAC();play(ti,filteredTracks);}};
+  const next=()=>{const n=(ti+1)%filteredTracks.length;setTi(n);if(playing)play(n,filteredTracks);};
+  const prev=()=>{const n=(ti-1+filteredTracks.length)%filteredTracks.length;setTi(n);if(playing)play(n,filteredTracks);};
+  const random=()=>{
+    const insts=["all",...Object.keys(INST_CONF)];
+    const rInst=insts[Math.floor(Math.random()*insts.length)];
+    setSelInst(rInst);
+    const newList=rInst==="all"?TRACKS:TRACKS.filter(tr=>tr.inst===rInst);
+    const rIdx=Math.floor(Math.random()*newList.length);
+    setTi(rIdx);getAC();play(rIdx,newList);
+  };
+  const pickInst=(k)=>{setSelInst(k);setTi(0);
+    const newList=k==="all"?TRACKS:TRACKS.filter(tr=>tr.inst===k);
+    if(playing)play(0,newList);
+  };
+
+  // Keyboard controls: ↑↓ = instrument, ←→ = track, space = play/pause
+  useEffect(()=>{if(!show)return;
+    const h=(e)=>{
+      if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName))return;
+      const insts=["all",...Object.keys(INST_CONF)];
+      const curIdx=insts.indexOf(selInst);
+      if(e.key==="ArrowUp"){e.preventDefault();pickInst(insts[(curIdx-1+insts.length)%insts.length]);}
+      else if(e.key==="ArrowDown"){e.preventDefault();pickInst(insts[(curIdx+1)%insts.length]);}
+      else if(e.key==="ArrowLeft"){e.preventDefault();prev();}
+      else if(e.key==="ArrowRight"){e.preventDefault();next();}
+      else if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}
+    };
+    window.addEventListener("keydown",h);
+    return()=>window.removeEventListener("keydown",h);
+  },[show,selInst,ti,playing,filteredTracks.length]);
 
   if(!show)return(
     <button onClick={()=>setShow(true)} style={{position:"absolute",bottom:8,right:8,zIndex:36,
@@ -845,31 +951,54 @@ function MusicPlayer(){
       display:"flex",alignItems:"center",justifyContent:"center"}}>
       <InstrIcon type={playing?t.inst:"guqin"} sz={playing?28:24}/>
       {playing&&<div style={{position:"absolute",top:0,right:0,width:10,height:10,borderRadius:"50%",
-        background:C.accent,border:"2px solid #faf5ed"}}/>}
+        background:C.accent,border:"2px solid #faf5ed"}}></div>}
     </button>);
 
   return(<div style={{position:"absolute",bottom:8,right:8,zIndex:36,
-    background:"rgba(250,245,237,.96)",backdropFilter:"blur(8px)",
-    borderRadius:12,padding:"10px 14px",boxShadow:"0 2px 14px rgba(0,0,0,.08)",width:220}}>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-      <div style={{display:"flex",alignItems:"center",gap:6}}>
-        <InstrIcon type={t.inst} sz={22}/>
-        <span style={{fontSize:11,color:C.tl,letterSpacing:2}}>{INST_LABEL[t.inst]}</span>
-      </div>
+    background:"rgba(250,245,237,.97)",backdropFilter:"blur(8px)",
+    borderRadius:12,padding:"12px 14px",boxShadow:"0 4px 20px rgba(0,0,0,.1)",width:280}}>
+    {/* Header */}
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+      <div style={{fontSize:13,fontWeight:700,color:C.text,letterSpacing:2}}>🎼 国乐</div>
       <button onClick={()=>setShow(false)} style={{border:"none",background:"none",cursor:"pointer",fontSize:16,color:C.tl}}>{"×"}</button>
     </div>
-    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6}}>
-      <button onClick={prev} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>⏮</button>
-      <button onClick={toggle} style={{border:"none",background:"none",cursor:"pointer",fontSize:20,color:C.accent}}>{playing?"⏸":"▶"}</button>
-      <button onClick={next} style={{border:"none",background:"none",cursor:"pointer",fontSize:14,color:C.tl}}>⏭</button>
-      <div style={{flex:1}}>
-        <div style={{fontSize:14,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
-        <div style={{fontSize:11,color:C.tl}}>{ti+1}/{TRACKS.length}首</div>
+    {/* Instrument selector */}
+    <div style={{display:"flex",gap:3,flexWrap:"wrap",marginBottom:10}}>
+      <button onClick={()=>pickInst("all")} style={{border:"none",borderRadius:12,padding:"4px 9px",cursor:"pointer",fontSize:11,
+        background:selInst==="all"?C.accent+"22":"#f5f0e8",color:selInst==="all"?C.accent:C.tl,fontWeight:selInst==="all"?700:500}}>
+        全部</button>
+      {Object.keys(INST_LABEL).map(k=>(
+        <button key={k} onClick={()=>pickInst(k)} style={{border:"none",borderRadius:12,padding:"4px 9px",cursor:"pointer",fontSize:11,
+          background:selInst===k?C.accent+"22":"#f5f0e8",color:selInst===k?C.accent:C.tl,fontWeight:selInst===k?700:500}}>
+          {INST_LABEL[k]}</button>))}
+      <button onClick={random} style={{border:"none",borderRadius:12,padding:"4px 9px",cursor:"pointer",fontSize:11,
+        background:"#fdf0e0",color:"#d06030",fontWeight:700}}>🎲 随机</button>
+    </div>
+    {/* Now playing */}
+    <div style={{background:"#f5f0e8",borderRadius:8,padding:"8px 10px",marginBottom:8}}>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        <InstrIcon type={t.inst} sz={26}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
+          <div style={{fontSize:10,color:C.tl}}>{INST_LABEL[t.inst]} · {t.era||""} · {(ti%filteredTracks.length)+1}/{filteredTracks.length}</div>
+        </div>
       </div>
     </div>
-    {playing&&<div style={{height:3,borderRadius:2,background:"#ece6dc",overflow:"hidden"}}>
+    {/* Controls */}
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14}}>
+      <button onClick={prev} style={{border:"none",background:"none",cursor:"pointer",fontSize:18,color:C.tl}}>⏮</button>
+      <button onClick={toggle} style={{border:"none",background:C.accent,color:"#fff",borderRadius:"50%",
+        width:42,height:42,cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        {playing?"⏸":"▶"}</button>
+      <button onClick={next} style={{border:"none",background:"none",cursor:"pointer",fontSize:18,color:C.tl}}>⏭</button>
+    </div>
+    {/* Keyboard hint */}
+    <div style={{fontSize:9,color:C.tl,textAlign:"center",marginTop:8,opacity:.6,letterSpacing:1}}>
+      ↑↓切换乐器 · ←→切换曲目 · 空格播放
+    </div>
+    {playing&&<div style={{height:3,borderRadius:2,background:"#ece6dc",overflow:"hidden",marginTop:6}}>
       <div style={{height:"100%",width:"60%",borderRadius:2,background:"linear-gradient(90deg,"+C.accent+","+C.accent2+")",
-        animation:"progress 3s linear infinite"}}/>
+        animation:"progress 3s linear infinite"}}></div>
     </div>}
   </div>);
 }
@@ -1212,6 +1341,7 @@ function LandscapeSVG({season,color,w,h}){
 function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
   const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
   const [note,setNote]=useState("");const [notes,setNotes]=useState([]);
+  const [showShare,setShowShare]=useState(false);
   // Load shared notes for this spot
   useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("notes_"+s.id,true):null;
     if(r&&r.value)setNotes(JSON.parse(r.value));}catch{}})();},[s.id]);
@@ -1318,10 +1448,52 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:isChecked?"#c8a050":C.tl}}>
             {isChecked?"📍已打卡":"📍打卡"}</button>
-          <button onClick={function(){var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"");if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text}).catch(function(){});else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
+          <button onClick={()=>setShowShare(true)}
             style={{border:"1.5px solid #e0dcd4",background:"#faf6ef",borderRadius:8,padding:"8px 12px",
               cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl}}>📤</button>
         </div>
+        {/* Social share menu */}
+        {showShare&&<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(0,0,0,.35)",
+          display:"flex",alignItems:"flex-end",justifyContent:"center",backdropFilter:"blur(3px)"}}
+          onClick={()=>setShowShare(false)}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"100%",maxWidth:480,
+            borderRadius:"14px 14px 0 0",padding:"20px 22px 28px",animation:"none"}}>
+            <div style={{fontSize:14,fontWeight:700,color:C.text,textAlign:"center",marginBottom:16,letterSpacing:3}}>分享到</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
+              {[
+                {k:"wx",l:"微信",c:"#07c160",ic:"💬"},
+                {k:"pyq",l:"朋友圈",c:"#07c160",ic:"👥"},
+                {k:"xhs",l:"小红书",c:"#fe2c55",ic:"📕"},
+                {k:"wb",l:"微博",c:"#e6162d",ic:"🔴"},
+                {k:"tw",l:"X/推特",c:"#1da1f2",ic:"𝕏"},
+                {k:"fb",l:"Facebook",c:"#4267b2",ic:"f"},
+                {k:"lk",l:"复制链接",c:"#8a7a68",ic:"🔗"},
+                {k:"sys",l:"更多",c:"#8a7a68",ic:"⋯"},
+              ].map(m=>(
+                <button key={m.k} onClick={()=>{
+                  var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"")+"\n——来自花信风";
+                  var url=typeof window!=="undefined"?window.location.href:"";
+                  if(m.k==="wx"||m.k==="pyq"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开微信粘贴分享");}
+                  else if(m.k==="xhs"){navigator.clipboard.writeText(text+"\n"+url);alert("文案已复制！请打开小红书APP粘贴发布");}
+                  else if(m.k==="wb"){var wb="https://service.weibo.com/share/share.php?title="+encodeURIComponent(text)+"&url="+encodeURIComponent(url);window.open(wb,"_blank");}
+                  else if(m.k==="tw"){var tw="https://twitter.com/intent/tweet?text="+encodeURIComponent(text)+"&url="+encodeURIComponent(url);window.open(tw,"_blank");}
+                  else if(m.k==="fb"){var fb="https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(url)+"&quote="+encodeURIComponent(text);window.open(fb,"_blank");}
+                  else if(m.k==="lk"){navigator.clipboard.writeText(url);alert("链接已复制");}
+                  else if(m.k==="sys"){if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text,url:url}).catch(function(){});else{navigator.clipboard.writeText(text);alert("已复制");}}
+                  setShowShare(false);
+                }} style={{border:"none",background:"transparent",cursor:"pointer",padding:"8px 2px",
+                  display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+                  <div style={{width:44,height:44,borderRadius:"50%",background:m.c,color:"#fff",
+                    display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:700,
+                    boxShadow:"0 2px 8px "+m.c+"44"}}>{m.ic}</div>
+                  <div style={{fontSize:11,color:C.text}}>{m.l}</div>
+                </button>))}
+            </div>
+            <button onClick={()=>setShowShare(false)} style={{display:"block",margin:"18px auto 0",
+              border:"none",background:"#f0ece4",borderRadius:20,padding:"8px 28px",
+              cursor:"pointer",fontSize:13,color:C.tl}}>取消</button>
+          </div>
+        </div>}
         {isChecked&&<div style={{fontSize:11,color:"#c8a050",textAlign:"center",marginTop:4}}>
           🎉 打卡时间：{isChecked.date}</div>}
         {/* Community notes */}
@@ -1352,21 +1524,45 @@ function SpeciesWheel({onSelect,selected,spots}){
     else if(e.key==="ArrowRight"){setSi(i=>{const n=(i+1)%species.length;onSelect(species[n]);return n;});e.preventDefault();}};
     window.addEventListener("keydown",h);return()=>window.removeEventListener("keydown",h);},[species]);
   const count=spots.filter(s=>s.sp===selected&&((s._st&&s._st.l)||0)>0).length;
-  return(<div style={{position:"absolute",bottom:0,right:0,zIndex:28,width:210,height:120}}>
-    <svg viewBox="0 0 210 120" style={{width:"100%",height:"100%"}}>
-      <path d={`M${105-95},110 A95,95 0 0,1 ${105+95},110`} fill="rgba(250,245,237,.9)" stroke="rgba(180,150,100,.1)" strokeWidth=".5"/>
-      {species.map((sp,i)=>{const a=((i-si+species.length)%species.length);const half=Math.floor(species.length/2);
-        if(a>half&&a<species.length-half+1)return null;const mapped=a<=half?a:a-species.length;
-        const rad=(90-mapped*(140/species.length))*Math.PI/180;
-        const x=105+82*Math.cos(rad),y=110-82*Math.sin(rad);const isSel=sp===selected;const fl=FLORA.find(f=>f.sp===sp);
-        return <g key={sp} onClick={()=>sel(i)} style={{cursor:"pointer"}}>
-          <circle cx={x} cy={y} r={isSel?13:8} fill={isSel?"rgba(250,245,237,.95)":"rgba(250,245,237,.5)"}
-            stroke={(fl&&fl.c)||C.accent} strokeWidth={isSel?1.2:.3}/>
-          <foreignObject x={x-(isSel?10:5)} y={y-(isSel?10:5)} width={isSel?20:10} height={isSel?20:10}>
-            <FI sp={sp} sz={isSel?20:10} co={(fl&&fl.c)}/></foreignObject></g>;})}
-      <text x="105" y="98" textAnchor="middle" fontSize="9.5" fill={C.text} fontWeight="700">{selected}</text>
-      <text x="105" y="108" textAnchor="middle" fontSize="6.5" fill={C.tl}>{count}个观赏地 · ← →</text>
-    </svg></div>);
+  const prevSp=species[(si-1+species.length)%species.length];
+  const nextSp=species[(si+1)%species.length];
+  const prevFl=FLORA.find(f=>f.sp===prevSp);
+  const nextFl=FLORA.find(f=>f.sp===nextSp);
+  const curFl=FLORA.find(f=>f.sp===selected);
+  return(<div style={{position:"absolute",bottom:8,right:8,zIndex:28,width:260,height:110,
+    background:"rgba(250,245,237,.96)",borderRadius:12,padding:"10px 14px",
+    boxShadow:"0 2px 14px rgba(0,0,0,.08)",display:"flex",alignItems:"center",gap:6}}>
+    {/* Previous */}
+    <button onClick={()=>sel((si-1+species.length)%species.length)}
+      style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:42,height:42,
+        cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+        opacity:.6,padding:0}}>
+      <FI sp={prevSp} sz={22} co={(prevFl&&prevFl.c)}/>
+      <div style={{fontSize:9,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{prevSp.slice(0,3)}</div>
+    </button>
+    <div style={{fontSize:16,color:C.tl,opacity:.5}}>‹</div>
+    {/* Current selected - BIG */}
+    <div style={{flex:1,textAlign:"center",padding:"0 4px"}}>
+      <div style={{display:"flex",justifyContent:"center",marginBottom:2}}>
+        <div style={{width:54,height:54,borderRadius:"50%",background:"rgba(255,255,255,.95)",
+          border:"2.5px solid "+((curFl&&curFl.c)||C.accent),boxShadow:"0 2px 8px "+((curFl&&curFl.c)||C.accent)+"33",
+          display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <FI sp={selected} sz={34} co={(curFl&&curFl.c)}/>
+        </div>
+      </div>
+      <div style={{fontSize:14,color:C.text,fontWeight:800,letterSpacing:2,lineHeight:1.1}}>{selected}</div>
+      <div style={{fontSize:10,color:C.accent,marginTop:1}}>{count}个观赏地</div>
+    </div>
+    <div style={{fontSize:16,color:C.tl,opacity:.5}}>›</div>
+    {/* Next */}
+    <button onClick={()=>sel((si+1)%species.length)}
+      style={{border:"none",background:"rgba(255,255,255,.6)",borderRadius:"50%",width:42,height:42,
+        cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
+        opacity:.6,padding:0}}>
+      <FI sp={nextSp} sz={22} co={(nextFl&&nextFl.c)}/>
+      <div style={{fontSize:9,color:C.tl,marginTop:-1,whiteSpace:"nowrap"}}>{nextSp.slice(0,3)}</div>
+    </button>
+  </div>);
 }
 
 // ═══ MAIN ═══
@@ -1460,7 +1656,12 @@ export default function App(){
         const bloomInFuture=pred&&pred.daysUntil>=minDays&&pred.daysUntil<=maxDays;
         if(bloomInFuture){at=FAT[f.id]||f.th;st={st:"预计"+pred.dateStr,l:3};}
         else st={st:"不在窗口",l:0};
-      }else if(filter==="current"&&f.s!==cs)st={st:"非当季",l:0};
+      }else if(filter==="current"){
+        // 当季：不仅季节匹配，花期月份也要包含当前月(±1)
+        const curM=new Date().getMonth()+1;
+        const inPkMonth=f.pk[0]<=f.pk[1]?(curM>=f.pk[0]-1&&curM<=f.pk[1]+1):(curM>=f.pk[0]||curM<=f.pk[1]);
+        if(f.s!==cs||!inPkMonth)st={st:"非当季",l:0};
+      }
       else if(filter==="favs"&&!favs[f.id])st={st:"未收藏",l:0};
       else if(filter!=="current"&&filter!=="all"&&filter!=="favs"&&f.s!==filter)st={st:"非本季",l:0};
       return{...f,_at:at,_st:st,_dist:userLoc?distKm(userLoc.lat,userLoc.lon,f.lat,f.lon):null};
@@ -1622,12 +1823,12 @@ export default function App(){
       </div></div>
 
     {/* Page tabs */}
-    <div style={{position:"absolute",top:22,right:3,zIndex:30,display:"flex",gap:1,background:"rgba(250,245,237,.85)",borderRadius:7,padding:"1.5px"}}>
+    <div style={{position:"absolute",top:50,right:8,zIndex:30,display:"flex",gap:1,background:"rgba(250,245,237,.92)",borderRadius:8,padding:"2px",boxShadow:"0 1px 4px rgba(0,0,0,.06)"}}>
       {[{k:"map",l:t.tab_map,ic:"🗺"},{k:"species",l:t.tab_species,ic:"🌺"},{k:"nearby",l:t.tab_nearby,ic:"📍"}].map(p=>(
         <button key={p.k} onClick={()=>{setPage(p.k);if(p.k==="nearby")requestLoc();}}
-          style={{border:"none",borderRadius:5,padding:"4px 10px",cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",gap:1,
-            background:page===p.k?C.accent+"18":"transparent",color:page===p.k?C.accent:C.tl,fontWeight:page===p.k?700:400}}>
-          <span style={{fontSize:12}}>{p.ic}</span>{p.l}</button>))}
+          style={{border:"none",borderRadius:6,padding:"5px 12px",cursor:"pointer",fontSize:13,display:"flex",alignItems:"center",gap:3,
+            background:page===p.k?C.accent+"22":"transparent",color:page===p.k?C.accent:C.tl,fontWeight:page===p.k?700:500}}>
+          <span style={{fontSize:13}}>{p.ic}</span>{p.l}</button>))}
     </div>
 
     {/* Filter (map page) */}
@@ -1664,12 +1865,17 @@ export default function App(){
           background:has?C.accent+"18":"transparent",color:has?C.accent:"#ddd",fontWeight:has?700:400}}>{m}月</button>;})}</div>}
 
     {page==="nearby"&&<div style={{position:"absolute",bottom:5,left:"50%",transform:"translateX(-50%)",zIndex:30,
-      display:"flex",background:"rgba(250,245,237,.85)",borderRadius:8,padding:"1px",gap:1,flexWrap:"wrap",justifyContent:"center",maxWidth:"min(340px,78vw)"}}>
-      <button onClick={()=>setNearbyMonth(0)} style={{border:"none",borderRadius:7,padding:"3px 8px",cursor:"pointer",fontSize:11,
-        background:nearbyMonth===0?C.accent+"18":"transparent",color:nearbyMonth===0?C.accent:"#999"}}>全年</button>
+      display:"flex",background:"rgba(250,245,237,.9)",borderRadius:8,padding:"2px",gap:2,flexWrap:"wrap",justifyContent:"center",maxWidth:"min(420px,88vw)"}}>
+      {(()=>{const cm=new Date().getMonth()+1;const nm=cm===12?1:cm+1;const shortcuts=[
+        {l:"本月",v:cm},{l:"下月",v:nm},{l:"全年",v:0}];
+        return shortcuts.map(s=>(
+          <button key={s.l} onClick={()=>setNearbyMonth(s.v)} style={{border:"none",borderRadius:8,padding:"4px 10px",cursor:"pointer",fontSize:12,fontWeight:700,
+            background:nearbyMonth===s.v?C.accent+"22":"transparent",color:nearbyMonth===s.v?C.accent:C.text,letterSpacing:2}}>
+            {s.l}</button>));})()}
+      <div style={{width:1,background:"#e0dcd4",margin:"2px 4px"}}></div>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>(
-        <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:8,padding:"4px 8px",cursor:"pointer",fontSize:12,
-          background:nearbyMonth===m?C.accent+"18":"transparent",color:nearbyMonth===m?C.accent:"#999"}}>{m}月</button>))}</div>}
+        <button key={m} onClick={()=>setNearbyMonth(m)} style={{border:"none",borderRadius:6,padding:"4px 7px",cursor:"pointer",fontSize:11,
+          background:nearbyMonth===m?C.accent+"18":"transparent",color:nearbyMonth===m?C.accent:"#aaa"}}>{m}月</button>))}</div>}
 
     {/* Region nav - hidden in nearby mode */}
     {page==="map"&&<div style={{position:"absolute",left:ez>1.5?10:2,bottom:5,zIndex:30,display:"flex",flexDirection:"column",gap:1,
@@ -1831,29 +2037,37 @@ export default function App(){
         </>}
       </div>
     </div>}
-    {/* Mood card trigger button (always visible top right area) */}
-    <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:12,right:180,zIndex:31,
-      border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
-      background:"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
-      fontSize:11,color:C.accent,display:"flex",alignItems:"center",gap:3,fontWeight:600,letterSpacing:1}}>
-      🪷 <span>花签</span></button>
+    {/* Mood card trigger - Bookmark style on left edge */}
+    <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:90,right:0,zIndex:31,
+      border:"none",cursor:"pointer",padding:0,background:"transparent",
+      filter:"drop-shadow(0 2px 6px rgba(200,160,80,.25))"}} title="每日花签·求一签">
+      <svg width="42" height="58" viewBox="0 0 42 58">
+        <defs><linearGradient id="bmgrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#e8a850"/><stop offset="100%" stopColor="#c88830"/></linearGradient></defs>
+        <path d="M2,0 L40,0 L40,56 L21,46 L2,56 Z" fill="url(#bmgrad)" stroke="#a87020" strokeWidth=".8"/>
+        <path d="M6,4 L36,4 L36,40" fill="none" stroke="#fff8e8" strokeWidth=".5" opacity=".5"/>
+        <text x="21" y="18" textAnchor="middle" fontSize="9" fill="#fff8e8" fontWeight="700" letterSpacing="2">花</text>
+        <text x="21" y="32" textAnchor="middle" fontSize="9" fill="#fff8e8" fontWeight="700" letterSpacing="2">签</text>
+      </svg>
+    </button>
     {/* Dark mode toggle */}
-    <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:240,zIndex:31,
+    <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:10,zIndex:31,
       border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
-      background:dark?"rgba(40,35,28,.8)":"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
+      background:dark?"rgba(40,35,28,.85)":"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
       fontSize:12,color:dark?"#e0d8c8":C.tl}}>{dark?"☀":"🌙"}</button>
     {/* Language switcher */}
-    <div style={{position:"absolute",top:12,right:290,zIndex:31,display:"flex",gap:1,
-      background:"rgba(250,245,237,.9)",borderRadius:16,padding:"2px",boxShadow:"0 1px 6px rgba(0,0,0,.05)"}}>
+    <div style={{position:"absolute",top:12,right:60,zIndex:32,display:"flex",gap:1,
+      background:"rgba(250,245,237,.95)",borderRadius:16,padding:"3px",boxShadow:"0 1px 6px rgba(0,0,0,.08)"}}>
       {[{k:"zh",l:"中"},{k:"en",l:"EN"},{k:"ja",l:"JP"},{k:"ko",l:"KR"}].map(x=>(
-        <button key={x.k} onClick={()=>setLang(x.k)} style={{border:"none",borderRadius:14,padding:"3px 8px",
-          cursor:"pointer",fontSize:10,fontWeight:lang===x.k?700:400,letterSpacing:0,
-          background:lang===x.k?C.accent+"18":"transparent",color:lang===x.k?C.accent:C.tl}}>{x.l}</button>))}
+        <button key={x.k} onClick={()=>setLang(x.k)} style={{border:"none",borderRadius:14,padding:"4px 10px",
+          cursor:"pointer",fontSize:11,fontWeight:lang===x.k?700:500,letterSpacing:0,
+          background:lang===x.k?C.accent+"26":"transparent",color:lang===x.k?C.accent:C.tl,
+          transition:"all .15s"}}>{x.l}</button>))}
     </div>
     {/* Travel guide button (non-Chinese) */}
-    {lang!=="zh"&&<button onClick={()=>setShowGuide(true)} style={{position:"absolute",top:12,right:390,zIndex:31,
+    {lang!=="zh"&&<button onClick={()=>setShowGuide(true)} style={{position:"absolute",top:12,right:210,zIndex:31,
       border:"none",borderRadius:16,padding:"5px 12px",cursor:"pointer",
-      background:"rgba(250,245,237,.9)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
+      background:"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
       fontSize:11,color:C.accent,fontWeight:600}}>🌏 {t.guide}</button>}
     {showGuide&&<TravelGuide onClose={()=>setShowGuide(false)} lang={lang}/>}
   </div>);
