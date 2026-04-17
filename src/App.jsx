@@ -1008,7 +1008,7 @@ function MoodCard({onClose}){
             filter:"drop-shadow(0 2px 6px rgba(0,0,0,.1))"}}>🪷</div>
           <h2 style={{fontSize:26,fontWeight:900,color:C.text,letterSpacing:10,marginBottom:4,
             fontFamily:"'Noto Serif SC',serif"}}>每 日 花 签</h2>
-          <div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${qljsGold},transparent)`,margin:"8px auto 14px"}}/>
+          <div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${qljsGold},transparent)`,margin:"8px auto 14px"}}></div>
           <div style={{fontSize:13,color:C.tl,letterSpacing:3,marginBottom:28,lineHeight:1.8}}>
             一花一世界 · 一签一解语</div>
           <button onClick={draw} disabled={shaking} style={{border:`1.5px solid ${qljsGold}`,
@@ -1031,7 +1031,7 @@ function MoodCard({onClose}){
           </div>
 
           {/* Divider line */}
-          <div style={{width:"80%",height:1,background:`linear-gradient(90deg,transparent,${qljsGold}66,transparent)`,margin:"12px auto"}}/>
+          <div style={{width:"80%",height:1,background:`linear-gradient(90deg,transparent,${qljsGold}66,transparent)`,margin:"12px auto"}}></div>
 
           {/* Poem in scroll style */}
           <div style={{textAlign:"center",padding:"14px 20px",margin:"12px 0",position:"relative",
@@ -1158,7 +1158,7 @@ function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
       opacity:sh?(dead?(hl?.35:.15):1):0,transition:"all .2s cubic-bezier(.34,1.56,.64,1)",
       cursor:"pointer",zIndex:hov?20:10,textAlign:"center",filter:hl?`drop-shadow(0 0 6px ${s.c})`:"none"}}>
     {hot&&<div style={{position:"absolute",left:"50%",top:"50%",transform:"translate(-50%,-50%)",
-      width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}/>}
+      width:sz*2.4,height:sz*2.4,borderRadius:"50%",background:`radial-gradient(circle,${s.c}20,transparent 70%)`,animation:"pulse 2.5s ease-in-out infinite"}}></div>}
     <div style={{width:sz,height:sz,borderRadius:"50%",margin:"0 auto",background:dead?"#e0d8d0":"rgba(255,255,255,.85)",
       border:`1.5px solid ${dead?"#c0b8b0":s.c}55`,
       boxShadow:dead?"none":`0 2px 4px ${s.c}33`,
@@ -1238,7 +1238,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
       opacity:v?1:0,transition:"all .2s",borderRadius:12,overflow:"hidden",
       boxShadow:"0 12px 40px rgba(0,0,0,.15)"}}>
       {/* Top accent bar */}
-      <div style={{height:6,background:"linear-gradient(90deg,"+s.c+","+s.c+"88,"+s.c+")"}}/>
+      <div style={{height:6,background:s.c}}></div>
       {/* Generative landscape header */}
       <div style={{position:"relative",overflow:"hidden"}}>
         <LandscapeSVG season={s.s} color={s.c} w={480} h={80}/>
@@ -1346,7 +1346,7 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             📤 分享</button>
         </div>
       </div>
-      <div style={{height:6,background:"linear-gradient(90deg,"+s.c+","+s.c+"88,"+s.c+")"}}/></div></div>);
+      <div style={{height:6,background:s.c}}></div></div></div>);
 }
 
 function SpeciesWheel({onSelect,selected,spots}){
