@@ -145,6 +145,178 @@ const ic={"樱花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=
 "三角梅":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".9"><path d="M12,3L6,14L18,14Z" fill={cl}/><path d="M12,4L8,13L16,13Z" fill={cl} opacity=".6"/><circle cx="12" cy="11" r="1.5" fill="#f0e8d0"/></g></svg>,
 "丁香花":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85">{[0,90,180,270].map(a=><ellipse key={a} cx="12" cy="8" rx="1.8" ry="3.5" transform={"rotate("+a+",12,12)"} fill={cl}/>)}<circle cx="12" cy="12" r="1.2" fill="#e8d8f0"/>{[-3,3].map(x=><g key={x}>{[0,90,180,270].map(a=><ellipse key={a} cx={12+x} cy={8+Math.abs(x)} rx="1.2" ry="2.5" transform={"rotate("+a+","+(12+x)+","+(8+Math.abs(x))+")"} fill={cl} opacity=".6"/>)}</g>)}</g></svg>,
 "野花草甸":()=><svg viewBox="0 0 24 24" width={s} height={s}><g opacity=".85"><circle cx="8" cy="9" r="2.5" fill={cl}/><circle cx="12" cy="7" r="2.5" fill="#e8a040"/><circle cx="16" cy="9" r="2.5" fill="#d070a0"/></g></svg>};
+// ═══ 二十四番花信风 (24 Flower Messages of the Wind) ═══
+// 传统花信风：小寒至谷雨，每五日一候，共八气二十四候
+const HUAXIN24=[
+  {jq:"小寒",jqEn:"Minor Cold",period:"01·05~01·19",ji:1,hou:"一候",sp:"梅花",date:"01·05"},
+  {jq:"小寒",jqEn:"Minor Cold",period:"01·05~01·19",ji:2,hou:"二候",sp:"山茶花",date:"01·10"},
+  {jq:"小寒",jqEn:"Minor Cold",period:"01·05~01·19",ji:3,hou:"三候",sp:"水仙花",date:"01·15"},
+  {jq:"大寒",jqEn:"Major Cold",period:"01·20~02·03",ji:1,hou:"一候",sp:"瑞香",date:"01·20"},
+  {jq:"大寒",jqEn:"Major Cold",period:"01·20~02·03",ji:2,hou:"二候",sp:"兰花",date:"01·25"},
+  {jq:"大寒",jqEn:"Major Cold",period:"01·20~02·03",ji:3,hou:"三候",sp:"山矾",date:"01·30"},
+  {jq:"立春",jqEn:"Spring Begins",period:"02·04~02·18",ji:1,hou:"一候",sp:"迎春花",date:"02·04"},
+  {jq:"立春",jqEn:"Spring Begins",period:"02·04~02·18",ji:2,hou:"二候",sp:"樱花",date:"02·09"},
+  {jq:"立春",jqEn:"Spring Begins",period:"02·04~02·18",ji:3,hou:"三候",sp:"望春",date:"02·14"},
+  {jq:"雨水",jqEn:"Rain Water",period:"02·19~03·04",ji:1,hou:"一候",sp:"油菜花",date:"02·19"},
+  {jq:"雨水",jqEn:"Rain Water",period:"02·19~03·04",ji:2,hou:"二候",sp:"杏花",date:"02·24"},
+  {jq:"雨水",jqEn:"Rain Water",period:"02·19~03·04",ji:3,hou:"三候",sp:"李花",date:"03·01"},
+  {jq:"惊蛰",jqEn:"Awaken of Insects",period:"03·05~03·19",ji:1,hou:"一候",sp:"桃花",date:"03·05"},
+  {jq:"惊蛰",jqEn:"Awaken of Insects",period:"03·05~03·19",ji:2,hou:"二候",sp:"棠棣",date:"03·10"},
+  {jq:"惊蛰",jqEn:"Awaken of Insects",period:"03·05~03·19",ji:3,hou:"三候",sp:"蔷薇",date:"03·15"},
+  {jq:"春分",jqEn:"Spring Equinox",period:"03·20~04·03",ji:1,hou:"一候",sp:"海棠花",date:"03·20"},
+  {jq:"春分",jqEn:"Spring Equinox",period:"03·20~04·03",ji:2,hou:"二候",sp:"梨花",date:"03·25"},
+  {jq:"春分",jqEn:"Spring Equinox",period:"03·20~04·03",ji:3,hou:"三候",sp:"木兰",date:"03·30"},
+  {jq:"清明",jqEn:"Clear & Bright",period:"04·04~04·18",ji:1,hou:"一候",sp:"桐花",date:"04·04"},
+  {jq:"清明",jqEn:"Clear & Bright",period:"04·04~04·18",ji:2,hou:"二候",sp:"麦花",date:"04·09"},
+  {jq:"清明",jqEn:"Clear & Bright",period:"04·04~04·18",ji:3,hou:"三候",sp:"柳花",date:"04·14"},
+  {jq:"谷雨",jqEn:"Grain Rain",period:"04·19~05·04",ji:1,hou:"一候",sp:"牡丹",date:"04·19"},
+  {jq:"谷雨",jqEn:"Grain Rain",period:"04·19~05·04",ji:2,hou:"二候",sp:"荼蘼",date:"04·24"},
+  {jq:"谷雨",jqEn:"Grain Rain",period:"04·19~05·04",ji:3,hou:"三候",sp:"楝花",date:"04·29"},
+];
+
+// ═══ 花卉百科 (Flower Encyclopedia) ═══
+// 别名、学名、科属、花语、典故、关联诗词
+const FLORA_WIKI={
+  "梅花":{alias:"春梅、干枝梅",sci:"Prunus mume",family:"蔷薇科·李属",flang:"坚强、高洁、谦虚",
+    origin:"原产于中国南方，栽培历史逾3000年",
+    story:"梅花与兰、竹、菊并称「四君子」，又与松、竹并称「岁寒三友」。古时文人以梅自喻，象征清雅孤傲。",
+    care:"喜阳光充足、排水良好的微酸性土壤。耐寒能力强，冬季低温时反而开花更盛。",
+    poems:[
+      {t:"墙角数枝梅，凌寒独自开。遥知不是雪，为有暗香来。",a:"王安石·《梅花》"},
+      {t:"已是悬崖百丈冰，犹有花枝俏。俏也不争春，只把春来报。",a:"毛泽东·《卜算子·咏梅》"},
+      {t:"驿外断桥边，寂寞开无主。已是黄昏独自愁，更着风和雨。",a:"陆游·《卜算子·咏梅》"},
+    ]},
+  "桃花":{alias:"桃、粉桃",sci:"Prunus persica",family:"蔷薇科·李属",flang:"爱情、少女的娇美",
+    origin:"原产于中国，栽培历史悠久，是华夏文化中最具代表性的花卉之一",
+    story:"「桃之夭夭，灼灼其华」出自《诗经》，是中国最早的花卉诗篇之一。世外桃源源自陶渊明笔下。",
+    care:"喜阳光充足，耐寒，忌水涝。每年冬末春初修剪枝条。",
+    poems:[
+      {t:"桃之夭夭，灼灼其华。之子于归，宜其室家。",a:"《诗经·周南·桃夭》"},
+      {t:"去年今日此门中，人面桃花相映红。人面不知何处去，桃花依旧笑春风。",a:"崔护·《题都城南庄》"},
+      {t:"桃花尽日随流水，洞在清溪何处边。",a:"张旭·《桃花溪》"},
+    ]},
+  "樱花":{alias:"山樱、樱桃花",sci:"Prunus serrulata",family:"蔷薇科·李属",flang:"纯洁、热烈、短暂的美",
+    origin:"原产于喜马拉雅山地区，唐代传至日本，盛于东瀛",
+    story:"中国赏樱之风始于秦汉，盛于唐代。樱花花期极短，象征「转瞬即逝的美」。",
+    care:"喜光，喜排水良好的酸性土壤。花后应重剪。",
+    poems:[
+      {t:"樱花烂漫几多时？柳绿桃红角两枝。",a:"苏曼殊·《本事诗》"},
+      {t:"昨日南园新雨后，樱花满地不胜扫。",a:"白居易·《酬刘梦得咏樱花》"},
+    ]},
+  "牡丹":{alias:"富贵花、洛阳花",sci:"Paeonia × suffruticosa",family:"芍药科·芍药属",flang:"富贵、雍容、幸福",
+    origin:"原产于中国西北，唐代盛极一时，被誉为「国花」",
+    story:"武则天贬牡丹至洛阳，反而成就洛阳牡丹甲天下。「国色天香」之名始于唐代。",
+    care:"喜温凉气候，畏酷热。种植宜深耕，施基肥。每年惊蛰前后发芽。",
+    poems:[
+      {t:"唯有牡丹真国色，花开时节动京城。",a:"刘禹锡·《赏牡丹》"},
+      {t:"庭前芍药妖无格，池上芙蕖净少情。",a:"刘禹锡·《赏牡丹》"},
+      {t:"云想衣裳花想容，春风拂槛露华浓。",a:"李白·《清平调》"},
+    ]},
+  "荷花":{alias:"莲花、芙蓉、水芝",sci:"Nelumbo nucifera",family:"莲科·莲属",flang:"清廉、高洁、圣洁",
+    origin:"原产于中国、印度一带，有约1.35亿年进化历史",
+    story:"「出淤泥而不染」出自周敦颐《爱莲说》，使莲花成为文人君子的象征。佛教以莲花喻佛。",
+    care:"水生植物，需温暖湿润环境。莲池水深30-60cm为宜。",
+    poems:[
+      {t:"予独爱莲之出淤泥而不染，濯清涟而不妖。",a:"周敦颐·《爱莲说》"},
+      {t:"接天莲叶无穷碧，映日荷花别样红。",a:"杨万里·《晓出净慈寺送林子方》"},
+      {t:"小荷才露尖尖角，早有蜻蜓立上头。",a:"杨万里·《小池》"},
+    ]},
+  "菊花":{alias:"秋菊、黄华",sci:"Chrysanthemum morifolium",family:"菊科·菊属",flang:"隐逸、高洁、长寿",
+    origin:"原产于中国，栽培历史逾3000年，是中国十大名花之一",
+    story:"陶渊明「采菊东篱下，悠然见南山」使菊花成为归隐象征。重阳节赏菊、饮菊花酒为传统习俗。",
+    care:"喜阳光，耐寒。短日照植物，秋季开花。",
+    poems:[
+      {t:"采菊东篱下，悠然见南山。",a:"陶渊明·《饮酒》"},
+      {t:"不是花中偏爱菊，此花开尽更无花。",a:"元稹·《菊花》"},
+      {t:"待到重阳日，还来就菊花。",a:"孟浩然·《过故人庄》"},
+    ]},
+  "杜鹃花":{alias:"映山红、山石榴",sci:"Rhododendron simsii",family:"杜鹃花科·杜鹃属",flang:"思乡、热情、爱的喜悦",
+    origin:"原产于东亚山区，中国有590种，占全球一半以上",
+    story:"传说蜀帝杜宇化为杜鹃鸟，啼血染红漫山花朵，故名「映山红」。三月春末，漫山遍野如火。",
+    care:"喜酸性土壤，忌强光暴晒。喜湿润半阴环境。",
+    poems:[
+      {t:"杜鹃啼血猿哀鸣，春江花朝秋月夜。",a:"白居易·《琵琶行》"},
+      {t:"子规夜半犹啼血，不信东风唤不回。",a:"王令·《送春》"},
+    ]},
+  "油菜花":{alias:"芸薹、油菜",sci:"Brassica napus",family:"十字花科·芸薹属",flang:"祈福、加油",
+    origin:"欧亚大陆原产，中国广泛种植，是重要油料作物和观光花卉",
+    story:"中国四大油菜花海：婺源、罗平、青海湖、汉中。三四月间，金黄花海绵延数十里。",
+    care:"秋播越冬作物，喜温凉气候。盛花期3-4月。",
+    poems:[
+      {t:"儿童急走追黄蝶，飞入菜花无处寻。",a:"杨万里·《宿新市徐公店》"},
+    ]},
+  "梨花":{alias:"白梨花",sci:"Pyrus",family:"蔷薇科·梨属",flang:"纯情、纯洁、安慰",
+    origin:"原产于中国，栽培历史4000余年",
+    story:"「千树万树梨花开」本是咏雪，却反让梨花成为雪一般的意象。白居易以「梨花一枝春带雨」写杨玉环。",
+    care:"喜光耐寒，忌水涝。春季开花时节若遇倒春寒，花期将减。",
+    poems:[
+      {t:"忽如一夜春风来，千树万树梨花开。",a:"岑参·《白雪歌送武判官归京》"},
+      {t:"玉容寂寞泪阑干，梨花一枝春带雨。",a:"白居易·《长恨歌》"},
+    ]},
+  "兰花":{alias:"幽兰、国香",sci:"Cymbidium",family:"兰科·兰属",flang:"高洁、清雅、爱国",
+    origin:"原产于中国南部山地，栽培历史2500余年",
+    story:"兰花与梅、竹、菊并称「四君子」。孔子爱兰，称「兰当为王者香」。幽谷独芳，是君子之德。",
+    care:"喜阴凉通风环境，忌强光。浇水宜干透再浇。",
+    poems:[
+      {t:"芝兰生于深林，不以无人而不芳。",a:"《孔子家语》"},
+      {t:"孤兰生幽园，众草共芜没。",a:"李白·《古风》"},
+    ]},
+  "桂花":{alias:"木樨、九里香",sci:"Osmanthus fragrans",family:"木樨科·木樨属",flang:"崇高、美好、吉祥",
+    origin:"原产于中国西南喜马拉雅山区",
+    story:"「蟾宫折桂」比喻科举高中。中秋赏桂是江南传统，桂花酿酒、做糕，是节庆美食。",
+    care:"喜光亦耐阴，忌积水。修剪宜于花后。",
+    poems:[
+      {t:"暗淡轻黄体性柔，情疏迹远只香留。",a:"李清照·《鹧鸪天·桂花》"},
+      {t:"人闲桂花落，夜静春山空。",a:"王维·《鸟鸣涧》"},
+    ]},
+  "薰衣草":{alias:"灵香草",sci:"Lavandula",family:"唇形科·薰衣草属",flang:"等待爱情、清净",
+    origin:"原产于地中海地区，中国新疆伊犁是亚洲最大薰衣草基地",
+    story:"伊犁被誉为「东方普罗旺斯」。6月盛开，紫色花海绵延数十公里。",
+    care:"喜阳光充足、干燥环境，忌湿。贫瘠沙壤土最佳。",
+    poems:[{t:"紫色花海接天涯",a:"民谣"}]},
+  "向日葵":{alias:"朝阳花、太阳花",sci:"Helianthus annuus",family:"菊科·向日葵属",flang:"忠诚、阳光、积极向上",
+    origin:"原产于北美洲，明代传入中国",
+    story:"向日葵随太阳转动的特性使其成为「忠诚」的象征。梵高的名作让其世界闻名。",
+    care:"喜阳光，耐旱，忌积水。生长期需充足阳光。",
+    poems:[{t:"更无柳絮因风起，惟有葵花向日倾。",a:"司马光·《客中初夏》"}]},
+  "郁金香":{alias:"洋荷花",sci:"Tulipa gesneriana",family:"百合科·郁金香属",flang:"博爱、体贴、高雅",
+    origin:"原产于中亚和土耳其，经荷兰培育扬名全球",
+    story:"唐代已有记载，诗仙李白曾写「兰陵美酒郁金香」。现代荷兰是郁金香王国。",
+    care:"喜凉爽气候，球根秋植。需冷藏处理。",
+    poems:[{t:"兰陵美酒郁金香，玉碗盛来琥珀光。",a:"李白·《客中作》"}]},
+  "红枫":{alias:"枫树、红叶",sci:"Acer palmatum",family:"槭树科·槭属",flang:"热情、深情、激情",
+    origin:"原产于中国、日本、朝鲜，秋季红叶是东亚秋景代表",
+    story:"「霜叶红于二月花」出自杜牧。香山、九寨沟、栖霞山、天平山是中国四大红叶胜地。",
+    care:"喜半阴环境，忌强日晒。酸性土壤最佳。",
+    poems:[
+      {t:"停车坐爱枫林晚，霜叶红于二月花。",a:"杜牧·《山行》"},
+      {t:"月落乌啼霜满天，江枫渔火对愁眠。",a:"张继·《枫桥夜泊》"},
+    ]},
+  "银杏":{alias:"白果树、公孙树",sci:"Ginkgo biloba",family:"银杏科·银杏属",flang:"坚韧、长寿、沉着",
+    origin:"中国特产，被称为「活化石」，生长期2亿年以上",
+    story:"银杏树寿可千年。「公孙树」因爷爷栽树孙子收果而得名。秋日满树金黄，是古寺庙标志。",
+    care:"极耐寒耐旱，忌水涝。雌雄异株，需搭配种植。",
+    poems:[{t:"满城尽带黄金甲",a:"黄巢·《不第后赋菊》（意境借用）"}]},
+  "三角梅":{alias:"叶子花、宝巾花",sci:"Bougainvillea",family:"紫茉莉科·叶子花属",flang:"热情、坚韧不拔",
+    origin:"原产于南美巴西，现广泛栽培于中国南方",
+    story:"深圳、厦门市花。四季常开，色彩丰富。实为苞片而非花瓣。",
+    care:"喜光喜热，耐旱耐瘠。盆栽需控水促花。",
+    poems:[{t:"鹭岛三角梅如火",a:"现代"}]},
+  "荼蘼":{alias:"酴醾、佛见笑",sci:"Rubus rosifolius",family:"蔷薇科·悬钩子属",flang:"女子的美好、末世的繁华",
+    origin:"原产于中国",
+    story:"「开到荼蘼花事了」——春末最后一种花，花谢即意味着春天结束。象征美好终结。",
+    care:"喜阳光充足、排水良好环境。",
+    poems:[
+      {t:"开到荼蘼花事了，丝丝天棘出莓墙。",a:"王淇·《春暮游小园》"},
+      {t:"一架荼蘼满院香，羞映沉檀一种妆。",a:"王安石"}
+    ]},
+  "迎春花":{alias:"黄素馨",sci:"Jasminum nudiflorum",family:"木樨科·素馨属",flang:"相爱到永远、坚韧不拔",
+    origin:"原产于中国北部和中部",
+    story:"春寒料峭时第一朵开放，故名「迎春」。与梅花、水仙、山茶并称「雪中四友」。",
+    care:"耐寒耐旱，适应性强。花后应短截促新枝。",
+    poems:[{t:"金英翠萼带春寒，黄花先报春来早。",a:"白居易"}]},
+};
+
 const alt={"高山杜鹃":"杜鹃花","云锦杜鹃":"杜鹃花","野杏花":"桃花","芍药":"牡丹","冬樱花":"樱花","苹果梨花":"梨花","凤凰花":"杜鹃花","紫荆花":"杜鹃花","朱槿":"杜鹃花","紫菜花":"薰衣草","杏花":"桃花","竹林":"白桦林","兰花":"薰衣草","菊花":"格桑花","山茶花":"牡丹","蜡梅":"梅花","辛夷花":"梅花","沙漠花":"油菜花","茶花":"牡丹",
   "向日葵":"油菜花","紫藤":"薰衣草","木棉花":"杜鹃花","玉兰花":"梅花","月季":"牡丹","海棠花":"桃花","水仙花":"郁金香","芦花":"格桑花","紫云英":"薰衣草","绣球花":"杜鹃花","睡莲":"荷花","紫薇花":"杜鹃花","合欢花":"桃花","栀子花":"梅花","茉莉花":"梅花","玫瑰":"牡丹","芙蓉花":"牡丹","虞美人":"杜鹃花","波斯菊":"格桑花","鸡蛋花":"郁金香","凌霄花":"杜鹃花","木槿花":"杜鹃花","石榴花":"杜鹃花","蔷薇":"桃花","百合":"郁金香","迎春花":"油菜花",
   "牵牛花":"杜鹃花","金针花":"油菜花","蝴蝶兰":"杜鹃花","椰树":"白桦林"};
@@ -1799,10 +1971,11 @@ function LandscapeSVG({season,color,w,h}){
   </svg>);
 }
 
-function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
+function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin,onShowWiki}){
   const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
   const [note,setNote]=useState("");const [notes,setNotes]=useState([]);
   const [showShare,setShowShare]=useState(false);
+  const [ckMode,setCkMode]=useState(false);const [ckNote,setCkNote]=useState("");
   // Load shared notes for this spot
   useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("notes_"+s.id,true):null;
     if(r&&r.value)setNotes(JSON.parse(r.value));}catch{}})();},[s.id]);
@@ -1895,6 +2068,12 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             color:C.accent,fontSize:14,fontWeight:600,textDecoration:"none",letterSpacing:2,
             border:"1px solid #e8ddd0",transition:"background .2s"}}>
           🐝 查看马蜂窝景点详情 →</a>}
+        {FLORA_WIKI[s.sp]&&<button onClick={()=>{if(onShowWiki)onShowWiki(s.sp);}}
+          style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,
+            padding:"8px 16px",background:s.c+"12",borderRadius:8,
+            color:s.c,fontSize:13,fontWeight:600,letterSpacing:2,cursor:"pointer",
+            border:"1px solid "+s.c+"33",marginTop:6}}>
+          📖 {s.sp}百科 · 诗词 · 花语</button>}
         {/* Action buttons: Favorite + Share */}
         <div style={{display:"flex",gap:8,marginTop:12}}>
           <button onClick={function(){if(onFav)onFav(s.id);}} style={{flex:1,border:"1.5px solid "+(isFav?"#e06050":"#e0dcd4"),
@@ -1905,14 +2084,33 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             background:inTrip?"#eef8f0":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:inTrip?"#3a8a60":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
             {inTrip?"✓ 已加入行程":"+ 加入行程"}</button>
-          <button onClick={function(){if(onCheckin)onCheckin(s.id);}} style={{border:"1.5px solid "+(isChecked?"#c8a050":"#e0dcd4"),
-            background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
+          <button onClick={function(){if(isChecked)return;setCkMode(true);}} style={{border:"1.5px solid "+(isChecked?"#c8a050":"#e0dcd4"),
+            background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:isChecked?"default":"pointer",
             fontSize:13,fontWeight:600,color:isChecked?"#c8a050":C.tl}}>
             {isChecked?"📍已打卡":"📍打卡"}</button>
           <button onClick={()=>setShowShare(true)}
             style={{border:"1.5px solid #e0dcd4",background:"#faf6ef",borderRadius:8,padding:"8px 12px",
               cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl}}>📤</button>
         </div>
+        {/* Checkin note dialog */}
+        {ckMode&&<div style={{margin:"8px 0",padding:"12px 14px",background:"#fdf8ee",
+          borderRadius:8,border:"1.5px solid #c8a050"}}>
+          <div style={{fontSize:12,color:"#c8a050",fontWeight:700,letterSpacing:2,marginBottom:8}}>📍 打卡此地</div>
+          <input value={ckNote} onChange={e=>setCkNote(e.target.value)}
+            placeholder="记录一句话花事笔记（可选）..."
+            style={{width:"100%",border:"1px solid #e8e0d4",borderRadius:6,padding:"8px 10px",
+              fontSize:12,background:"#fff",outline:"none",fontFamily:"'Noto Serif SC',serif",
+              marginBottom:8}}/>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>{if(onCheckin)onCheckin(s.id,ckNote);setCkMode(false);setCkNote("");}}
+              style={{flex:1,border:"none",background:"#c8a050",color:"#fff",borderRadius:6,
+                padding:"8px",cursor:"pointer",fontSize:12,fontWeight:700,letterSpacing:2}}>
+              确认打卡</button>
+            <button onClick={()=>{setCkMode(false);setCkNote("");}}
+              style={{border:"1px solid #e0dcd4",background:"transparent",borderRadius:6,
+                padding:"8px 12px",cursor:"pointer",fontSize:12,color:"#8a7a68"}}>取消</button>
+          </div>
+        </div>}
         {/* Social share menu */}
         {showShare&&<SpotShareCard s={s} onClose={()=>setShowShare(false)}/>}
         {isChecked&&<div style={{fontSize:11,color:"#c8a050",textAlign:"center",marginTop:4}}>
@@ -2039,6 +2237,343 @@ function SpeciesWheel({onSelect,selected,spots}){
   </>);
 }
 
+// ═══ 个人花历 (Personal Flower Diary) ═══
+function DiaryPanel({onClose,checkins,flora,favs}){
+  // Build timeline entries from checkins
+  const entries=Object.keys(checkins).map(id=>{
+    const ck=checkins[id];
+    const spot=flora.find(f=>f.id===Number(id));
+    if(!spot)return null;
+    return{id:Number(id),date:ck.date,ts:ck.ts,note:ck.note||"",spot:spot};
+  }).filter(Boolean).sort((a,b)=>(b.ts||0)-(a.ts||0));
+
+  // Stats
+  const totalSpots=entries.length;
+  const species=[...new Set(entries.map(e=>e.spot.sp))];
+  const regions=[...new Set(entries.map(e=>e.spot.rg))];
+  const seasons=[...new Set(entries.map(e=>e.spot.s))];
+  const seasonNames={spring:"春",summer:"夏",autumn:"秋",winter:"冬"};
+
+  // Achievement badges
+  const badges=[];
+  if(totalSpots>=1)badges.push({icon:"🌱",name:"初见花事",desc:"首次打卡"});
+  if(totalSpots>=5)badges.push({icon:"🌸",name:"寻芳踏春",desc:"打卡5处"});
+  if(totalSpots>=10)badges.push({icon:"🌺",name:"访花大师",desc:"打卡10处"});
+  if(totalSpots>=20)badges.push({icon:"👑",name:"花中帝王",desc:"打卡20处"});
+  if(species.length>=3)badges.push({icon:"🎨",name:"百花缘",desc:"3种花卉"});
+  if(species.length>=8)badges.push({icon:"💐",name:"花卉通",desc:"8种花卉"});
+  if(regions.length>=3)badges.push({icon:"🗺",name:"万里寻芳",desc:"跨3区域"});
+  if(regions.length>=5)badges.push({icon:"✈",name:"花迹天涯",desc:"跨5区域"});
+  if(seasons.length>=2)badges.push({icon:"🌗",name:"双季采花",desc:"跨2季"});
+  if(seasons.length>=4)badges.push({icon:"🌍",name:"四季收集者",desc:"春夏秋冬"});
+  const favCount=Object.keys(favs).length;
+  if(favCount>=5)badges.push({icon:"❤",name:"花痴",desc:"收藏5处"});
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",justifyContent:"flex-end",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{width:"min(420px,90vw)",height:"100vh",
+      background:"#faf6ef",overflowY:"auto",boxShadow:"-4px 0 24px rgba(0,0,0,.15)"}}>
+      {/* Header */}
+      <div style={{padding:"22px 22px 16px",borderBottom:"1px solid #ece6dc",
+        background:"linear-gradient(180deg,#faf6ef,#f2ebd8)",position:"sticky",top:0,zIndex:2}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:10,color:"#b08040",letterSpacing:5}}>· 我 的 ·</div>
+            <h2 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:8,margin:"4px 0",
+              fontFamily:"'Noto Serif SC',serif"}}>花 历</h2>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",
+            color:"#3a2818",cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+        {/* Stats bar */}
+        <div style={{display:"flex",gap:16,marginTop:12}}>
+          {[
+            {v:totalSpots,l:"打卡"},
+            {v:species.length,l:"花种"},
+            {v:regions.length,l:"区域"},
+            {v:seasons.map(s=>seasonNames[s]||s).join(""),l:"四季"},
+          ].map((s,i)=>(<div key={i} style={{textAlign:"center"}}>
+            <div style={{fontSize:20,fontWeight:900,color:"#c06040"}}>{s.v}</div>
+            <div style={{fontSize:10,color:"#8a7a60",letterSpacing:1}}>{s.l}</div>
+          </div>))}
+        </div>
+      </div>
+
+      {/* Badges */}
+      {badges.length>0&&<div style={{padding:"14px 22px",borderBottom:"1px solid #ece6dc"}}>
+        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:8,fontWeight:600}}>· 成就徽章 ·</div>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+          {badges.map((b,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:5,
+            padding:"4px 10px",background:"#f5f0e8",borderRadius:16,border:"1px solid #e8e0d4"}}>
+            <span style={{fontSize:16}}>{b.icon}</span>
+            <div>
+              <div style={{fontSize:11,fontWeight:700,color:"#3a2818"}}>{b.name}</div>
+              <div style={{fontSize:9,color:"#8a7a60"}}>{b.desc}</div>
+            </div>
+          </div>))}
+        </div>
+      </div>}
+
+      {/* Timeline */}
+      <div style={{padding:"16px 22px"}}>
+        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:12,fontWeight:600}}>· 花事时间线 ·</div>
+        {entries.length===0&&<div style={{textAlign:"center",padding:"40px 0",color:"#8a7a60"}}>
+          <div style={{fontSize:40,marginBottom:12}}>🌱</div>
+          <div style={{fontSize:14,letterSpacing:2}}>还没有花事记录</div>
+          <div style={{fontSize:12,marginTop:6,opacity:.6}}>在地图上点击景点 → 📍打卡 → 开始你的花历</div>
+        </div>}
+        {entries.map((e,i)=>{
+          const sm=SM[e.spot.s];
+          return(<div key={e.id} style={{display:"flex",gap:12,marginBottom:0,position:"relative"}}>
+            {/* Timeline line */}
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:24,flexShrink:0}}>
+              <div style={{width:14,height:14,borderRadius:"50%",background:e.spot.c,
+                border:"2px solid #faf6ef",boxShadow:"0 0 0 1px "+e.spot.c+"44",zIndex:1}}>
+              </div>
+              {i<entries.length-1&&<div style={{width:1,flex:1,background:"#e0dcd4"}}></div>}
+            </div>
+            {/* Content */}
+            <div style={{flex:1,paddingBottom:20}}>
+              <div style={{fontSize:11,color:"#8a7a60",marginBottom:3}}>{e.date}</div>
+              <div style={{padding:"10px 14px",background:"#f8f4ee",borderRadius:8,
+                border:"1px solid #ece6dc"}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
+                  <div style={{width:24,height:24,borderRadius:"50%",background:"#fff",
+                    border:"1px solid "+e.spot.c+"55",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    <FI sp={e.spot.sp} sz={16} co={e.spot.c}/></div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:"#2a2018"}}>{e.spot.n}</div>
+                    <div style={{fontSize:11,color:e.spot.c}}>{e.spot.sp} · {sm.i}{seasonNames[e.spot.s]}</div>
+                  </div>
+                </div>
+                {e.note&&<div style={{fontSize:12,color:"#5a4a38",lineHeight:1.7,marginTop:6,
+                  padding:"6px 10px",background:"#fff",borderRadius:4,
+                  borderLeft:"2px solid "+e.spot.c+"55"}}>{e.note}</div>}
+              </div>
+            </div>
+          </div>);
+        })}
+      </div>
+
+      {/* Generate summary card */}
+      {entries.length>=3&&<div style={{padding:"16px 22px 28px",borderTop:"1px solid #ece6dc"}}>
+        <button onClick={()=>{
+          // Generate summary text
+          var summary="🌸 我的花事记\n\n";
+          summary+="共打卡 "+totalSpots+" 处 · "+species.length+" 种花 · "+regions.length+" 个区域\n\n";
+          entries.slice(0,10).forEach(function(e){
+            summary+=e.date+" "+e.spot.n+" · "+e.spot.sp+(e.note?" · "+e.note:"")+"\n";
+          });
+          summary+="\n——来自花信风";
+          if(navigator.share)navigator.share({title:"我的花事记",text:summary}).catch(function(){});
+          else{navigator.clipboard.writeText(summary);alert("花事记已复制到剪贴板");}
+        }} style={{display:"block",width:"100%",border:"1.5px solid #c06040",
+          background:"#c06040"+"12",borderRadius:10,padding:"12px",cursor:"pointer",
+          fontSize:13,fontWeight:700,color:"#c06040",letterSpacing:3,textAlign:"center"}}>
+          📤 分享我的花事记</button>
+      </div>}
+    </div>
+  </div>);
+}
+
+// ═══ 24番花信风面板 (Huaxin24 Panel) ═══
+function HuaxinPanel({onClose,onPickSpecies,flora,onShowWiki}){
+  const now=new Date();const curMD=(now.getMonth()+1)*100+now.getDate();
+  const getMD=s=>{const [m,d]=s.split("·").map(Number);return m*100+d;};
+  // Find current hou
+  let curHouIdx=-1;for(let i=0;i<HUAXIN24.length;i++){
+    const md=getMD(HUAXIN24[i].date);
+    const nextMd=i<HUAXIN24.length-1?getMD(HUAXIN24[i+1].date):getMD("05·04");
+    if(curMD>=md&&curMD<nextMd){curHouIdx=i;break;}
+  }
+  const jqColors={"小寒":"#8898a8","大寒":"#6878a8","立春":"#b8c860","雨水":"#60a890","惊蛰":"#70b878",
+    "春分":"#e8a0b8","清明":"#68b0c8","谷雨":"#c08060"};
+  // Group by jieqi
+  const grouped={};HUAXIN24.forEach((h,i)=>{if(!grouped[h.jq])grouped[h.jq]=[];grouped[h.jq].push({...h,idx:i});});
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.7)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"min(820px,94vw)",
+      maxHeight:"92vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)",position:"relative"}}>
+      {/* Header */}
+      <div style={{padding:"20px 28px 14px",borderBottom:"1px solid #ece6dc",
+        background:"linear-gradient(180deg,#faf6ef,#f2ebd8)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div>
+            <div style={{fontSize:10,color:"#b08040",letterSpacing:6,marginBottom:4}}>· 廿 四 · 花 · 信 · 风 ·</div>
+            <h2 style={{fontSize:24,fontWeight:900,color:"#2a2018",letterSpacing:10,margin:0,
+              fontFamily:"'Noto Serif SC',serif"}}>二十四番花信风</h2>
+            <div style={{fontSize:11,color:"#8a7a60",letterSpacing:2,marginTop:6,lineHeight:1.6}}>
+              小寒至谷雨 · 八气二十四候 · 每五日一候 · 每候一花开 · 花开则东风至
+            </div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+      </div>
+      {/* Grid of 8 jieqi × 3 hou */}
+      <div style={{flex:1,overflow:"auto",padding:"16px 20px"}}>
+        {Object.keys(grouped).map(jq=>{
+          const items=grouped[jq];const color=jqColors[jq];
+          return(<div key={jq} style={{marginBottom:14,borderLeft:"3px solid "+color,paddingLeft:14}}>
+            <div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:8}}>
+              <div style={{fontSize:18,fontWeight:900,color:color,letterSpacing:4}}>{jq}</div>
+              <div style={{fontSize:11,color:"#8a7a60"}}>{items[0].period}</div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:10}}>
+              {items.map(it=>{
+                const isCur=it.idx===curHouIdx;
+                const hasData=flora.some(f=>f.sp===it.sp||f.sp.includes(it.sp)||it.sp.includes(f.sp));
+                const fl=flora.find(f=>f.sp===it.sp)||flora.find(f=>f.sp.includes(it.sp))||flora.find(f=>it.sp.includes(f.sp));
+                return(<div key={it.idx}
+                  onClick={()=>{
+                    if(hasData&&onPickSpecies){onPickSpecies(fl?fl.sp:it.sp);onClose();}
+                    else if(onShowWiki&&FLORA_WIKI[it.sp]){onShowWiki(it.sp);}
+                  }}
+                  style={{padding:"10px 12px",background:isCur?color+"18":"#fafafa",
+                    border:isCur?"2px solid "+color:"1px solid #ece6dc",
+                    borderRadius:8,cursor:hasData||FLORA_WIKI[it.sp]?"pointer":"default",
+                    position:"relative",transition:"all .2s"}}
+                  onMouseEnter={e=>{if(hasData||FLORA_WIKI[it.sp])e.currentTarget.style.transform="translateY(-2px)";}}
+                  onMouseLeave={e=>e.currentTarget.style.transform=""}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:32,height:32,borderRadius:"50%",background:"rgba(255,255,255,.9)",
+                      display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,
+                      border:"1.5px solid "+((fl&&fl.c)||color)+"66"}}>
+                      <FI sp={it.sp} sz={22} co={(fl&&fl.c)||color}/>
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                        <span style={{fontSize:10,color:color,fontWeight:600}}>{it.hou}</span>
+                        {isCur&&<span style={{fontSize:9,padding:"1px 6px",background:color,color:"#fff",
+                          borderRadius:8,fontWeight:700}}>当下</span>}
+                      </div>
+                      <div style={{fontSize:15,fontWeight:700,color:"#2a2018",letterSpacing:2}}>{it.sp}</div>
+                      <div style={{fontSize:10,color:"#8a7a60"}}>{it.date} · {hasData?"可赏":"古录"}</div>
+                    </div>
+                  </div>
+                </div>);
+              })}
+            </div>
+          </div>);
+        })}
+        <div style={{textAlign:"center",marginTop:18,padding:"16px 0",borderTop:"1px dashed #e0dcd4"}}>
+          <div style={{fontSize:11,color:"#8a7a60",letterSpacing:3,lineHeight:1.8}}>
+            "花信风，应花期而来的风也。"<br/>
+            · 古时以风候花 · 东风应时 · 百花次第 ·
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ 花卉百科 Wiki Modal ═══
+function FlowerWiki({sp,onClose,flora,onPickSpecies}){
+  const wiki=FLORA_WIKI[sp];
+  const related=flora?flora.filter(f=>f.sp===sp).slice(0,6):[];
+  if(!wiki)return(<div style={{position:"fixed",inset:0,zIndex:140,background:"rgba(0,0,0,.5)",
+    display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",padding:"30px 40px",borderRadius:10,textAlign:"center"}}>
+      <div style={{fontSize:40,marginBottom:12}}>🌸</div>
+      <div style={{fontSize:14,color:"#3a2818"}}>{sp} 的百科资料整理中</div>
+      <button onClick={onClose} style={{marginTop:16,border:"1px solid #e0dcd4",background:"transparent",
+        borderRadius:16,padding:"6px 22px",cursor:"pointer",color:"#8a7a68"}}>关闭</button>
+    </div></div>);
+  const fl=flora?flora.find(f=>f.sp===sp):null;
+  const mainColor=(fl&&fl.c)||"#c06040";
+  return(<div style={{position:"fixed",inset:0,zIndex:140,background:"rgba(20,15,10,.65)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={e=>e.stopPropagation()} style={{background:"#faf6ef",width:"min(580px,94vw)",
+      maxHeight:"90vh",borderRadius:12,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      {/* Header with flower */}
+      <div style={{padding:"26px 30px 20px",
+        background:"linear-gradient(135deg,"+mainColor+"22,"+mainColor+"08)",
+        borderBottom:"1px solid "+mainColor+"33",position:"relative"}}>
+        <button onClick={onClose} style={{position:"absolute",top:12,right:14,border:"none",
+          background:"rgba(0,0,0,.1)",color:"#3a2818",cursor:"pointer",fontSize:13,
+          width:26,height:26,borderRadius:"50%"}}>{"×"}</button>
+        <div style={{display:"flex",gap:16,alignItems:"center"}}>
+          <div style={{width:72,height:72,borderRadius:"50%",background:"#fff",
+            border:"2px solid "+mainColor+"88",display:"flex",alignItems:"center",justifyContent:"center",
+            boxShadow:"0 4px 14px "+mainColor+"33"}}>
+            <FI sp={sp} sz={52} co={mainColor}/>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:10,color:mainColor,letterSpacing:4,fontWeight:600,marginBottom:2}}>FLOWER·花卉</div>
+            <h2 style={{fontSize:28,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0,
+              fontFamily:"'Noto Serif SC',serif"}}>{sp}</h2>
+            <div style={{fontSize:11,color:"#8a7a60",marginTop:3,letterSpacing:1}}>
+              <span style={{fontStyle:"italic"}}>{wiki.sci}</span> · {wiki.family}
+            </div>
+          </div>
+        </div>
+        {/* Flower language */}
+        <div style={{marginTop:14,padding:"8px 14px",background:"rgba(255,255,255,.6)",borderRadius:6,
+          borderLeft:"3px solid "+mainColor}}>
+          <div style={{fontSize:10,color:"#8a7a60",letterSpacing:3,marginBottom:3}}>花语</div>
+          <div style={{fontSize:14,color:"#3a2818",fontWeight:600,letterSpacing:3}}>{wiki.flang}</div>
+        </div>
+      </div>
+      {/* Body */}
+      <div style={{flex:1,overflow:"auto",padding:"18px 30px"}}>
+        {/* Aliases */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:4}}>别名</div>
+          <div style={{fontSize:13,color:"#3a2818"}}>{wiki.alias}</div>
+        </div>
+        {/* Origin */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:4}}>原产 · 历史</div>
+          <div style={{fontSize:13,color:"#3a2818",lineHeight:1.7}}>{wiki.origin}</div>
+        </div>
+        {/* Story */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:4}}>文化 · 典故</div>
+          <div style={{fontSize:13,color:"#3a2818",lineHeight:1.8,
+            background:"#f5f0e8",padding:"10px 14px",borderRadius:6}}>{wiki.story}</div>
+        </div>
+        {/* Care */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:4}}>养护</div>
+          <div style={{fontSize:13,color:"#3a2818",lineHeight:1.7}}>{wiki.care}</div>
+        </div>
+        {/* Poems */}
+        <div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:8}}>
+            · 古诗词 · {wiki.poems.length}首</div>
+          {wiki.poems.map((p,i)=>(
+            <div key={i} style={{marginBottom:10,padding:"12px 16px",
+              background:"linear-gradient(135deg,"+mainColor+"08,"+mainColor+"03)",
+              borderRadius:6,borderLeft:"2px solid "+mainColor+"55"}}>
+              <div style={{fontSize:14,color:"#2a2018",lineHeight:2,letterSpacing:2,
+                fontFamily:"'Noto Serif SC',serif",fontStyle:"italic"}}>{p.t}</div>
+              <div style={{fontSize:11,color:mainColor,marginTop:4,textAlign:"right"}}>—— {p.a}</div>
+            </div>))}
+        </div>
+        {/* Related spots */}
+        {related.length>0&&<div style={{marginBottom:14}}>
+          <div style={{fontSize:10,color:mainColor,letterSpacing:3,fontWeight:600,marginBottom:8}}>
+            · 观赏地 · {flora.filter(f=>f.sp===sp).length}处</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:6}}>
+            {related.map(r=>(<div key={r.id} style={{padding:"6px 10px",background:"#f5f0e8",
+              borderRadius:4,fontSize:12,color:"#3a2818"}}>
+              <span style={{color:mainColor,marginRight:4}}>📍</span>{r.n}
+              <span style={{color:"#8a7a60",marginLeft:3}}>·{r.pk[0]}月</span>
+            </div>))}
+          </div>
+          {onPickSpecies&&<button onClick={()=>{onPickSpecies(sp);onClose();}}
+            style={{marginTop:10,border:"1px solid "+mainColor,background:mainColor+"11",
+              color:mainColor,borderRadius:16,padding:"6px 20px",cursor:"pointer",
+              fontSize:12,letterSpacing:2,fontWeight:600}}>🌺 在地图上查看</button>}
+        </div>}
+      </div>
+    </div>
+  </div>);
+}
+
 // ═══ MAIN ═══
 export default function App(){
   const [entered,setEntered]=useState(false);const [geo,setGeo]=useState(null);
@@ -2056,7 +2591,7 @@ export default function App(){
   // Load checkins from storage
   useEffect(()=>{(async()=>{try{const r=window.storage?await window.storage.get("checkins"):null;
     if(r&&r.value)setCheckins(JSON.parse(r.value));}catch{}})();},[]);
-  const doCheckin=async(id)=>{const nc={...checkins,[id]:{date:new Date().toLocaleDateString("zh-CN"),ts:Date.now()}};
+  const doCheckin=async(id,note)=>{const nc={...checkins,[id]:{date:new Date().toLocaleDateString("zh-CN"),ts:Date.now(),note:note||""}};
     setCheckins(nc);try{if(window.storage)await window.storage.set("checkins",JSON.stringify(nc));}catch{}};
 
   // P3-16: Request notification permission + schedule bloom alerts
@@ -2213,6 +2748,8 @@ export default function App(){
 
   const [dark,setDark]=useState(false);
   const [lang,setLang]=useState("zh");const [showGuide,setShowGuide]=useState(false);
+  const [showHuaxin,setShowHuaxin]=useState(false);const [wikiSp,setWikiSp]=useState(null);
+  const [showDiary,setShowDiary]=useState(false);
   const t=I18N[lang]||I18N.zh;
 
   if(!entered)return <ScrollLanding onEnter={()=>setEntered(true)}/>;
@@ -2401,7 +2938,8 @@ export default function App(){
 
     {sel&&<Card s={sel} onClose={()=>setSel(null)} isFav={!!favs[sel.id]} onFav={toggleFav}
       inTrip={trip.includes(sel.id)} onAddTrip={addToTrip}
-      isChecked={checkins[sel.id]||false} onCheckin={doCheckin}/>}
+      isChecked={checkins[sel.id]||false} onCheckin={doCheckin}
+      onShowWiki={(sp)=>{setSel(null);setWikiSp(sp);}}/>}
     {showMood&&<MoodCard onClose={()=>setShowMood(false)}/>}
 
     {/* Trip planning floating button */}
@@ -2508,6 +3046,43 @@ export default function App(){
         <text x="21" y="32" textAnchor="middle" fontSize="9" fill="#fff8e8" fontWeight="700" letterSpacing="2">签</text>
       </svg>
     </button>
+    {/* 24-Huaxin bookmark - second bookmark below */}
+    <button onClick={()=>setShowHuaxin(true)} style={{position:"absolute",top:154,right:0,zIndex:31,
+      border:"none",cursor:"pointer",padding:0,background:"transparent",
+      filter:"drop-shadow(0 2px 6px rgba(80,120,100,.25))"}} title="二十四番花信风">
+      <svg width="42" height="58" viewBox="0 0 42 58">
+        <defs><linearGradient id="bmgrad2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#5a8a70"/><stop offset="100%" stopColor="#3a6b50"/></linearGradient></defs>
+        <path d="M2,0 L40,0 L40,56 L21,46 L2,56 Z" fill="url(#bmgrad2)" stroke="#2a5a40" strokeWidth=".8"/>
+        <path d="M6,4 L36,4 L36,40" fill="none" stroke="#e8f0e0" strokeWidth=".5" opacity=".5"/>
+        <text x="21" y="18" textAnchor="middle" fontSize="9" fill="#e8f0e0" fontWeight="700" letterSpacing="2">花</text>
+        <text x="21" y="32" textAnchor="middle" fontSize="9" fill="#e8f0e0" fontWeight="700" letterSpacing="2">信</text>
+      </svg>
+    </button>
+    {showHuaxin&&<HuaxinPanel onClose={()=>setShowHuaxin(false)}
+      onPickSpecies={(sp)=>{setSelSp(sp);setPage("species");}}
+      onShowWiki={(sp)=>{setShowHuaxin(false);setWikiSp(sp);}}
+      flora={flora}/>}
+    {wikiSp&&<FlowerWiki sp={wikiSp} flora={flora} onClose={()=>setWikiSp(null)}
+      onPickSpecies={(sp)=>{setSelSp(sp);setPage("species");}}/>}
+    {/* Diary bookmark - third bookmark */}
+    <button onClick={()=>setShowDiary(true)} style={{position:"absolute",top:218,right:0,zIndex:31,
+      border:"none",cursor:"pointer",padding:0,background:"transparent",
+      filter:"drop-shadow(0 2px 6px rgba(192,96,64,.25))"}} title="我的花历">
+      <svg width="42" height="58" viewBox="0 0 42 58">
+        <defs><linearGradient id="bmgrad3" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#c87050"/><stop offset="100%" stopColor="#a05030"/></linearGradient></defs>
+        <path d="M2,0 L40,0 L40,56 L21,46 L2,56 Z" fill="url(#bmgrad3)" stroke="#804020" strokeWidth=".8"/>
+        <path d="M6,4 L36,4 L36,40" fill="none" stroke="#f8e8d0" strokeWidth=".5" opacity=".5"/>
+        <text x="21" y="18" textAnchor="middle" fontSize="9" fill="#f8e8d0" fontWeight="700" letterSpacing="2">花</text>
+        <text x="21" y="32" textAnchor="middle" fontSize="9" fill="#f8e8d0" fontWeight="700" letterSpacing="2">历</text>
+      </svg>
+      {Object.keys(checkins).length>0&&<div style={{position:"absolute",top:-2,left:-4,
+        width:18,height:18,borderRadius:"50%",background:"#c06040",color:"#fff",
+        fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",
+        border:"2px solid #faf6ef"}}>{Object.keys(checkins).length}</div>}
+    </button>
+    {showDiary&&<DiaryPanel onClose={()=>setShowDiary(false)} checkins={checkins} flora={flora} favs={favs}/>}
     {/* Dark mode toggle */}
     <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:10,zIndex:31,
       border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
