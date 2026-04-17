@@ -1318,6 +1318,9 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:isChecked?"#c8a050":C.tl}}>
             {isChecked?"📍已打卡":"📍打卡"}</button>
+          <button onClick={function(){var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"");if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text}).catch(function(){});else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
+            style={{border:"1.5px solid #e0dcd4",background:"#faf6ef",borderRadius:8,padding:"8px 12px",
+              cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl}}>📤</button>
         </div>
         {isChecked&&<div style={{fontSize:11,color:"#c8a050",textAlign:"center",marginTop:4}}>
           🎉 打卡时间：{isChecked.date}</div>}
@@ -1336,14 +1339,6 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
             <button onClick={addNote} style={{border:"none",background:C.accent,color:"#fff",borderRadius:6,
               padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:600}}>发送</button>
           </div>
-        </div>
-          <button onClick={()=>{var text=s.n+" · "+s.sp+"\n"+s.po+"\n预测盛花期："+(s._pred?s._pred.dateStr:"");
-            if(navigator.share)navigator.share({title:"花信风 · "+s.n,text:text}).catch(function(){});
-            else{navigator.clipboard.writeText(text);alert("已复制到剪贴板");}}}
-            style={{flex:1,border:"1.5px solid #e0dcd4",background:"#faf6ef",borderRadius:8,
-              padding:"8px 12px",cursor:"pointer",fontSize:13,fontWeight:600,color:C.tl,
-              display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
-            📤 分享</button>
         </div>
       </div>
       <div style={{height:6,background:s.c}}></div></div></div>);
