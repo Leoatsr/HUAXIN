@@ -1031,7 +1031,7 @@ function ScrollLanding({onEnter}){
 }
 
 // ═══ Marker / Card / Wheel / Rank ═══
-function Mk({s,px,py,zoom,onClick,hl,fav}){
+function Mk({s,px,py,zoom,onClick,hl,fav,checked}){
   const [hov,setHov]=useState(false);const [sh,setSh]=useState(false);
   const st=s._st||{st:"...",l:1};const hot=st.l>=3,dead=st.l===0;const pred=s._pred;
   useEffect(()=>{const t=setTimeout(()=>setSh(true),25+s.id*10);return()=>clearTimeout(t);},[s.id]);
@@ -1051,7 +1051,8 @@ function Mk({s,px,py,zoom,onClick,hl,fav}){
       boxShadow:dead?"none":`0 2px 4px ${s.c}33`,
       display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
       {dead?<span style={{fontSize:sz*.4,opacity:.3}}>·</span>:<FI sp={s.sp} sz={sz*(hl?.8:.65)} co={s.c}/>}
-      {fav&&<div style={{position:"absolute",top:-2,right:-2,fontSize:8,color:"#e06050"}}>♥</div>}</div>
+      {fav&&<div style={{position:"absolute",top:-2,right:-2,fontSize:8,color:"#e06050"}}>♥</div>}
+      {checked&&<div style={{position:"absolute",bottom:-2,right:-2,fontSize:7,color:"#c8a050"}}>📍</div>}</div>
     {(zoom>=1.5||hl)&&!dead&&<div style={{marginTop:2,fontSize:hl?11:11,color:C.text,whiteSpace:"nowrap",
       textShadow:`0 1px 3px ${C.bg}`,fontWeight:600,letterSpacing:.5,opacity:hov?1:.65}}>{s.n.split("·")[1]||s.n}</div>}
     {hl&&!dead&&<div style={{fontSize:10,color:s.c,opacity:.7}}>{s._pred?s._pred.dateStr:s.pk[0]+"月"}</div>}
@@ -1095,7 +1096,16 @@ function LandscapeSVG({season,color,w,h}){
   </svg>);
 }
 
-function Card({s,onClose,isFav,onFav,inTrip,onAddTrip}){const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
+function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin}){
+  const [v,setV]=useState(false);const [realAT,setRealAT]=useState(null);
+  const [note,setNote]=useState("");const [notes,setNotes]=useState([]);
+  // Load shared notes for this spot
+  useEffect(()=>{(async()=>{try{const r=await window.storage?.get("notes_"+s.id,true);
+    if(r?.value)setNotes(JSON.parse(r.value));}catch{}})();},[s.id]);
+  const addNote=async()=>{if(!note.trim())return;
+    const nn=[...notes,{t:note.trim(),d:new Date().toLocaleDateString("zh-CN"),ts:Date.now()}].slice(-20);
+    setNotes(nn);setNote("");
+    try{await window.storage?.set("notes_"+s.id,JSON.stringify(nn),true);}catch{}};
   useEffect(()=>{setTimeout(()=>setV(true),10);},[]);
   // Fetch real accumulated temperature from Open-Meteo
   useEffect(()=>{(async()=>{try{
@@ -1191,6 +1201,29 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip}){const [v,setV]=useState(
             background:inTrip?"#eef8f0":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
             fontSize:13,fontWeight:600,color:inTrip?"#3a8a60":C.tl,display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
             {inTrip?"✓ 已加入行程":"+ 加入行程"}</button>
+          <button onClick={()=>onCheckin?.(s.id)} style={{border:`1.5px solid ${isChecked?"#c8a050":"#e0dcd4"}`,
+            background:isChecked?"#fdf8ee":"#faf6ef",borderRadius:8,padding:"8px 12px",cursor:"pointer",
+            fontSize:13,fontWeight:600,color:isChecked?"#c8a050":C.tl}}>
+            {isChecked?"📍已打卡":"📍打卡"}</button>
+        </div>
+        {isChecked&&<div style={{fontSize:11,color:"#c8a050",textAlign:"center",marginTop:4}}>
+          🎉 打卡时间：{isChecked.date}</div>}
+        {/* Community notes */}
+        <div style={{marginTop:12,borderTop:"1px solid #ece6dc",paddingTop:10}}>
+          <div style={{fontSize:12,color:C.tl,marginBottom:6,letterSpacing:2}}>💬 花友笔记</div>
+          {notes.length===0&&<div style={{fontSize:12,color:C.tl,opacity:.5,textAlign:"center",padding:"8px 0"}}>还没有笔记，做第一个分享的人吧</div>}
+          {notes.slice(-5).map((n,i)=>(
+            <div key={i} style={{fontSize:12,color:C.text,padding:"4px 0",borderBottom:"1px solid #f5f0e8"}}>
+              <span style={{opacity:.5,fontSize:10}}>{n.d}</span> {n.t}</div>))}
+          <div style={{display:"flex",gap:4,marginTop:6}}>
+            <input value={note} onChange={e=>setNote(e.target.value)} placeholder="写一条花事笔记..."
+              onKeyDown={e=>{if(e.key==="Enter")addNote();}}
+              style={{flex:1,border:"1px solid #e8e0d4",borderRadius:6,padding:"6px 8px",fontSize:12,
+                background:"#faf6ef",outline:"none",fontFamily:"'Noto Serif SC',serif"}}/>
+            <button onClick={addNote} style={{border:"none",background:C.accent,color:"#fff",borderRadius:6,
+              padding:"6px 12px",cursor:"pointer",fontSize:12,fontWeight:600}}>发送</button>
+          </div>
+        </div>
           <button onClick={()=>{const text=`${s.n} · ${s.sp}\n${s.po}\n预测盛花期：${s._pred?.dateStr||""}`;
             if(navigator.share)navigator.share({title:"花信风 · "+s.n,text}).catch(()=>{});
             else{navigator.clipboard?.writeText(text);alert("已复制到剪贴板");}}}
@@ -1240,6 +1273,26 @@ export default function App(){
   const [selSp,setSelSp]=useState("牡丹");const [userLoc,setUserLoc]=useState(null);const [locAsked,setLocAsked]=useState(false);
   const [showMood,setShowMood]=useState(false);
   const [trip,setTrip]=useState([]);const [showTrip,setShowTrip]=useState(false);
+  const [checkins,setCheckins]=useState({});
+
+  // Load checkins from storage
+  useEffect(()=>{(async()=>{try{const r=await window.storage?.get("checkins");
+    if(r?.value)setCheckins(JSON.parse(r.value));}catch{}})();},[]);
+  const doCheckin=async(id)=>{const nc={...checkins,[id]:{date:new Date().toLocaleDateString("zh-CN"),ts:Date.now()}};
+    setCheckins(nc);try{await window.storage?.set("checkins",JSON.stringify(nc));}catch{}};
+
+  // P3-16: Request notification permission + schedule bloom alerts
+  useEffect(()=>{if(!entered)return;
+    if("Notification" in window&&Notification.permission==="default"){
+      setTimeout(()=>Notification.requestPermission(),5000);}
+    // Check for blooming-soon flowers and notify
+    if("Notification" in window&&Notification.permission==="granted"){
+      const soon=flora.filter(f=>f._pred&&f._pred.daysUntil>=1&&f._pred.daysUntil<=3);
+      if(soon.length>0){const s=soon[0];
+        new Notification("🌸 花信风提醒",{body:`${s.n}${s.sp}将于${s._pred.daysUntil}天后盛开！`,icon:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='24' font-size='24'>🌸</text></svg>"});
+      }
+    }
+  },[entered,flora]);
   const [nearbyMonth,setNearbyMonth]=useState(0);
   const [searchQ,setSearchQ]=useState("");const [showSearch,setShowSearch]=useState(false);
   const [favs,setFavs]=useState({});
@@ -1430,7 +1483,7 @@ export default function App(){
               <text x={p[0]+8} y={p[1]+3} fontSize="7" fill="#4a90d9" fontWeight="600">你的位置</text></g>:null;})()}
         </svg>
         {spots.map(s=>{const pos=sP.get(s.id);if(!pos)return null;
-          return <Mk key={s.id} s={s} px={pos.x} py={pos.y} zoom={ez} onClick={()=>setSel(s)} hl={page==="species"} fav={!!favs[s.id]}/>;
+          return <Mk key={s.id} s={s} px={pos.x} py={pos.y} zoom={ez} onClick={()=>setSel(s)} hl={page==="species"} fav={!!favs[s.id]} checked={!!checkins[s.id]}/>;
         })}
       </div>
     </div>
@@ -1572,7 +1625,9 @@ export default function App(){
           </div>))}
       </div>);})()}
 
-    {sel&&<Card s={sel} onClose={()=>setSel(null)} isFav={!!favs[sel.id]} onFav={toggleFav} inTrip={trip.includes(sel.id)} onAddTrip={addToTrip}/>}
+    {sel&&<Card s={sel} onClose={()=>setSel(null)} isFav={!!favs[sel.id]} onFav={toggleFav}
+      inTrip={trip.includes(sel.id)} onAddTrip={addToTrip}
+      isChecked={checkins[sel.id]||false} onCheckin={doCheckin}/>}
     {showMood&&<MoodCard onClose={()=>setShowMood(false)}/>}
 
     {/* Trip planning floating button */}
