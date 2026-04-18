@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   
   <!-- ─── Primary Meta Tags ─── -->
   <title>花信风 · 跟着天地节律追一场中国色</title>
@@ -213,6 +213,17 @@
         console.warn('[花信风] analytics error:', e);
       }
     };
+    
+    /* Prevent Ctrl+Scroll browser zoom (so map zoom works correctly) */
+    window.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+    /* Prevent Ctrl+Plus/Minus browser zoom */
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
   </script>
   
   <script type="module" src="/src/main.jsx"></script>
