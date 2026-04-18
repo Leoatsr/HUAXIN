@@ -27,11 +27,14 @@
 
 | 维度 | 数据 |
 |------|------|
-| 代码 | 4,462 行 · 单文件 React 应用 |
+| 代码 | 5,388 行 · 单文件 React 应用 |
 | 景点 | 408 个 · 覆盖全国 34 省 + 台湾 + 南海 |
-| 花卉 | 72 种 · 19 种百科词条 |
+| 花卉 | 72 种 · **74 种深度百科词条（100% 覆盖）** |
 | 区域 | 10 大区（华北/华东/华南/华中/西南/西北/东北/西藏/台湾/南海）|
-| 诗词 | 22 首经典古诗词（《诗经》→ 李白 → 杜牧 → 毛泽东）|
+| 诗词 | 52 首经典古诗词 + **20 首鉴赏导读** |
+| 物候 | **24 番花信风 + 72 候全年物候** |
+| 景点详情 | 45 个重点景点完整信息 + 24 种花种贴士 + 11 个官方网站 |
+| 环境音 | 🌿 **5 种程序化自然音**（鸟鸣/虫鸣/溪流/风声/细雨）|
 | 音乐 | 21 首五声音阶民乐 · 8 种传统乐器 |
 | 成就 | 25 枚徽章 · 7 维度 · 4 级进阶（铜银金钻）|
 | 语言 | 中文 / English / 日本語 / 한국어 |
@@ -252,12 +255,30 @@ npm run dev
 npm run build
 ```
 
-### 更新代码
+### 更新代码流程
 
-1. 下载最新的 `flower-wind.jsx`
-2. 重命名为 `App.jsx`
-3. 替换 `src/App.jsx`
-4. 提交到 GitHub → Vercel 自动重新部署
+1. 下载最新的三个文件：
+   - `flower-wind.jsx` → 重命名为 `src/App.jsx`
+   - `index.html` → 替换根目录
+   - `manifest.webmanifest` → 放到 `public/` 目录
+2. 提交到 GitHub → Vercel 自动重新部署
+
+### 可选：启用数据分析
+
+`index.html` 中已预留 `window._hxTrack` 埋点接口，默认仅输出到 console。
+
+启用 Google Analytics：
+```html
+<!-- 在 </head> 前添加 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXX');
+</script>
+```
+然后在 `index.html` 的 `_hxTrack` 函数中取消 gtag 注释即可。
 
 ---
 
