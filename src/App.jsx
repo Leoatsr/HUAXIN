@@ -2072,111 +2072,208 @@ function SpeciesWheel({onSelect,selected,spots}){
 
 // ═══ 个人花历 (Personal Flower Diary) ═══
 function DiaryPanel({onClose,checkins,flora,favs}){
-  // Build timeline entries from checkins
-  const entries=Object.keys(checkins).map(id=>{
-    const ck=checkins[id];
-    const spot=flora.find(f=>f.id===Number(id));
+  const [tab,setTab]=useState("badges");
+  const [shareBadge,setShareBadge]=useState(null);
+  
+  const entries=Object.keys(checkins).map(function(id){
+    var ck=checkins[id];var spot=flora.find(function(f){return f.id===Number(id);});
     if(!spot)return null;
     return{id:Number(id),date:ck.date,ts:ck.ts,note:ck.note||"",spot:spot};
-  }).filter(Boolean).sort((a,b)=>(b.ts||0)-(a.ts||0));
+  }).filter(Boolean).sort(function(a,b){return(b.ts||0)-(a.ts||0);});
 
-  // Stats
-  const totalSpots=entries.length;
-  const species=[...new Set(entries.map(e=>e.spot.sp))];
-  const regions=[...new Set(entries.map(e=>e.spot.rg))];
-  const seasons=[...new Set(entries.map(e=>e.spot.s))];
-  const seasonNames={spring:"春",summer:"夏",autumn:"秋",winter:"冬"};
+  var totalSpots=entries.length;
+  var species=[...new Set(entries.map(function(e){return e.spot.sp;}))];
+  var regions=[...new Set(entries.map(function(e){return e.spot.rg;}))];
+  var seasons=[...new Set(entries.map(function(e){return e.spot.s;}))];
+  var favCount=Object.keys(favs).length;
+  var noteCount=entries.filter(function(e){return e.note;}).length;
+  var seasonNames={spring:"春",summer:"夏",autumn:"秋",winter:"冬"};
+  var months=[...new Set(entries.map(function(e){try{return e.date.split("/")[1]||"";}catch(x){return "";}}))].filter(Boolean);
+  var ancientCaps=["西安","洛阳","杭州","南京","北京","开封","苏州"];
+  var capVisits=entries.filter(function(e){return ancientCaps.some(function(c){return e.spot.n.includes(c);});});
+  var hasNorth=entries.some(function(e){return["华北","东北","西北"].includes(e.spot.rg);});
+  var hasSouth=entries.some(function(e){return["华南","西南","华东"].includes(e.spot.rg);});
 
-  // Achievement badges
-  const badges=[];
-  if(totalSpots>=1)badges.push({icon:"🌱",name:"初见花事",desc:"首次打卡"});
-  if(totalSpots>=5)badges.push({icon:"🌸",name:"寻芳踏春",desc:"打卡5处"});
-  if(totalSpots>=10)badges.push({icon:"🌺",name:"访花大师",desc:"打卡10处"});
-  if(totalSpots>=20)badges.push({icon:"👑",name:"花中帝王",desc:"打卡20处"});
-  if(species.length>=3)badges.push({icon:"🎨",name:"百花缘",desc:"3种花卉"});
-  if(species.length>=8)badges.push({icon:"💐",name:"花卉通",desc:"8种花卉"});
-  if(regions.length>=3)badges.push({icon:"🗺",name:"万里寻芳",desc:"跨3区域"});
-  if(regions.length>=5)badges.push({icon:"✈",name:"花迹天涯",desc:"跨5区域"});
-  if(seasons.length>=2)badges.push({icon:"🌗",name:"双季采花",desc:"跨2季"});
-  if(seasons.length>=4)badges.push({icon:"🌍",name:"四季收集者",desc:"春夏秋冬"});
-  const favCount=Object.keys(favs).length;
-  if(favCount>=5)badges.push({icon:"❤",name:"花痴",desc:"收藏5处"});
+  var tierColors=["#ccc","#cd7f32","#c0c0c0","#ffd700","#b9f2ff"];
+  var tierNames=["未解锁","铜","银","金","钻"];
+  var tierBg=["#f0f0f0","#fdf4e8","#f5f5f5","#fffbe8","#f0fbff"];
+
+  var allBadges=[
+    {cat:"探花者",icon:"🌱",name:"初识花事",desc:"首次打卡赏花",tier:totalSpots>=1?1:0,cur:totalSpots,max:1},
+    {cat:"探花者",icon:"🌸",name:"寻芳踏春",desc:"打卡5处赏花地",tier:totalSpots>=5?2:totalSpots>=1?1:0,cur:totalSpots,max:5},
+    {cat:"探花者",icon:"🌺",name:"访花大师",desc:"打卡15处赏花地",tier:totalSpots>=15?3:totalSpots>=5?2:0,cur:totalSpots,max:15},
+    {cat:"探花者",icon:"👑",name:"花中帝王",desc:"打卡30处赏花地",tier:totalSpots>=30?4:totalSpots>=15?3:0,cur:totalSpots,max:30},
+    {cat:"采花令",icon:"🎨",name:"初窥门径",desc:"采集3种花卉",tier:species.length>=3?1:0,cur:species.length,max:3},
+    {cat:"采花令",icon:"💐",name:"百花园主",desc:"采集8种花卉",tier:species.length>=8?2:species.length>=3?1:0,cur:species.length,max:8},
+    {cat:"采花令",icon:"🏵",name:"花卉博士",desc:"采集15种花卉",tier:species.length>=15?3:species.length>=8?2:0,cur:species.length,max:15},
+    {cat:"采花令",icon:"🎭",name:"花神降世",desc:"采集25种花卉",tier:species.length>=25?4:species.length>=15?3:0,cur:species.length,max:25},
+    {cat:"行者",icon:"🚶",name:"踏青一步",desc:"跨越2个区域",tier:regions.length>=2?1:0,cur:regions.length,max:2},
+    {cat:"行者",icon:"🗺",name:"万里寻芳",desc:"跨越4个区域",tier:regions.length>=4?2:regions.length>=2?1:0,cur:regions.length,max:4},
+    {cat:"行者",icon:"✈",name:"花迹天涯",desc:"跨越6个区域",tier:regions.length>=6?3:regions.length>=4?2:0,cur:regions.length,max:6},
+    {cat:"行者",icon:"🌐",name:"九州花事",desc:"跨越8个区域",tier:regions.length>=8?4:regions.length>=6?3:0,cur:regions.length,max:8},
+    {cat:"四时",icon:"🌗",name:"双季之约",desc:"在2个季节赏花",tier:seasons.length>=2?1:0,cur:seasons.length,max:2},
+    {cat:"四时",icon:"🔄",name:"三季轮回",desc:"在3个季节赏花",tier:seasons.length>=3?2:seasons.length>=2?1:0,cur:seasons.length,max:3},
+    {cat:"四时",icon:"🌍",name:"四季花神",desc:"春夏秋冬全收集",tier:seasons.length>=4?4:seasons.length>=3?2:0,cur:seasons.length,max:4},
+    {cat:"社交",icon:"❤",name:"花之初恋",desc:"收藏3处赏花地",tier:favCount>=3?1:0,cur:favCount,max:3},
+    {cat:"社交",icon:"💕",name:"花痴",desc:"收藏10处赏花地",tier:favCount>=10?2:favCount>=3?1:0,cur:favCount,max:10},
+    {cat:"社交",icon:"💝",name:"花之守护者",desc:"收藏20处赏花地",tier:favCount>=20?3:favCount>=10?2:0,cur:favCount,max:20},
+    {cat:"社交",icon:"✍",name:"花事记者",desc:"写3条花事笔记",tier:noteCount>=3?2:noteCount>=1?1:0,cur:noteCount,max:3},
+    {cat:"社交",icon:"📝",name:"花事作家",desc:"写10条花事笔记",tier:noteCount>=10?3:noteCount>=3?2:0,cur:noteCount,max:10},
+    {cat:"风雅",icon:"🏯",name:"古都寻花",desc:"访古都赏花地",tier:capVisits.length>=3?3:capVisits.length>=1?1:0,cur:capVisits.length,max:3},
+    {cat:"风雅",icon:"🌊",name:"南北花使",desc:"南北方都赏过花",tier:hasNorth&&hasSouth?3:hasNorth||hasSouth?1:0,cur:(hasNorth?1:0)+(hasSouth?1:0),max:2},
+    {cat:"稀有",icon:"📅",name:"月月赏花",desc:"6个不同月份打卡",tier:months.length>=6?4:months.length>=3?2:0,cur:months.length,max:6},
+    {cat:"稀有",icon:"🏔",name:"高原花使",desc:"到访西藏赏花",tier:entries.some(function(e){return e.spot.rg==="西藏";})?4:0,cur:entries.some(function(e){return e.spot.rg==="西藏";})?1:0,max:1},
+    {cat:"稀有",icon:"🏝",name:"海岛花事",desc:"到访台湾或南海赏花",tier:entries.some(function(e){return["台湾","南海"].includes(e.spot.rg);})?4:0,cur:entries.some(function(e){return["台湾","南海"].includes(e.spot.rg);})?1:0,max:1},
+  ];
+
+  var earnedBadges=allBadges.filter(function(b){return b.tier>0;});
+  var earnedCount=earnedBadges.length;
+  var totalCount=allBadges.length;
+  var cats=[...new Set(allBadges.map(function(b){return b.cat;}))];
+  var catIcons={"探花者":"🌸","采花令":"💐","行者":"🗺","四时":"🔄","社交":"💬","风雅":"🎋","稀有":"💎"};
+
+  var shareBadgeImg=function(badge){
+    var canvas=document.createElement("canvas");canvas.width=540;canvas.height=540;
+    var ctx=canvas.getContext("2d");
+    var bg=ctx.createRadialGradient(270,270,50,270,270,350);
+    bg.addColorStop(0,tierBg[badge.tier]);bg.addColorStop(1,"#f5ede0");
+    ctx.fillStyle=bg;ctx.fillRect(0,0,540,540);
+    ctx.strokeStyle=tierColors[badge.tier];ctx.lineWidth=4;
+    ctx.beginPath();ctx.arc(270,270,240,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle=tierColors[badge.tier];
+    ctx.beginPath();ctx.arc(270,140,60,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#fff";ctx.font="48px sans-serif";ctx.textAlign="center";
+    ctx.fillText(badge.icon,270,158);
+    ctx.fillStyle=tierColors[badge.tier];ctx.fillRect(220,210,100,26);
+    ctx.fillStyle="#fff";ctx.font="bold 14px sans-serif";
+    ctx.fillText(tierNames[badge.tier]+"级",270,228);
+    ctx.fillStyle="#2a2018";ctx.font="bold 36px sans-serif";
+    ctx.fillText(badge.name,270,290);
+    ctx.fillStyle="#8a7a60";ctx.font="16px sans-serif";
+    ctx.fillText(badge.desc,270,325);
+    ctx.fillStyle="#b08040";ctx.font="13px sans-serif";
+    ctx.fillText("花信风 · 我的花事成就",270,475);
+    canvas.toBlob(function(blob){
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([blob],"b.png",{type:"image/png"})]})){
+        navigator.share({files:[new File([blob],"花信风-"+badge.name+".png",{type:"image/png"})],title:"花信风成就",text:"我解锁了「"+badge.name+"」！"}).catch(function(){});
+      }else{var a=document.createElement("a");a.download="花信风-"+badge.name+".png";a.href=URL.createObjectURL(blob);a.click();}
+    },"image/png");
+  };
 
   return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
     display:"flex",justifyContent:"flex-end",backdropFilter:"blur(6px)"}} onClick={onClose}>
-    <div onClick={e=>e.stopPropagation()} style={{width:"min(420px,90vw)",height:"100vh",
+    <div onClick={function(e){e.stopPropagation();}} style={{width:"min(440px,92vw)",height:"100vh",
       background:"#faf6ef",overflowY:"auto",boxShadow:"-4px 0 24px rgba(0,0,0,.15)"}}>
       {/* Header */}
-      <div style={{padding:"22px 22px 16px",borderBottom:"1px solid #ece6dc",
+      <div style={{padding:"20px 22px 14px",borderBottom:"1px solid #ece6dc",
         background:"linear-gradient(180deg,#faf6ef,#f2ebd8)",position:"sticky",top:0,zIndex:2}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div>
-            <div style={{fontSize:10,color:"#b08040",letterSpacing:5}}>· 我 的 ·</div>
-            <h2 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:8,margin:"4px 0",
-              fontFamily:"'Noto Serif SC',serif"}}>花 历</h2>
+            <div style={{fontSize:10,color:"#b08040",letterSpacing:5}}>{"· 我 的 ·"}</div>
+            <h2 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:8,margin:"4px 0"}}>花 历</h2>
           </div>
           <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",
             color:"#3a2818",cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
         </div>
-        {/* Stats bar */}
-        <div style={{display:"flex",gap:16,marginTop:12}}>
-          {[
-            {v:totalSpots,l:"打卡"},
-            {v:species.length,l:"花种"},
-            {v:regions.length,l:"区域"},
-            {v:seasons.map(s=>seasonNames[s]||s).join(""),l:"四季"},
-          ].map((s,i)=>(<div key={i} style={{textAlign:"center"}}>
-            <div style={{fontSize:20,fontWeight:900,color:"#c06040"}}>{s.v}</div>
-            <div style={{fontSize:10,color:"#8a7a60",letterSpacing:1}}>{s.l}</div>
-          </div>))}
+        <div style={{display:"flex",gap:14,marginTop:12}}>
+          {[{v:totalSpots,l:"打卡"},{v:species.length,l:"花种"},{v:regions.length,l:"区域"},
+            {v:earnedCount+"/"+totalCount,l:"成就"}].map(function(s,i){return(
+            <div key={i} style={{textAlign:"center"}}>
+              <div style={{fontSize:18,fontWeight:900,color:"#c06040"}}>{s.v}</div>
+              <div style={{fontSize:10,color:"#8a7a60",letterSpacing:1}}>{s.l}</div>
+            </div>);})}
+        </div>
+        <div style={{display:"flex",gap:2,marginTop:12}}>
+          {[{k:"badges",l:"🏅 成就"},{k:"timeline",l:"📅 花历"},{k:"share",l:"📤 分享"}].map(function(t2){return(
+            <button key={t2.k} onClick={function(){setTab(t2.k);}}
+              style={{flex:1,border:"none",borderRadius:6,padding:"6px",cursor:"pointer",fontSize:12,fontWeight:tab===t2.k?700:400,
+                background:tab===t2.k?"#c06040"+"22":"transparent",color:tab===t2.k?"#c06040":"#8a7a68"}}>
+              {t2.l}</button>);})}
         </div>
       </div>
 
-      {/* Badges */}
-      {badges.length>0&&<div style={{padding:"14px 22px",borderBottom:"1px solid #ece6dc"}}>
-        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:8,fontWeight:600}}>· 成就徽章 ·</div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-          {badges.map((b,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:5,
-            padding:"4px 10px",background:"#f5f0e8",borderRadius:16,border:"1px solid #e8e0d4"}}>
-            <span style={{fontSize:16}}>{b.icon}</span>
-            <div>
-              <div style={{fontSize:11,fontWeight:700,color:"#3a2818"}}>{b.name}</div>
-              <div style={{fontSize:9,color:"#8a7a60"}}>{b.desc}</div>
+      {tab==="badges"&&<div style={{padding:"14px 18px"}}>
+        {(function(){var next=allBadges.find(function(b){return b.tier===0;});
+          if(!next)return null;
+          return(<div style={{margin:"0 0 16px",padding:"12px 14px",background:"linear-gradient(135deg,#fdf8f0,#f8f0e0)",
+            borderRadius:10,border:"1px dashed #e0dcd4"}}>
+            <div style={{fontSize:10,color:"#b08040",letterSpacing:3,marginBottom:6,fontWeight:600}}>🎯 下一个成就</div>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <div style={{fontSize:28,opacity:.4}}>{next.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:700,color:"#2a2018"}}>{next.name}</div>
+                <div style={{fontSize:11,color:"#8a7a60"}}>{next.desc}</div>
+                <div style={{height:4,borderRadius:2,background:"#e8e0d4",marginTop:4,overflow:"hidden"}}>
+                  <div style={{height:"100%",borderRadius:2,width:Math.min(100,next.cur/next.max*100)+"%",
+                    background:"linear-gradient(90deg,#c06040,#e0a040)"}}></div>
+                </div>
+                <div style={{fontSize:9,color:"#8a7a68",marginTop:2}}>{next.cur}/{next.max}</div>
+              </div>
             </div>
-          </div>))}
-        </div>
+          </div>);
+        })()}
+        {cats.map(function(cat){
+          var catBadges=allBadges.filter(function(b){return b.cat===cat;});
+          var catEarned=catBadges.filter(function(b){return b.tier>0;}).length;
+          return(<div key={cat} style={{marginBottom:18}}>
+            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+              <span style={{fontSize:14}}>{catIcons[cat]||"🏅"}</span>
+              <span style={{fontSize:12,fontWeight:700,color:"#2a2018",letterSpacing:2}}>{cat}</span>
+              <span style={{fontSize:10,color:"#8a7a68"}}>{catEarned}/{catBadges.length}</span>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(115px,1fr))",gap:8}}>
+              {catBadges.map(function(b,i){
+                var earned=b.tier>0;var pct=Math.min(1,b.cur/b.max);
+                return(<div key={i} onClick={function(){if(earned)setShareBadge(b);}}
+                  style={{padding:"10px 8px",background:earned?tierBg[b.tier]:"#f8f8f6",
+                    border:"1.5px solid "+(earned?tierColors[b.tier]:"#e8e4dc"),
+                    borderRadius:10,textAlign:"center",cursor:earned?"pointer":"default",
+                    opacity:earned?1:.5,position:"relative"}}>
+                  {earned&&<div style={{position:"absolute",top:-4,right:-4,
+                    width:18,height:18,borderRadius:"50%",background:tierColors[b.tier],
+                    display:"flex",alignItems:"center",justifyContent:"center",
+                    fontSize:8,color:"#fff",fontWeight:900,border:"2px solid #faf6ef"}}>
+                    {tierNames[b.tier]}</div>}
+                  <div style={{fontSize:28,marginBottom:4,filter:earned?"none":"grayscale(1)"}}>{b.icon}</div>
+                  <div style={{fontSize:11,fontWeight:700,color:earned?"#2a2018":"#bbb",letterSpacing:1,lineHeight:1.2}}>{b.name}</div>
+                  <div style={{fontSize:9,color:earned?"#8a7a60":"#ccc",marginTop:2}}>{b.desc}</div>
+                  <div style={{height:3,borderRadius:2,background:"#e8e0d4",marginTop:6,overflow:"hidden"}}>
+                    <div style={{height:"100%",borderRadius:2,width:(pct*100)+"%",
+                      background:earned?tierColors[b.tier]:"#ddd"}}></div>
+                  </div>
+                  <div style={{fontSize:8,color:"#aaa",marginTop:2}}>{b.cur}/{b.max}</div>
+                </div>);
+              })}
+            </div>
+          </div>);
+        })}
       </div>}
 
-      {/* Timeline */}
-      <div style={{padding:"16px 22px"}}>
-        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:12,fontWeight:600}}>· 花事时间线 ·</div>
+      {tab==="timeline"&&<div style={{padding:"14px 18px"}}>
+        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:12,fontWeight:600}}>{"· 花事时间线 ·"}</div>
         {entries.length===0&&<div style={{textAlign:"center",padding:"40px 0",color:"#8a7a60"}}>
           <div style={{fontSize:40,marginBottom:12}}>🌱</div>
           <div style={{fontSize:14,letterSpacing:2}}>还没有花事记录</div>
-          <div style={{fontSize:12,marginTop:6,opacity:.6}}>在地图上点击景点 → 📍打卡 → 开始你的花历</div>
+          <div style={{fontSize:12,marginTop:6,opacity:.6}}>在地图上点击景点 → 📍打卡</div>
         </div>}
-        {entries.map((e,i)=>{
-          const sm=SM[e.spot.s];
-          return(<div key={e.id} style={{display:"flex",gap:12,marginBottom:0,position:"relative"}}>
-            {/* Timeline line */}
+        {entries.map(function(e,i){
+          var sm=SM[e.spot.s];
+          return(<div key={e.id} style={{display:"flex",gap:12,position:"relative"}}>
             <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:24,flexShrink:0}}>
               <div style={{width:14,height:14,borderRadius:"50%",background:e.spot.c,
-                border:"2px solid #faf6ef",boxShadow:"0 0 0 1px "+e.spot.c+"44",zIndex:1}}>
-              </div>
+                border:"2px solid #faf6ef",boxShadow:"0 0 0 1px "+e.spot.c+"44",zIndex:1}}></div>
               {i<entries.length-1&&<div style={{width:1,flex:1,background:"#e0dcd4"}}></div>}
             </div>
-            {/* Content */}
-            <div style={{flex:1,paddingBottom:20}}>
+            <div style={{flex:1,paddingBottom:18}}>
               <div style={{fontSize:11,color:"#8a7a60",marginBottom:3}}>{e.date}</div>
-              <div style={{padding:"10px 14px",background:"#f8f4ee",borderRadius:8,
-                border:"1px solid #ece6dc"}}>
+              <div style={{padding:"10px 14px",background:"#f8f4ee",borderRadius:8,border:"1px solid #ece6dc"}}>
                 <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:4}}>
                   <div style={{width:24,height:24,borderRadius:"50%",background:"#fff",
                     border:"1px solid "+e.spot.c+"55",display:"flex",alignItems:"center",justifyContent:"center"}}>
                     <FI sp={e.spot.sp} sz={16} co={e.spot.c}/></div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:13,fontWeight:700,color:"#2a2018"}}>{e.spot.n}</div>
-                    <div style={{fontSize:11,color:e.spot.c}}>{e.spot.sp} · {sm.i}{seasonNames[e.spot.s]}</div>
+                    <div style={{fontSize:11,color:e.spot.c}}>{e.spot.sp} · {sm?(sm.i||""):""}{ seasonNames[e.spot.s]||""}</div>
                   </div>
                 </div>
                 {e.note&&<div style={{fontSize:12,color:"#5a4a38",lineHeight:1.7,marginTop:6,
@@ -2186,24 +2283,64 @@ function DiaryPanel({onClose,checkins,flora,favs}){
             </div>
           </div>);
         })}
-      </div>
+      </div>}
 
-      {/* Generate summary card */}
-      {entries.length>=3&&<div style={{padding:"16px 22px 28px",borderTop:"1px solid #ece6dc"}}>
-        <button onClick={()=>{
-          // Generate summary text
-          var summary="🌸 我的花事记\n\n";
-          summary+="共打卡 "+totalSpots+" 处 · "+species.length+" 种花 · "+regions.length+" 个区域\n\n";
-          entries.slice(0,10).forEach(function(e){
-            summary+=e.date+" "+e.spot.n+" · "+e.spot.sp+(e.note?" · "+e.note:"")+"\n";
-          });
-          summary+="\n——来自花信风";
-          if(navigator.share)navigator.share({title:"我的花事记",text:summary}).catch(function(){});
-          else{navigator.clipboard.writeText(summary);alert("花事记已复制到剪贴板");}
-        }} style={{display:"block",width:"100%",border:"1.5px solid #c06040",
-          background:"#c06040"+"12",borderRadius:10,padding:"12px",cursor:"pointer",
-          fontSize:13,fontWeight:700,color:"#c06040",letterSpacing:3,textAlign:"center"}}>
-          📤 分享我的花事记</button>
+      {tab==="share"&&<div style={{padding:"14px 18px"}}>
+        <div style={{fontSize:10,color:"#b08040",letterSpacing:4,marginBottom:12,fontWeight:600}}>{"· 分享我的花事 ·"}</div>
+        <div style={{background:"linear-gradient(135deg,#fdf8f0,#f0e8d0)",borderRadius:10,
+          padding:"20px",border:"1.5px solid #e0dcd4",marginBottom:16,textAlign:"center"}}>
+          <div style={{fontSize:18,fontWeight:900,color:"#2a2018",letterSpacing:4,marginBottom:8}}>我的花事记</div>
+          <div style={{display:"flex",justifyContent:"center",gap:20,marginBottom:12}}>
+            <div><div style={{fontSize:24,fontWeight:900,color:"#c06040"}}>{totalSpots}</div><div style={{fontSize:10,color:"#8a7a68"}}>打卡</div></div>
+            <div><div style={{fontSize:24,fontWeight:900,color:"#c06040"}}>{species.length}</div><div style={{fontSize:10,color:"#8a7a68"}}>花种</div></div>
+            <div><div style={{fontSize:24,fontWeight:900,color:"#c06040"}}>{earnedCount}</div><div style={{fontSize:10,color:"#8a7a68"}}>成就</div></div>
+          </div>
+          <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:12,flexWrap:"wrap"}}>
+            {earnedBadges.filter(function(b){return b.tier>=2;}).slice(0,6).map(function(b,i){return(
+              <div key={i} style={{width:36,height:36,borderRadius:"50%",background:tierColors[b.tier],
+                display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,
+                boxShadow:"0 2px 6px "+tierColors[b.tier]+"44"}}>{b.icon}</div>);})}
+          </div>
+          <div style={{fontSize:11,color:"#8a7a60"}}>
+            {entries.length>0?"从"+(entries[entries.length-1]||{}).date+"开始的花事之旅":"期待你的花事之旅"}
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:10}}>
+          {[{l:"💬 微信",c:"#07c160"},{l:"📕 小红书",c:"#fe2c55"},{l:"𝕏 推特",c:"#000"},{l:"🔴 微博",c:"#e6162d"}].map(function(m,i){return(
+            <button key={i} onClick={function(){
+              var txt="🌸 花信风花事记\n打卡"+totalSpots+"处·"+species.length+"种花·"+earnedCount+"个成就\n";
+              earnedBadges.filter(function(b){return b.tier>=2;}).slice(0,4).forEach(function(b){txt+=b.icon+b.name+" ";});
+              var url=typeof window!=="undefined"?window.location.origin:"";
+              if(m.l.includes("推特")){window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(txt)+"&url="+encodeURIComponent(url),"_blank");}
+              else if(m.l.includes("微博")){window.open("https://service.weibo.com/share/share.php?title="+encodeURIComponent(txt)+"&url="+encodeURIComponent(url),"_blank");}
+              else{navigator.clipboard.writeText(txt+"\n"+url);alert("已复制！请打开对应APP粘贴");}
+            }} style={{padding:"14px",background:m.c,color:"#fff",border:"none",borderRadius:10,
+              cursor:"pointer",fontSize:13,fontWeight:700,letterSpacing:1}}>
+              {m.l}</button>);})}
+        </div>
+      </div>}
+
+      {shareBadge&&<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(0,0,0,.6)",
+        display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(4px)"}}
+        onClick={function(){setShareBadge(null);}}>
+        <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",borderRadius:14,
+          padding:"24px",width:"min(320px,88vw)",textAlign:"center"}}>
+          <div style={{width:80,height:80,borderRadius:"50%",background:tierColors[shareBadge.tier],
+            display:"flex",alignItems:"center",justifyContent:"center",fontSize:42,
+            margin:"0 auto 12px",boxShadow:"0 4px 16px "+tierColors[shareBadge.tier]+"66"}}>{shareBadge.icon}</div>
+          <div style={{display:"inline-block",padding:"2px 14px",background:tierColors[shareBadge.tier],
+            color:"#fff",borderRadius:10,fontSize:11,fontWeight:700,marginBottom:8}}>{tierNames[shareBadge.tier]}级</div>
+          <h3 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:4,margin:"8px 0"}}>{shareBadge.name}</h3>
+          <div style={{fontSize:12,color:"#8a7a60",marginBottom:16}}>{shareBadge.desc}</div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={function(){shareBadgeImg(shareBadge);setShareBadge(null);}}
+              style={{flex:1,padding:"10px",background:"#c06040",color:"#fff",border:"none",
+                borderRadius:8,cursor:"pointer",fontSize:12,fontWeight:700}}>📤 分享成就卡</button>
+            <button onClick={function(){setShareBadge(null);}}
+              style={{padding:"10px 16px",background:"#f0ece4",border:"none",
+                borderRadius:8,cursor:"pointer",fontSize:12,color:"#8a7a68"}}>关闭</button>
+          </div>
+        </div>
       </div>}
     </div>
   </div>);
@@ -2554,9 +2691,1131 @@ const FLORA_WIKI={
   </div>);
 }
 
+// ═══ P1-1: 节气花事日历 (Seasonal Flower Calendar) ═══
+function CalendarPanel({onClose,flora}){
+  const [viewMonth,setViewMonth]=useState(new Date().getMonth());
+  const months=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+  const jieqiByMonth=[
+    [{n:"小寒",d:5},{n:"大寒",d:20}],  // 1月
+    [{n:"立春",d:4},{n:"雨水",d:19}],  // 2月
+    [{n:"惊蛰",d:5},{n:"春分",d:20}],  // 3月
+    [{n:"清明",d:4},{n:"谷雨",d:19}],  // 4月
+    [{n:"立夏",d:5},{n:"小满",d:21}],  // 5月
+    [{n:"芒种",d:5},{n:"夏至",d:21}],  // 6月
+    [{n:"小暑",d:7},{n:"大暑",d:22}],  // 7月
+    [{n:"立秋",d:7},{n:"处暑",d:23}],  // 8月
+    [{n:"白露",d:7},{n:"秋分",d:23}],  // 9月
+    [{n:"寒露",d:8},{n:"霜降",d:23}],  // 10月
+    [{n:"立冬",d:7},{n:"小雪",d:22}],  // 11月
+    [{n:"大雪",d:7},{n:"冬至",d:22}],  // 12月
+  ];
+  // Flowers blooming this month
+  var monthFlowers=flora?flora.filter(function(f){
+    var m=viewMonth+1;
+    if(f.pk[0]<=f.pk[1])return m>=f.pk[0]&&m<=f.pk[1];
+    return m>=f.pk[0]||m<=f.pk[1];
+  }).slice(0,30):[];
+  // Group by species
+  var bySpecies={};
+  monthFlowers.forEach(function(f){if(!bySpecies[f.sp])bySpecies[f.sp]={sp:f.sp,c:f.c,s:f.s,spots:[]};bySpecies[f.sp].spots.push(f);});
+  var speciesList=Object.values(bySpecies).sort(function(a,b){return b.spots.length-a.spots.length;});
+
+  // Generate iCal
+  var generateICal=function(){
+    var cal="BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//HuaXinFeng//CN\nCALSCALE:GREGORIAN\n";
+    var year=new Date().getFullYear();
+    flora.filter(function(f){return f._pred&&f._pred.dateStr;}).slice(0,50).forEach(function(f){
+      var pred=f._pred;
+      var month=String(pred.predMonth||1).padStart(2,"0");
+      var day=String(pred.predDay||1).padStart(2,"0");
+      cal+="BEGIN:VEVENT\n";
+      cal+="DTSTART:"+year+month+day+"\n";
+      cal+="SUMMARY:"+f.sp+" · "+f.n+" 预测盛花期\n";
+      cal+="DESCRIPTION:"+f.po+"\\n建议："+f.tp+"\\n置信度"+pred.confidence+"%\n";
+      cal+="LOCATION:"+f.n+"\n";
+      cal+="END:VEVENT\n";
+    });
+    cal+="END:VCALENDAR\n";
+    var blob=new Blob([cal],{type:"text/calendar"});
+    var a=document.createElement("a");
+    a.download="花信风-花事日历.ics";
+    a.href=URL.createObjectURL(blob);
+    a.click();
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",width:"min(680px,94vw)",
+      maxHeight:"90vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      {/* Header */}
+      <div style={{padding:"18px 24px 14px",borderBottom:"1px solid #ece6dc",
+        background:"linear-gradient(180deg,#faf6ef,#f2ebd8)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <h2 style={{fontSize:20,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0}}>🗓 花事日历</h2>
+            <div style={{fontSize:11,color:"#8a7a60",marginTop:4}}>节气 · 花期 · 订阅</div>
+          </div>
+          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            <button onClick={generateICal} style={{border:"1px solid #c06040",background:"#c06040"+"15",
+              borderRadius:16,padding:"5px 14px",cursor:"pointer",fontSize:11,color:"#c06040",fontWeight:600}}>
+              📅 导出iCal</button>
+            <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+              cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+          </div>
+        </div>
+        {/* Month nav */}
+        <div style={{display:"flex",gap:2,marginTop:12,flexWrap:"wrap"}}>
+          {months.map(function(m,i){return(
+            <button key={i} onClick={function(){setViewMonth(i);}} className="hx-monthbtn"
+              style={{border:"none",borderRadius:6,padding:"4px 8px",cursor:"pointer",fontSize:11,
+                background:viewMonth===i?"#c06040"+"22":"transparent",
+                color:viewMonth===i?"#c06040":"#8a7a68",fontWeight:viewMonth===i?700:400}}>{m}</button>);})}
+        </div>
+      </div>
+      {/* Body */}
+      <div style={{flex:1,overflow:"auto",padding:"16px 24px"}}>
+        {/* Jieqi for this month */}
+        <div style={{display:"flex",gap:12,marginBottom:16}}>
+          {(jieqiByMonth[viewMonth]||[]).map(function(jq,i){return(
+            <div key={i} style={{flex:1,padding:"10px 14px",background:"#f5f0e8",borderRadius:8,
+              borderLeft:"3px solid #c06040"}}>
+              <div style={{fontSize:16,fontWeight:800,color:"#2a2018",letterSpacing:3}}>{jq.n}</div>
+              <div style={{fontSize:11,color:"#8a7a60"}}>{viewMonth+1}月{jq.d}日</div>
+            </div>);})}
+        </div>
+        {/* Flowers this month */}
+        <div style={{fontSize:11,color:"#b08040",letterSpacing:3,marginBottom:10,fontWeight:600}}>
+          · {months[viewMonth]}花事 · 共{speciesList.length}种 ·</div>
+        {speciesList.length===0&&<div style={{textAlign:"center",padding:"30px 0",color:"#8a7a60",fontSize:13}}>
+          本月暂无花事记录</div>}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:10}}>
+          {speciesList.map(function(sp){
+            var sm=SM[sp.s];
+            return(<div key={sp.sp} style={{padding:"10px 14px",background:"#fff",borderRadius:8,
+              border:"1px solid "+sp.c+"33",borderLeft:"3px solid "+sp.c}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                <FI sp={sp.sp} sz={24} co={sp.c}/>
+                <div>
+                  <div style={{fontSize:14,fontWeight:700,color:"#2a2018"}}>{sp.sp}</div>
+                  <div style={{fontSize:10,color:sp.c}}>{sm?sm.i:""} {sp.spots.length}处可赏</div>
+                </div>
+              </div>
+              <div style={{fontSize:11,color:"#8a7a60",lineHeight:1.6}}>
+                {sp.spots.slice(0,3).map(function(s){return s.n.split("·")[1]||s.n;}).join(" · ")}
+                {sp.spots.length>3?" …":""}
+              </div>
+            </div>);
+          })}
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ P2-1: 众包花事播报 (Crowd-Sourced Bloom Reports) ═══
+function CrowdPanel({onClose,flora}){
+  var [reports,setReports]=useState([]);
+  var [selSpot,setSelSpot]=useState(null);
+  var [status,setStatus]=useState("");
+  var [note,setNote]=useState("");
+
+  // Load shared reports
+  useEffect(function(){(async function(){
+    try{var r=window.storage?await window.storage.get("crowd_reports",true):null;
+      if(r&&r.value)setReports(JSON.parse(r.value));}catch(e){}
+  })();},[]);
+
+  var submitReport=async function(){
+    if(!selSpot||!status)return;
+    var newReport={spotId:selSpot.id,spotName:selSpot.n,sp:selSpot.sp,c:selSpot.c,
+      status:status,note:note,date:new Date().toLocaleDateString("zh-CN"),ts:Date.now()};
+    var newReports=[newReport].concat(reports).slice(0,100);
+    setReports(newReports);setSelSpot(null);setStatus("");setNote("");
+    try{if(window.storage)await window.storage.set("crowd_reports",JSON.stringify(newReports),true);}catch(e){}
+  };
+
+  var statusOpts=[
+    {k:"blooming",l:"🌸 盛花期",c:"#e06050"},
+    {k:"budding",l:"🌱 含苞待放",c:"#60a050"},
+    {k:"early",l:"🌼 初花期",c:"#e0a040"},
+    {k:"fading",l:"🍂 将谢",c:"#a08060"},
+    {k:"faded",l:"❄ 已谢",c:"#8a8a8a"},
+  ];
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",justifyContent:"flex-end",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{width:"min(420px,90vw)",height:"100vh",
+      background:"#faf6ef",overflowY:"auto",boxShadow:"-4px 0 24px rgba(0,0,0,.15)"}}>
+      {/* Header */}
+      <div style={{padding:"20px 22px 14px",borderBottom:"1px solid #ece6dc",position:"sticky",top:0,
+        zIndex:2,background:"#faf6ef"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <h2 style={{fontSize:20,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0}}>📡 花讯播报</h2>
+            <div style={{fontSize:11,color:"#8a7a60",marginTop:4}}>众包实况 · 让预测更精准</div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+      </div>
+      {/* Submit new report */}
+      <div style={{padding:"16px 22px",borderBottom:"1px solid #ece6dc",background:"#f8f4ee"}}>
+        <div style={{fontSize:12,color:"#b08040",letterSpacing:3,marginBottom:10,fontWeight:600}}>· 提交花讯 ·</div>
+        {/* Spot search */}
+        <div style={{marginBottom:10}}>
+          <input placeholder="搜索景点名称..." onChange={function(e){
+            var q=e.target.value;if(!q){setSelSpot(null);return;}
+            var match=flora?flora.find(function(f){return f.n.includes(q)||f.sp.includes(q);}):null;
+            if(match)setSelSpot(match);
+          }} style={{width:"100%",border:"1px solid #e0dcd4",borderRadius:8,padding:"8px 12px",
+            fontSize:12,background:"#fff",outline:"none"}}/>
+          {selSpot&&<div style={{marginTop:6,padding:"6px 10px",background:"#fff",borderRadius:6,
+            border:"1px solid "+selSpot.c+"44",display:"flex",alignItems:"center",gap:6}}>
+            <FI sp={selSpot.sp} sz={18} co={selSpot.c}/>
+            <span style={{fontSize:13,fontWeight:600,color:"#2a2018"}}>{selSpot.n}</span>
+            <span style={{fontSize:11,color:selSpot.c}}>{selSpot.sp}</span>
+          </div>}
+        </div>
+        {/* Status select */}
+        <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
+          {statusOpts.map(function(s){return(
+            <button key={s.k} onClick={function(){setStatus(s.k);}}
+              style={{border:"1.5px solid "+(status===s.k?s.c:"#e0dcd4"),
+                background:status===s.k?s.c+"18":"#fff",borderRadius:16,padding:"4px 12px",
+                cursor:"pointer",fontSize:11,color:status===s.k?s.c:"#8a7a68",fontWeight:status===s.k?700:500}}>
+              {s.l}</button>);})}
+        </div>
+        {/* Note */}
+        <input value={note} onChange={function(e){setNote(e.target.value);}}
+          placeholder="补充说明（可选）..." style={{width:"100%",border:"1px solid #e0dcd4",
+            borderRadius:8,padding:"8px 12px",fontSize:12,background:"#fff",outline:"none",marginBottom:10}}/>
+        <button onClick={submitReport} disabled={!selSpot||!status}
+          style={{width:"100%",border:"none",background:selSpot&&status?"#c06040":"#ddd",
+            color:"#fff",borderRadius:8,padding:"10px",cursor:selSpot&&status?"pointer":"default",
+            fontSize:13,fontWeight:700,letterSpacing:2}}>提交花讯</button>
+      </div>
+      {/* Recent reports */}
+      <div style={{padding:"16px 22px"}}>
+        <div style={{fontSize:12,color:"#b08040",letterSpacing:3,marginBottom:10,fontWeight:600}}>
+          · 最近花讯 · {reports.length}条 ·</div>
+        {reports.length===0&&<div style={{textAlign:"center",padding:"30px 0",color:"#8a7a60"}}>
+          <div style={{fontSize:32,marginBottom:8}}>📡</div>
+          <div style={{fontSize:13}}>还没有花讯播报</div>
+          <div style={{fontSize:11,marginTop:4,opacity:.6}}>搜索景点 → 选择状态 → 提交</div>
+        </div>}
+        {reports.map(function(r,i){
+          var stLabel=statusOpts.find(function(s){return s.k===r.status;});
+          return(<div key={i} style={{padding:"8px 12px",marginBottom:6,background:"#fff",borderRadius:8,
+            border:"1px solid #ece6dc",borderLeft:"3px solid "+(r.c||"#ccc")}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                <FI sp={r.sp} sz={16} co={r.c}/>
+                <span style={{fontSize:13,fontWeight:600,color:"#2a2018"}}>{r.spotName}</span>
+              </div>
+              <span style={{fontSize:10,color:"#8a7a68"}}>{r.date}</span>
+            </div>
+            <div style={{marginTop:4,display:"flex",alignItems:"center",gap:6}}>
+              <span style={{fontSize:11,color:stLabel?stLabel.c:"#888",fontWeight:600}}>
+                {stLabel?stLabel.l:r.status}</span>
+              {r.note&&<span style={{fontSize:11,color:"#5a4a38"}}>{r.note}</span>}
+            </div>
+          </div>);
+        })}
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ P3-1: 诗词地图联动 (Poetry Map) ═══
+function PoemPanel({onClose,flora,onGoSpot}){
+  var POEMS=[
+    {poem:"桃之夭夭，灼灼其华",poet:"《诗经》",sp:"桃花",region:"全国"},
+    {poem:"去年今日此门中，人面桃花相映红",poet:"崔护",sp:"桃花",region:"长安"},
+    {poem:"唯有牡丹真国色，花开时节动京城",poet:"刘禹锡",sp:"牡丹",region:"洛阳"},
+    {poem:"云想衣裳花想容，春风拂槛露华浓",poet:"李白",sp:"牡丹",region:"长安"},
+    {poem:"墙角数枝梅，凌寒独自开",poet:"王安石",sp:"梅花",region:"江南"},
+    {poem:"已是悬崖百丈冰，犹有花枝俏",poet:"毛泽东",sp:"梅花",region:"全国"},
+    {poem:"接天莲叶无穷碧，映日荷花别样红",poet:"杨万里",sp:"荷花",region:"杭州"},
+    {poem:"小荷才露尖尖角，早有蜻蜓立上头",poet:"杨万里",sp:"荷花",region:"江南"},
+    {poem:"采菊东篱下，悠然见南山",poet:"陶渊明",sp:"菊花",region:"庐山"},
+    {poem:"不是花中偏爱菊，此花开尽更无花",poet:"元稹",sp:"菊花",region:"全国"},
+    {poem:"停车坐爱枫林晚，霜叶红于二月花",poet:"杜牧",sp:"红枫",region:"长沙"},
+    {poem:"忽如一夜春风来，千树万树梨花开",poet:"岑参",sp:"梨花",region:"西域"},
+    {poem:"人闲桂花落，夜静春山空",poet:"王维",sp:"桂花",region:"终南山"},
+    {poem:"儿童急走追黄蝶，飞入菜花无处寻",poet:"杨万里",sp:"油菜花",region:"江南"},
+    {poem:"杜鹃啼血猿哀鸣",poet:"白居易",sp:"杜鹃花",region:"江南"},
+    {poem:"月落乌啼霜满天，江枫渔火对愁眠",poet:"张继",sp:"红枫",region:"苏州"},
+    {poem:"芝兰生于深林，不以无人而不芳",poet:"孔子",sp:"兰花",region:"山东"},
+    {poem:"开到荼蘼花事了",poet:"王淇",sp:"荼蘼",region:"全国"},
+    {poem:"暗淡轻黄体性柔，情疏迹远只香留",poet:"李清照",sp:"桂花",region:"杭州"},
+    {poem:"兰陵美酒郁金香，玉碗盛来琥珀光",poet:"李白",sp:"郁金香",region:"山东"},
+    {poem:"玉容寂寞泪阑干，梨花一枝春带雨",poet:"白居易",sp:"梨花",region:"长安"},
+    {poem:"更无柳絮因风起，惟有葵花向日倾",poet:"司马光",sp:"向日葵",region:"全国"},
+  ];
+
+  var [selPoem,setSelPoem]=useState(null);
+  var [filterSp,setFilterSp]=useState("all");
+  var species=["all"].concat([...new Set(POEMS.map(function(p){return p.sp;}))]);
+  var filtered=filterSp==="all"?POEMS:POEMS.filter(function(p){return p.sp===filterSp;});
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",width:"min(720px,94vw)",
+      maxHeight:"90vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      {/* Header */}
+      <div style={{padding:"20px 28px 14px",borderBottom:"1px solid #ece6dc",
+        background:"linear-gradient(180deg,#faf6ef,#f2ebd8)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <h2 style={{fontSize:20,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0}}>📜 诗词花事</h2>
+            <div style={{fontSize:11,color:"#8a7a60",marginTop:4}}>千年诗句 · 遇见花事 · 定位寻芳</div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+        {/* Filter */}
+        <div style={{display:"flex",gap:3,marginTop:10,flexWrap:"wrap"}}>
+          {species.map(function(sp){return(
+            <button key={sp} onClick={function(){setFilterSp(sp);}} className="hx-monthbtn"
+              style={{border:"none",borderRadius:12,padding:"3px 10px",cursor:"pointer",fontSize:11,
+                background:filterSp===sp?"#c06040"+"22":"#f5f0e8",
+                color:filterSp===sp?"#c06040":"#8a7a68",fontWeight:filterSp===sp?700:400}}>
+              {sp==="all"?"全部":sp}</button>);})}
+        </div>
+      </div>
+      {/* Poems grid */}
+      <div style={{flex:1,overflow:"auto",padding:"16px 24px"}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:12}}>
+          {filtered.map(function(p,i){
+            var fl=flora?flora.find(function(f){return f.sp===p.sp;}):null;
+            var color=fl?fl.c:"#c06040";
+            return(<div key={i} onClick={function(){setSelPoem(selPoem===i?null:i);}}
+              style={{padding:"14px 16px",background:selPoem===i?"#fff":"#fafafa",
+                border:"1px solid "+(selPoem===i?color:"#ece6dc"),borderRadius:8,
+                borderLeft:"3px solid "+color,cursor:"pointer",transition:"all .2s"}}>
+              {/* Poem */}
+              <div style={{fontSize:15,color:"#2a2018",lineHeight:2,letterSpacing:2,
+                fontStyle:"italic",marginBottom:8}}>{p.poem}</div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div style={{display:"flex",alignItems:"center",gap:6}}>
+                  <FI sp={p.sp} sz={16} co={color}/>
+                  <span style={{fontSize:11,color:color,fontWeight:600}}>{p.sp}</span>
+                </div>
+                <span style={{fontSize:11,color:"#8a7a68"}}>—— {p.poet}</span>
+              </div>
+              {/* Expanded: related spots */}
+              {selPoem===i&&<div style={{marginTop:10,paddingTop:8,borderTop:"1px dashed "+color+"44"}}>
+                <div style={{fontSize:10,color:"#8a7a68",marginBottom:6}}>📍 {p.region} · 相关赏花地：</div>
+                <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                  {(flora?flora.filter(function(f){return f.sp===p.sp;}).slice(0,5):[]).map(function(s){return(
+                    <button key={s.id} onClick={function(e){e.stopPropagation();if(onGoSpot)onGoSpot(s);onClose();}}
+                      style={{border:"1px solid "+color+"44",background:color+"11",borderRadius:12,
+                        padding:"3px 10px",cursor:"pointer",fontSize:11,color:"#2a2018"}}>
+                      {s.n.split("·")[1]||s.n}</button>);})}
+                </div>
+              </div>}
+            </div>);
+          })}
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ 新手引导 (Onboarding Guide) ═══
+function OnboardingGuide({onComplete}){
+  var [step,setStep]=useState(0);
+  var steps=[
+    {icon:"🌸",title:"欢迎来到花信风",desc:"这是一款基于中国传统物候学的赏花地图。\n我们用积温模型预测全国408个景点的花期，\n帮你在最美的时刻遇见最美的花。",pos:"center"},
+    {icon:"🗺",title:"探索花事地图",desc:"地图上每个标记都是一个赏花景点。\n点击标记查看花期预测、诗句、打卡。\n用底部「当季/全年/未来」筛选不同花期。",pos:"center"},
+    {icon:"🌺",title:"花谱与花信",desc:"顶部切换「花谱」查看72种花卉。\n右侧金色书签「花签」求每日花运。\n绿色书签「花信」看二十四番花信风。",pos:"center"},
+    {icon:"🤖",title:"智能工具栏",desc:"左下角工具栏集合了6大功能：\nAI助手 · 个性化推荐 · 花事圈\n花事日历 · 花讯播报 · 诗词花事",pos:"center"},
+    {icon:"📍",title:"开始你的花事之旅",desc:"打卡赏花地 → 解锁成就徽章 → 分享花事圈\n在「花历」中记录你的赏花足迹。\n\n准备好了吗？",pos:"center"},
+  ];
+  var s=steps[step];
+  var isLast=step===steps.length-1;
+
+  return(<div style={{position:"fixed",inset:0,zIndex:300,background:"rgba(20,15,10,.8)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(12px)"}}>
+    <div style={{width:"min(420px,88vw)",background:"#faf6ef",borderRadius:16,overflow:"hidden",
+      boxShadow:"0 20px 60px rgba(0,0,0,.5)"}}>
+      {/* Progress dots */}
+      <div style={{display:"flex",justifyContent:"center",gap:6,padding:"16px 0 0"}}>
+        {steps.map(function(_,i){return(
+          <div key={i} style={{width:i===step?20:6,height:6,borderRadius:3,
+            background:i===step?"#c06040":i<step?"#c06040":"#e0dcd4",
+            transition:"all .3s"}}></div>);})}
+      </div>
+      {/* Content */}
+      <div style={{padding:"24px 32px 20px",textAlign:"center"}}>
+        <div style={{fontSize:56,marginBottom:16,
+          animation:"pulse 2s ease-in-out infinite"}}>{s.icon}</div>
+        <h2 style={{fontSize:20,fontWeight:900,color:"#2a2018",letterSpacing:4,
+          margin:"0 0 12px"}}>{s.title}</h2>
+        <div style={{fontSize:13,color:"#5a4a38",lineHeight:2,whiteSpace:"pre-line",
+          letterSpacing:1}}>{s.desc}</div>
+      </div>
+      {/* Actions */}
+      <div style={{padding:"0 32px 24px",display:"flex",gap:10}}>
+        {step>0&&<button onClick={function(){setStep(step-1);}}
+          style={{flex:1,padding:"12px",border:"1.5px solid #e0dcd4",background:"transparent",
+            borderRadius:10,cursor:"pointer",fontSize:13,color:"#8a7a68",fontWeight:600}}>
+          上一步</button>}
+        <button onClick={function(){if(isLast)onComplete();else setStep(step+1);}}
+          style={{flex:2,padding:"12px",border:"none",
+            background:isLast?"linear-gradient(135deg,#c06040,#e0a040)":"#c06040",
+            color:"#fff",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:700,
+            letterSpacing:isLast?4:2,boxShadow:"0 2px 10px rgba(192,96,64,.3)"}}>
+          {isLast?"🌸 开始探索":"下一步 →"}</button>
+      </div>
+      {/* Skip */}
+      {!isLast&&<div style={{textAlign:"center",paddingBottom:16}}>
+        <button onClick={onComplete}
+          style={{border:"none",background:"none",cursor:"pointer",
+            fontSize:11,color:"#b0a890",letterSpacing:2}}>跳过引导</button>
+      </div>}
+    </div>
+  </div>);
+}
+
+// ═══ 用户登录 (Login System) ═══
+function LoginPanel({onLogin,onClose}){
+  var [mode,setMode]=useState("choice"); // choice | phone | wechat
+  var [phone,setPhone]=useState("");
+  var [code,setCode]=useState("");
+  var [sent,setSent]=useState(false);
+  var [countdown,setCountdown]=useState(0);
+  var [nick,setNick]=useState("");
+  var [step,setStep]=useState(1); // 1=phone input, 2=code verify, 3=set nickname
+
+  // Countdown timer
+  useEffect(function(){
+    if(countdown<=0)return;
+    var t=setTimeout(function(){setCountdown(countdown-1);},1000);
+    return function(){clearTimeout(t);};
+  },[countdown]);
+
+  var sendCode=function(){
+    if(phone.length!==11)return;
+    setSent(true);setCountdown(60);setStep(2);
+  };
+
+  var verifyCode=function(){
+    if(code.length<4)return;
+    // In production: verify with backend. Here we simulate success.
+    setStep(3);
+  };
+
+  var finishLogin=function(){
+    var name=nick||("花友"+phone.slice(-4));
+    var user={name:name,phone:phone,avatar:null,
+      id:"u_"+phone.slice(-6)+"_"+Date.now().toString(36),
+      joinDate:new Date().toLocaleDateString("zh-CN"),
+      loginType:"phone"};
+    onLogin(user);
+  };
+
+  var wechatLogin=function(){
+    // WeChat OAuth flow - needs WeChat Open Platform AppID
+    // In production: redirect to WeChat OAuth URL
+    // Here: simulate with a local user
+    var user={name:"微信用户",phone:"",avatar:null,
+      id:"wx_"+Date.now().toString(36),
+      joinDate:new Date().toLocaleDateString("zh-CN"),
+      loginType:"wechat"};
+    onLogin(user);
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:200,background:"rgba(20,15,10,.75)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(10px)"}}
+    onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",
+      width:"min(400px,90vw)",borderRadius:16,overflow:"hidden",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      
+      {/* Header with logo */}
+      <div style={{padding:"28px 30px 20px",textAlign:"center",
+        background:"linear-gradient(180deg,#f5ede0,#faf6ef)"}}>
+        <div style={{width:56,height:56,borderRadius:"50%",
+          background:"linear-gradient(135deg,#c06040,#e0a040)",
+          display:"flex",alignItems:"center",justifyContent:"center",
+          margin:"0 auto 12px",fontSize:28,boxShadow:"0 4px 14px rgba(192,96,64,.3)"}}>🌸</div>
+        <h2 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0}}>花信风</h2>
+        <div style={{fontSize:11,color:"#8a7a60",letterSpacing:2,marginTop:6}}>
+          登录后可同步收藏、打卡、成就数据</div>
+      </div>
+
+      <div style={{padding:"20px 30px 28px"}}>
+        {/* Choice mode */}
+        {mode==="choice"&&<div>
+          {/* WeChat login - primary */}
+          <button onClick={function(){wechatLogin();}}
+            style={{width:"100%",padding:"14px",background:"#07c160",color:"#fff",
+              border:"none",borderRadius:10,cursor:"pointer",fontSize:15,fontWeight:700,
+              letterSpacing:2,marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8,
+              boxShadow:"0 2px 10px rgba(7,193,96,.3)"}}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M8.69 11.87c-.4 0-.74-.34-.74-.76s.33-.76.74-.76.74.34.74.76-.34.76-.74.76zm4.62 0c-.41 0-.74-.34-.74-.76s.33-.76.74-.76c.4 0 .73.34.73.76s-.33.76-.73.76zM12 2C6.48 2 2 5.92 2 10.66c0 2.65 1.38 5.03 3.54 6.6l-.88 2.64 3.07-1.53c1.36.38 2.82.58 4.27.58 5.52 0 10-3.92 10-8.75S17.52 2 12 2z"/></svg>
+            微信一键登录</button>
+          
+          {/* Divider */}
+          <div style={{display:"flex",alignItems:"center",gap:12,margin:"16px 0"}}>
+            <div style={{flex:1,height:1,background:"#e8e0d4"}}></div>
+            <span style={{fontSize:11,color:"#b0a890"}}>或</span>
+            <div style={{flex:1,height:1,background:"#e8e0d4"}}></div>
+          </div>
+
+          {/* Phone login - secondary */}
+          <button onClick={function(){setMode("phone");}}
+            style={{width:"100%",padding:"13px",background:"transparent",color:"#2a2018",
+              border:"1.5px solid #e0dcd4",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:600,
+              letterSpacing:2,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+            📱 手机号登录</button>
+
+          {/* Skip */}
+          <button onClick={onClose}
+            style={{display:"block",margin:"18px auto 0",border:"none",background:"transparent",
+              cursor:"pointer",fontSize:12,color:"#b0a890",letterSpacing:2}}>
+            暂不登录，先逛逛</button>
+        </div>}
+
+        {/* Phone login flow */}
+        {mode==="phone"&&<div>
+          <button onClick={function(){setMode("choice");setStep(1);setPhone("");setCode("");}}
+            style={{border:"none",background:"none",cursor:"pointer",fontSize:12,color:"#8a7a68",
+              marginBottom:12,padding:0}}>← 返回</button>
+
+          {step===1&&<div>
+            <div style={{fontSize:13,fontWeight:700,color:"#2a2018",letterSpacing:2,marginBottom:12}}>
+              输入手机号</div>
+            <div style={{display:"flex",gap:8}}>
+              <div style={{padding:"10px 12px",background:"#f5f0e8",borderRadius:8,
+                fontSize:13,color:"#2a2018",fontWeight:600}}>+86</div>
+              <input value={phone} onChange={function(e){setPhone(e.target.value.replace(/\D/g,"").slice(0,11));}}
+                placeholder="请输入手机号" type="tel" maxLength="11"
+                style={{flex:1,padding:"10px 14px",border:"1.5px solid #e0dcd4",borderRadius:8,
+                  fontSize:14,outline:"none",background:"#fff",letterSpacing:2}}/>
+            </div>
+            <button onClick={sendCode} disabled={phone.length!==11}
+              style={{width:"100%",marginTop:14,padding:"13px",
+                background:phone.length===11?"#c06040":"#e0dcd4",
+                color:phone.length===11?"#fff":"#aaa",
+                border:"none",borderRadius:10,cursor:phone.length===11?"pointer":"default",
+                fontSize:14,fontWeight:700,letterSpacing:2}}>
+              获取验证码</button>
+          </div>}
+
+          {step===2&&<div>
+            <div style={{fontSize:13,fontWeight:700,color:"#2a2018",letterSpacing:2,marginBottom:6}}>
+              输入验证码</div>
+            <div style={{fontSize:11,color:"#8a7a68",marginBottom:12}}>
+              验证码已发送至 +86 {phone}</div>
+            <input value={code} onChange={function(e){setCode(e.target.value.replace(/\D/g,"").slice(0,6));}}
+              placeholder="请输入6位验证码" type="tel" maxLength="6"
+              style={{width:"100%",padding:"12px 14px",border:"1.5px solid #e0dcd4",borderRadius:8,
+                fontSize:18,outline:"none",background:"#fff",letterSpacing:8,textAlign:"center"}}/>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:10}}>
+              <button onClick={function(){if(countdown<=0)sendCode();}}
+                disabled={countdown>0}
+                style={{border:"none",background:"none",cursor:countdown>0?"default":"pointer",
+                  fontSize:12,color:countdown>0?"#ccc":"#c06040"}}>
+                {countdown>0?countdown+"秒后重发":"重新发送"}</button>
+            </div>
+            <button onClick={verifyCode} disabled={code.length<4}
+              style={{width:"100%",marginTop:14,padding:"13px",
+                background:code.length>=4?"#c06040":"#e0dcd4",
+                color:code.length>=4?"#fff":"#aaa",
+                border:"none",borderRadius:10,cursor:code.length>=4?"pointer":"default",
+                fontSize:14,fontWeight:700,letterSpacing:2}}>
+              验证</button>
+          </div>}
+
+          {step===3&&<div>
+            <div style={{fontSize:13,fontWeight:700,color:"#2a2018",letterSpacing:2,marginBottom:6}}>
+              设置昵称</div>
+            <div style={{fontSize:11,color:"#8a7a68",marginBottom:12}}>
+              给自己取一个花事昵称吧</div>
+            <input value={nick} onChange={function(e){setNick(e.target.value.slice(0,12));}}
+              placeholder={"花友"+phone.slice(-4)}
+              style={{width:"100%",padding:"12px 14px",border:"1.5px solid #e0dcd4",borderRadius:8,
+                fontSize:14,outline:"none",background:"#fff",letterSpacing:2}}/>
+            <button onClick={finishLogin}
+              style={{width:"100%",marginTop:14,padding:"13px",background:"#c06040",color:"#fff",
+                border:"none",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:700,letterSpacing:2}}>
+              🌸 开始花事之旅</button>
+          </div>}
+        </div>}
+      </div>
+
+      {/* Footer */}
+      <div style={{padding:"0 30px 18px",textAlign:"center"}}>
+        <div style={{fontSize:10,color:"#c0b8a8",lineHeight:1.6}}>
+          登录即表示同意《花信风用户协议》和《隐私政策》</div>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ 用户头像菜单 (User Avatar Menu) ═══
+function UserMenu({user,onLogout,onShowDiary}){
+  var [open,setOpen]=useState(false);
+  if(!user)return null;
+  var initial=user.name?user.name[0]:"花";
+  return(<>
+    <button onClick={function(){setOpen(!open);}} title={user.name}
+      style={{position:"absolute",top:12,right:50,zIndex:35,border:"none",cursor:"pointer",
+        padding:0,background:"transparent"}}>
+      <div style={{width:32,height:32,borderRadius:"50%",
+        background:"linear-gradient(135deg,#c06040,#e0a040)",color:"#fff",
+        display:"flex",alignItems:"center",justifyContent:"center",
+        fontSize:14,fontWeight:800,boxShadow:"0 2px 8px rgba(192,96,64,.3)",
+        border:"2px solid #faf6ef"}}>{initial}</div>
+    </button>
+    {open&&<>
+      <div onClick={function(){setOpen(false);}} style={{position:"fixed",inset:0,zIndex:34}}></div>
+      <div style={{position:"absolute",top:50,right:40,zIndex:36,
+        background:"#faf6ef",borderRadius:10,padding:"6px",minWidth:160,
+        boxShadow:"0 4px 20px rgba(0,0,0,.15)",border:"1px solid #e0dcd4"}}>
+        {/* User info */}
+        <div style={{padding:"10px 14px",borderBottom:"1px solid #ece6dc"}}>
+          <div style={{fontSize:14,fontWeight:700,color:"#2a2018"}}>{user.name}</div>
+          <div style={{fontSize:10,color:"#8a7a68",marginTop:2}}>
+            {user.loginType==="wechat"?"微信用户":"📱 "+user.phone.slice(0,3)+"****"+user.phone.slice(-4)}</div>
+          <div style={{fontSize:10,color:"#b0a890",marginTop:2}}>加入于 {user.joinDate}</div>
+        </div>
+        {/* Menu items */}
+        {[
+          {icon:"📅",label:"我的花历",action:function(){if(onShowDiary)onShowDiary();setOpen(false);}},
+          {icon:"⚙",label:"设置",action:function(){setOpen(false);}},
+          {icon:"🚪",label:"退出登录",action:function(){if(onLogout)onLogout();setOpen(false);},danger:true},
+        ].map(function(item,i){return(
+          <button key={i} onClick={item.action}
+            style={{display:"flex",alignItems:"center",gap:8,width:"100%",
+              border:"none",background:"transparent",borderRadius:6,padding:"9px 14px",
+              cursor:"pointer",fontSize:12,color:item.danger?"#d04030":"#2a2018",textAlign:"left"}}>
+            <span style={{fontSize:14}}>{item.icon}</span>{item.label}</button>);})}
+      </div>
+    </>}
+  </>);
+}
+
+// ═══ 花事概览仪表盘 (Dashboard) ═══
+function DashboardPanel({onClose,flora,checkins,favs}){
+  var now=new Date();var cm=now.getMonth()+1;var cd=now.getDate();
+  var cs=getSeason();var sm=SM[cs];
+  var seasonNames={spring:"春",summer:"夏",autumn:"秋",winter:"冬"};
+  
+  // Current jieqi
+  var jieqiList=[
+    {n:"小寒",m:1,d:5},{n:"大寒",m:1,d:20},{n:"立春",m:2,d:4},{n:"雨水",m:2,d:19},
+    {n:"惊蛰",m:3,d:5},{n:"春分",m:3,d:20},{n:"清明",m:4,d:4},{n:"谷雨",m:4,d:19},
+    {n:"立夏",m:5,d:5},{n:"小满",m:5,d:21},{n:"芒种",m:6,d:5},{n:"夏至",m:6,d:21},
+    {n:"小暑",m:7,d:7},{n:"大暑",m:7,d:22},{n:"立秋",m:8,d:7},{n:"处暑",m:8,d:23},
+    {n:"白露",m:9,d:7},{n:"秋分",m:9,d:23},{n:"寒露",m:10,d:8},{n:"霜降",m:10,d:23},
+    {n:"立冬",m:11,d:7},{n:"小雪",m:11,d:22},{n:"大雪",m:12,d:7},{n:"冬至",m:12,d:22},
+  ];
+  var curJQ="";var nextJQ="";
+  for(var i=0;i<jieqiList.length;i++){
+    var j=jieqiList[i];var nj=jieqiList[(i+1)%jieqiList.length];
+    if(cm>j.m||(cm===j.m&&cd>=j.d)){curJQ=j.n;nextJQ=nj.n;}
+  }
+
+  // Stats
+  var blooming=flora.filter(function(f){return f._st&&f._st.l>=3;});
+  var upcoming=flora.filter(function(f){return f._pred&&f._pred.daysUntil>0&&f._pred.daysUntil<=14;});
+  var topSpecies={};
+  blooming.forEach(function(f){topSpecies[f.sp]=(topSpecies[f.sp]||0)+1;});
+  var topList=Object.keys(topSpecies).sort(function(a,b){return topSpecies[b]-topSpecies[a];}).slice(0,6);
+
+  // Year progress
+  var dayOfYear=Math.floor((now-new Date(now.getFullYear(),0,0))/(1000*60*60*24));
+  var yearPct=Math.round(dayOfYear/365*100);
+
+  var userSpots=Object.keys(checkins).length;
+  var userSpecies=[...new Set(Object.keys(checkins).map(function(id){
+    var s=flora.find(function(f){return f.id===Number(id);});return s?s.sp:"";
+  }).filter(Boolean))].length;
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",width:"min(520px,92vw)",
+      maxHeight:"88vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      {/* Season header */}
+      <div style={{padding:"22px 28px 16px",
+        background:"linear-gradient(135deg,"+sm.c+"18,"+sm.c+"08)",
+        borderBottom:"2px solid "+sm.c+"33"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+              <span style={{fontSize:32}}>{sm.i}</span>
+              <div>
+                <h2 style={{fontSize:22,fontWeight:900,color:"#2a2018",letterSpacing:4,margin:0}}>
+                  花事概览</h2>
+                <div style={{fontSize:12,color:sm.c,fontWeight:600,letterSpacing:2}}>
+                  {seasonNames[cs]}季 · {curJQ} → {nextJQ}</div>
+              </div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+        {/* Year progress */}
+        <div style={{marginTop:10}}>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#8a7a68",marginBottom:3}}>
+            <span>一月</span><span>年度进度 {yearPct}%</span><span>十二月</span>
+          </div>
+          <div style={{height:6,borderRadius:3,background:"#e8e0d4",overflow:"hidden"}}>
+            <div style={{height:"100%",borderRadius:3,width:yearPct+"%",
+              background:"linear-gradient(90deg,#c06040,"+sm.c+")"}}></div>
+          </div>
+        </div>
+      </div>
+      {/* Stats grid */}
+      <div style={{flex:1,overflow:"auto",padding:"18px 24px"}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:18}}>
+          {[
+            {v:blooming.length,l:"正在盛开",c:"#e06050",icon:"🌸"},
+            {v:upcoming.length,l:"即将绽放",c:"#60a050",icon:"🌱"},
+            {v:flora.length,l:"景点总数",c:"#c06040",icon:"📍"},
+          ].map(function(s,i){return(
+            <div key={i} style={{textAlign:"center",padding:"14px 10px",background:"#fff",
+              borderRadius:10,border:"1px solid #ece6dc"}}>
+              <div style={{fontSize:20,marginBottom:4}}>{s.icon}</div>
+              <div style={{fontSize:24,fontWeight:900,color:s.c}}>{s.v}</div>
+              <div style={{fontSize:10,color:"#8a7a68",letterSpacing:1}}>{s.l}</div>
+            </div>);})}
+        </div>
+
+        {/* Top blooming species */}
+        <div style={{marginBottom:18}}>
+          <div style={{fontSize:11,color:"#b08040",letterSpacing:3,marginBottom:10,fontWeight:600}}>
+            · 当前热门花卉 ·</div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            {topList.map(function(sp){
+              var fl=flora.find(function(f){return f.sp===sp;});
+              var color=fl?fl.c:"#ccc";
+              return(<div key={sp} style={{display:"flex",alignItems:"center",gap:6,
+                padding:"6px 12px",background:"#fff",borderRadius:20,
+                border:"1px solid "+color+"44"}}>
+                <FI sp={sp} sz={18} co={color}/>
+                <span style={{fontSize:12,fontWeight:600,color:"#2a2018"}}>{sp}</span>
+                <span style={{fontSize:10,color:color,fontWeight:700}}>{topSpecies[sp]}</span>
+              </div>);})}
+          </div>
+        </div>
+
+        {/* Your stats */}
+        <div style={{marginBottom:18,padding:"14px 16px",background:"linear-gradient(135deg,#fdf8f0,#f0e8d4)",
+          borderRadius:10,border:"1px solid #e8e0d4"}}>
+          <div style={{fontSize:11,color:"#b08040",letterSpacing:3,marginBottom:8,fontWeight:600}}>
+            · 我的花事 ·</div>
+          <div style={{display:"flex",gap:20}}>
+            {[
+              {v:userSpots,l:"打卡",icon:"📍"},
+              {v:userSpecies,l:"花种",icon:"🌺"},
+              {v:Object.keys(favs).length,l:"收藏",icon:"❤"},
+            ].map(function(s,i){return(
+              <div key={i} style={{textAlign:"center"}}>
+                <div style={{fontSize:16}}>{s.icon}</div>
+                <div style={{fontSize:20,fontWeight:900,color:"#c06040"}}>{s.v}</div>
+                <div style={{fontSize:10,color:"#8a7a68"}}>{s.l}</div>
+              </div>);})}
+          </div>
+        </div>
+
+        {/* Today's featured flower */}
+        {blooming.length>0&&(function(){
+          var todayFlower=blooming[cd%blooming.length];
+          return(<div style={{padding:"16px",background:"#fff",borderRadius:10,
+            border:"1px solid "+todayFlower.c+"33",borderLeft:"4px solid "+todayFlower.c}}>
+            <div style={{fontSize:10,color:"#b08040",letterSpacing:3,marginBottom:8,fontWeight:600}}>
+              · 今日推荐 ·</div>
+            <div style={{display:"flex",alignItems:"center",gap:12}}>
+              <div style={{width:48,height:48,borderRadius:"50%",background:todayFlower.c+"18",
+                display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <FI sp={todayFlower.sp} sz={32} co={todayFlower.c}/></div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:15,fontWeight:700,color:"#2a2018"}}>{todayFlower.n}</div>
+                <div style={{fontSize:12,color:todayFlower.c}}>{todayFlower.sp} · {todayFlower._st?todayFlower._st.st:""}</div>
+                <div style={{fontSize:11,color:"#5a4a38",marginTop:4,fontStyle:"italic"}}>
+                  {"「"}{todayFlower.po}{"」"}</div>
+              </div>
+            </div>
+          </div>);
+        })()}
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ AI 赏花助手 (AI Flower Assistant) ═══
+function AIAssistant({onClose,flora,user,onGoSpot}){
+  var [msgs,setMsgs]=useState([{role:"ai",text:"你好！我是花信风AI助手 🌸\n\n你可以问我：\n· 推荐周末赏花去处\n· 某种花的最佳观赏时间\n· 定制多日赏花路线\n· 带老人/小孩的无障碍赏花\n· 某个城市有什么花可看"}]);
+  var [input,setInput]=useState("");
+  var [loading,setLoading]=useState(false);
+
+  var sendMsg=async function(){
+    if(!input.trim()||loading)return;
+    var q=input.trim();setInput("");
+    setMsgs(function(prev){return prev.concat([{role:"user",text:q}]);});
+    setLoading(true);
+
+    // Build context from flora data
+    var now=new Date();var curMonth=now.getMonth()+1;
+    var blooming=flora.filter(function(f){return f._st&&f._st.l>=3;}).slice(0,20);
+    var upcoming=flora.filter(function(f){return f._pred&&f._pred.daysUntil>0&&f._pred.daysUntil<30;}).slice(0,15);
+
+    var context="你是花信风APP的AI赏花助手。当前月份："+curMonth+"月。\n";
+    context+="当前盛开："+blooming.map(function(f){return f.n+"("+f.sp+","+f.rg+")";}).join("、")+"\n";
+    context+="即将盛开："+upcoming.map(function(f){return f.n+"("+f.sp+","+(f._pred?f._pred.dateStr:"")+")";}).join("、")+"\n";
+    context+="请用中文回答，简洁友好，给出具体景点推荐。如果涉及路线，标注交通方式和大约时间。";
+
+    try{
+      var response=await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"claude-sonnet-4-20250514",
+          max_tokens:800,
+          system:context,
+          messages:[{role:"user",content:q}]
+        })
+      });
+      var data=await response.json();
+      var reply=(data.content||[]).map(function(c){return c.text||"";}).join("");
+      if(!reply)reply="抱歉，暂时无法回答。请换个问题试试。";
+      setMsgs(function(prev){return prev.concat([{role:"ai",text:reply}]);});
+    }catch(e){
+      // Fallback: local keyword matching
+      var reply=localAnswer(q,flora,curMonth);
+      setMsgs(function(prev){return prev.concat([{role:"ai",text:reply}]);});
+    }
+    setLoading(false);
+  };
+
+  // Local fallback answer engine
+  var localAnswer=function(q,flora,month){
+    var spots=[];
+    // City search
+    var cities=["北京","上海","杭州","南京","成都","西安","洛阳","武汉","广州","昆明","苏州","厦门","大理"];
+    var matchCity=cities.find(function(c){return q.includes(c);});
+    if(matchCity){
+      spots=flora.filter(function(f){return f.n.includes(matchCity);}).slice(0,5);
+      if(spots.length>0)return "🌸 "+matchCity+"赏花推荐：\n\n"+spots.map(function(s,i){
+        return(i+1)+". "+s.n+" · "+s.sp+"\n   📅 花期："+s.pk[0]+"-"+s.pk[1]+"月"+(s._pred?" · 预测："+s._pred.dateStr:"")+"\n   💡 "+s.tp;
+      }).join("\n\n");
+    }
+    // Flower search
+    var flowers=["樱花","桃花","梅花","牡丹","荷花","菊花","薰衣草","油菜花","杜鹃"];
+    var matchFlower=flowers.find(function(f){return q.includes(f);});
+    if(matchFlower){
+      spots=flora.filter(function(f){return f.sp===matchFlower;}).slice(0,5);
+      if(spots.length>0)return "🌺 "+matchFlower+"最佳赏花地：\n\n"+spots.map(function(s,i){
+        return(i+1)+". "+s.n+" · "+s.rg+"\n   📅 "+s.pk[0]+"-"+s.pk[1]+"月"+(s._pred?" · 预测："+s._pred.dateStr:"")+"\n   「"+s.po+"」";
+      }).join("\n\n");
+    }
+    // Current season
+    if(q.includes("现在")||q.includes("当季")||q.includes("本月")||q.includes("推荐")){
+      spots=flora.filter(function(f){return f._st&&f._st.l>=3;}).slice(0,6);
+      return "🌸 当前"+month+"月盛开推荐：\n\n"+spots.map(function(s,i){
+        return(i+1)+". "+s.n+" · "+s.sp+" · "+s.rg+"\n   "+s.po;
+      }).join("\n\n")+"\n\n💡 点击景点名可在地图上查看";
+    }
+    return "🌸 感谢提问！我可以帮你：\n\n1. 查某个城市的赏花地\n2. 查某种花的最佳观赏点\n3. 推荐当季盛开的花\n4. 规划赏花路线\n\n试试问：\"杭州有什么花可以看？\"";
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:140,background:"rgba(20,15,10,.65)",
+    display:"flex",justifyContent:"flex-end",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{width:"min(420px,92vw)",height:"100vh",
+      background:"#faf6ef",display:"flex",flexDirection:"column",boxShadow:"-4px 0 24px rgba(0,0,0,.15)"}}>
+      {/* Header */}
+      <div style={{padding:"16px 20px",borderBottom:"1px solid #ece6dc",background:"#f8f4ee",
+        display:"flex",justifyContent:"space-between",alignItems:"center",flexShrink:0}}>
+        <div>
+          <h2 style={{fontSize:18,fontWeight:900,color:"#2a2018",letterSpacing:4,margin:0}}>🤖 赏花助手</h2>
+          <div style={{fontSize:10,color:"#8a7a60",marginTop:2}}>AI驱动 · 智能推荐</div>
+        </div>
+        <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+          cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+      </div>
+      {/* Messages */}
+      <div style={{flex:1,overflow:"auto",padding:"14px 18px"}}>
+        {msgs.map(function(m,i){return(
+          <div key={i} style={{display:"flex",justifyContent:m.role==="user"?"flex-end":"flex-start",marginBottom:12}}>
+            <div style={{maxWidth:"85%",padding:"10px 14px",borderRadius:m.role==="user"?"12px 12px 2px 12px":"12px 12px 12px 2px",
+              background:m.role==="user"?"#c06040":"#fff",color:m.role==="user"?"#fff":"#2a2018",
+              fontSize:13,lineHeight:1.7,whiteSpace:"pre-wrap",boxShadow:"0 1px 4px rgba(0,0,0,.06)"}}>
+              {m.text}</div>
+          </div>);})}
+        {loading&&<div style={{display:"flex",justifyContent:"flex-start",marginBottom:12}}>
+          <div style={{padding:"10px 14px",borderRadius:"12px 12px 12px 2px",background:"#fff",
+            fontSize:13,color:"#8a7a68"}}>思考中...</div>
+        </div>}
+      </div>
+      {/* Input */}
+      <div style={{padding:"12px 18px",borderTop:"1px solid #ece6dc",background:"#f8f4ee",flexShrink:0,
+        display:"flex",gap:8}}>
+        <input value={input} onChange={function(e){setInput(e.target.value);}}
+          onKeyDown={function(e){if(e.key==="Enter")sendMsg();}}
+          placeholder="问我赏花去哪里..."
+          style={{flex:1,padding:"10px 14px",border:"1px solid #e0dcd4",borderRadius:20,
+            fontSize:13,outline:"none",background:"#fff"}}/>
+        <button onClick={sendMsg} disabled={loading||!input.trim()}
+          style={{border:"none",background:input.trim()?"#c06040":"#ddd",color:"#fff",
+            borderRadius:"50%",width:40,height:40,cursor:input.trim()?"pointer":"default",
+            fontSize:16,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>↑</button>
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ 个性化推荐 (Smart Recommendations) ═══
+function RecommendPanel({onClose,flora,checkins,favs,userLoc,onGoSpot}){
+  var visited=new Set(Object.keys(checkins).map(Number));
+  var favSet=new Set(Object.keys(favs).map(Number));
+  var visitedSpecies=new Set(Object.keys(checkins).map(function(id){
+    var s=flora.find(function(f){return f.id===Number(id);});return s?s.sp:"";
+  }).filter(Boolean));
+
+  // Scoring algorithm
+  var scored=flora.map(function(f){
+    var score=0;
+    // Bloom status bonus
+    if(f._st&&f._st.l>=4)score+=40; // blooming now = highest
+    if(f._st&&f._st.l===3)score+=30;
+    if(f._pred&&f._pred.daysUntil>0&&f._pred.daysUntil<14)score+=25;
+    // Not visited bonus
+    if(!visited.has(f.id))score+=15;
+    // New species bonus  
+    if(!visitedSpecies.has(f.sp))score+=20;
+    // Distance bonus (closer = better)
+    if(userLoc){
+      var dist=Math.sqrt(Math.pow(f.lat-userLoc.lat,2)+Math.pow(f.lon-userLoc.lon,2));
+      if(dist<2)score+=30;
+      else if(dist<5)score+=20;
+      else if(dist<10)score+=10;
+    }
+    // Favorited spots get slight boost
+    if(favSet.has(f.id))score+=5;
+    return{spot:f,score:score};
+  }).sort(function(a,b){return b.score-a.score;}).slice(0,12);
+
+  var categories=[
+    {title:"🌸 正在盛开",desc:"此刻最佳赏花时机",items:scored.filter(function(s){return s.spot._st&&s.spot._st.l>=3;}).slice(0,4)},
+    {title:"🌱 即将绽放",desc:"提前规划，不错过花期",items:scored.filter(function(s){return s.spot._pred&&s.spot._pred.daysUntil>0&&s.spot._pred.daysUntil<21;}).slice(0,4)},
+    {title:"🆕 新花种体验",desc:"你还没赏过的花卉",items:scored.filter(function(s){return!visitedSpecies.has(s.spot.sp);}).slice(0,4)},
+  ];
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{background:"#faf6ef",width:"min(620px,94vw)",
+      maxHeight:"90vh",borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column",
+      boxShadow:"0 20px 60px rgba(0,0,0,.4)"}}>
+      <div style={{padding:"18px 24px 14px",borderBottom:"1px solid #ece6dc",
+        background:"linear-gradient(180deg,#faf6ef,#f2ebd8)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <h2 style={{fontSize:20,fontWeight:900,color:"#2a2018",letterSpacing:6,margin:0}}>✨ 为你推荐</h2>
+            <div style={{fontSize:11,color:"#8a7a60",marginTop:4}}>基于你的花历 · 当季花事 · 个性化推荐</div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+      </div>
+      <div style={{flex:1,overflow:"auto",padding:"16px 24px"}}>
+        {categories.map(function(cat,ci){
+          if(cat.items.length===0)return null;
+          return(<div key={ci} style={{marginBottom:20}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#2a2018",letterSpacing:2,marginBottom:4}}>{cat.title}</div>
+            <div style={{fontSize:11,color:"#8a7a68",marginBottom:10}}>{cat.desc}</div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(170px,1fr))",gap:10}}>
+              {cat.items.map(function(item){var s=item.spot;
+                return(<div key={s.id} onClick={function(){if(onGoSpot)onGoSpot(s);onClose();}}
+                  style={{padding:"12px",background:"#fff",borderRadius:10,
+                    border:"1px solid "+s.c+"33",cursor:"pointer",transition:"all .15s",
+                    borderLeft:"3px solid "+s.c}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                    <div style={{width:28,height:28,borderRadius:"50%",background:"#f8f4ee",
+                      border:"1px solid "+s.c+"55",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      <FI sp={s.sp} sz={18} co={s.c}/></div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:12,fontWeight:700,color:"#2a2018",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>
+                        {s.n.split("·")[1]||s.n}</div>
+                      <div style={{fontSize:10,color:s.c}}>{s.sp}</div>
+                    </div>
+                  </div>
+                  <div style={{fontSize:10,color:"#8a7a68",lineHeight:1.5}}>
+                    {s._st?s._st.st:""}{s._pred&&s._pred.daysUntil>0?" · "+s._pred.daysUntil+"天后":""}</div>
+                  {!visited.has(s.id)&&<span style={{fontSize:9,padding:"1px 6px",background:"#e0f0e0",
+                    color:"#3a8a50",borderRadius:8,fontWeight:600}}>未到访</span>}
+                </div>);
+              })}
+            </div>
+          </div>);
+        })}
+      </div>
+    </div>
+  </div>);
+}
+
+// ═══ 花事圈 (Social Feed) ═══
+function SocialFeed({onClose,flora,user}){
+  var [posts,setPosts]=useState([]);
+  var [newPost,setNewPost]=useState("");
+  var [postSpot,setPostSpot]=useState(null);
+  var [searchQ,setSearchQ]=useState("");
+
+  useEffect(function(){(async function(){
+    try{var r=window.storage?await window.storage.get("social_feed",true):null;
+      if(r&&r.value)setPosts(JSON.parse(r.value));}catch(e){}
+  })();},[]);
+
+  var submitPost=async function(){
+    if(!newPost.trim())return;
+    var post={
+      id:Date.now().toString(36),
+      author:user?user.name:"匿名花友",
+      authorId:user?user.id:"anon",
+      text:newPost.trim(),
+      spot:postSpot?{id:postSpot.id,n:postSpot.n,sp:postSpot.sp,c:postSpot.c}:null,
+      date:new Date().toLocaleDateString("zh-CN"),
+      ts:Date.now(),
+      likes:0,likedBy:[]
+    };
+    var newPosts=[post].concat(posts).slice(0,200);
+    setPosts(newPosts);setNewPost("");setPostSpot(null);
+    try{if(window.storage)await window.storage.set("social_feed",JSON.stringify(newPosts),true);}catch(e){}
+  };
+
+  var likePost=async function(postId){
+    var uid=user?user.id:"anon";
+    var newPosts=posts.map(function(p){
+      if(p.id!==postId)return p;
+      var liked=(p.likedBy||[]).includes(uid);
+      return{...p,likes:liked?p.likes-1:p.likes+1,
+        likedBy:liked?(p.likedBy||[]).filter(function(x){return x!==uid;}):
+          (p.likedBy||[]).concat([uid])};
+    });
+    setPosts(newPosts);
+    try{if(window.storage)await window.storage.set("social_feed",JSON.stringify(newPosts),true);}catch(e){}
+  };
+
+  return(<div style={{position:"fixed",inset:0,zIndex:130,background:"rgba(20,15,10,.65)",
+    display:"flex",justifyContent:"flex-end",backdropFilter:"blur(6px)"}} onClick={onClose}>
+    <div onClick={function(e){e.stopPropagation();}} style={{width:"min(440px,92vw)",height:"100vh",
+      background:"#faf6ef",display:"flex",flexDirection:"column",boxShadow:"-4px 0 24px rgba(0,0,0,.15)"}}>
+      {/* Header */}
+      <div style={{padding:"16px 20px",borderBottom:"1px solid #ece6dc",background:"#f8f4ee",flexShrink:0}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <h2 style={{fontSize:18,fontWeight:900,color:"#2a2018",letterSpacing:4,margin:0}}>🌺 花事圈</h2>
+            <div style={{fontSize:10,color:"#8a7a60",marginTop:2}}>分享你的花事 · 发现同好</div>
+          </div>
+          <button onClick={onClose} style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+            cursor:"pointer",fontSize:14,width:28,height:28,borderRadius:"50%"}}>{"×"}</button>
+        </div>
+      </div>
+      {/* Compose */}
+      <div style={{padding:"14px 18px",borderBottom:"1px solid #ece6dc",background:"#fff",flexShrink:0}}>
+        <div style={{display:"flex",gap:10}}>
+          <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,#c06040,#e0a040)",
+            color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:800,flexShrink:0}}>
+            {user?user.name[0]:"花"}</div>
+          <div style={{flex:1}}>
+            <textarea value={newPost} onChange={function(e){setNewPost(e.target.value.slice(0,200));}}
+              placeholder="分享你的花事..."
+              rows="2" style={{width:"100%",border:"none",outline:"none",resize:"none",
+                fontSize:13,lineHeight:1.6,background:"transparent"}}/>
+            {/* Spot tag */}
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4}}>
+              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                {postSpot?<div style={{display:"flex",alignItems:"center",gap:4,padding:"2px 8px",
+                  background:postSpot.c+"18",borderRadius:12,fontSize:11,color:postSpot.c}}>
+                  <FI sp={postSpot.sp} sz={12} co={postSpot.c}/>{postSpot.n.split("·")[1]||postSpot.n}
+                  <span onClick={function(){setPostSpot(null);}} style={{cursor:"pointer",marginLeft:4}}>{"×"}</span>
+                </div>:
+                <div style={{position:"relative"}}>
+                  <input value={searchQ} onChange={function(e){setSearchQ(e.target.value);
+                    if(e.target.value.length>=2){
+                      var match=flora.find(function(f){return f.n.includes(e.target.value);});
+                      if(match){setPostSpot(match);setSearchQ("");}
+                    }}}
+                    placeholder="📍 标记景点" style={{border:"1px solid #e8e0d4",borderRadius:12,
+                      padding:"3px 10px",fontSize:11,width:100,outline:"none"}}/>
+                </div>}
+              </div>
+              <button onClick={submitPost} disabled={!newPost.trim()}
+                style={{border:"none",background:newPost.trim()?"#c06040":"#ddd",color:"#fff",
+                  borderRadius:14,padding:"5px 16px",cursor:newPost.trim()?"pointer":"default",
+                  fontSize:12,fontWeight:700}}>发布</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Feed */}
+      <div style={{flex:1,overflow:"auto"}}>
+        {posts.length===0&&<div style={{textAlign:"center",padding:"50px 0",color:"#8a7a60"}}>
+          <div style={{fontSize:40,marginBottom:12}}>🌺</div>
+          <div style={{fontSize:14,letterSpacing:2}}>花事圈还没有动态</div>
+          <div style={{fontSize:12,marginTop:6,opacity:.6}}>做第一个分享花事的人吧</div>
+        </div>}
+        {posts.map(function(p){
+          var isLiked=user&&(p.likedBy||[]).includes(user.id);
+          return(<div key={p.id} style={{padding:"14px 18px",borderBottom:"1px solid #f0ece4"}}>
+            {/* Author */}
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,#c06040,#e0a040)",
+                color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:800}}>
+                {p.author?p.author[0]:"花"}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:700,color:"#2a2018"}}>{p.author}</div>
+                <div style={{fontSize:10,color:"#b0a890"}}>{p.date}</div>
+              </div>
+            </div>
+            {/* Content */}
+            <div style={{fontSize:13,color:"#2a2018",lineHeight:1.8,marginBottom:8,whiteSpace:"pre-wrap"}}>{p.text}</div>
+            {/* Spot tag */}
+            {p.spot&&<div style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 10px",
+              background:(p.spot.c||"#ccc")+"15",borderRadius:12,fontSize:11,color:p.spot.c||"#888",marginBottom:8}}>
+              <FI sp={p.spot.sp} sz={12} co={p.spot.c}/>{p.spot.n}</div>}
+            {/* Actions */}
+            <div style={{display:"flex",gap:16}}>
+              <button onClick={function(){likePost(p.id);}}
+                style={{border:"none",background:"none",cursor:"pointer",fontSize:12,
+                  color:isLiked?"#e06050":"#b0a890",display:"flex",alignItems:"center",gap:4}}>
+                {isLiked?"❤":"♡"} {p.likes||0}</button>
+              <button onClick={function(){
+                var text=p.author+"："+p.text+(p.spot?" 📍"+p.spot.n:"");
+                navigator.clipboard.writeText(text);alert("已复制");
+              }} style={{border:"none",background:"none",cursor:"pointer",fontSize:12,color:"#b0a890"}}>
+                📤 转发</button>
+            </div>
+          </div>);
+        })}
+      </div>
+    </div>
+  </div>);
+}
+
 // ═══ MAIN ═══
 export default function App(){
   const [entered,setEntered]=useState(false);const [geo,setGeo]=useState(null);
+  const [user,setUser]=useState(null);const [showLogin,setShowLogin]=useState(false);
+  // Load user from storage
+  useEffect(function(){(async function(){
+    try{var r=window.storage?await window.storage.get("user_profile"):null;
+      if(r&&r.value)setUser(JSON.parse(r.value));}catch(e){}
+  })();},[]);
+  const doLogin=async function(u){
+    setUser(u);setShowLogin(false);
+    try{if(window.storage)await window.storage.set("user_profile",JSON.stringify(u));}catch(e){}
+  };
+  const doLogout=async function(){
+    setUser(null);
+    try{if(window.storage)await window.storage.delete("user_profile");}catch(e){}
+  };
   // Auto-show mood card once per day on entry
   const [flora]=useState(()=>FLORA.map(f=>{const pred=predictBloom(f);return{...f,_at:FAT[f.id]||200,_st:calcSt(FAT[f.id]||200,f.th,pred),_pred:pred};}));
   const [page,setPage]=useState("map");const [filter,setFilter]=useState("current");
@@ -2619,6 +3878,12 @@ export default function App(){
       if(!r&&r.value){setTimeout(()=>{setShowMood(true);
         window.storage&&window.storage.set("moodShown_"+seed,"1");},1200);}}catch{}
   })();},[entered]);
+
+  // Auto-prompt login after 45s if not logged in
+  useEffect(()=>{if(!entered||user)return;
+    const t=setTimeout(()=>{if(!user)setShowLogin(true);},45000);
+    return()=>clearTimeout(t);
+  },[entered,user]);
 
   const requestLoc=()=>{if(locAsked)return;setLocAsked(true);
     navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{
@@ -2686,8 +3951,8 @@ export default function App(){
       const isTrackpad=!isPinch&&Math.abs(e.deltaY)<=40&&!e.deltaMode;
       let f;
       if(isPinch){f=e.deltaY*-.02;}// pinch gesture
-      else if(isTrackpad){f=e.deltaY<0?.08:-.08;}// trackpad scroll zoom
-      else{f=e.deltaY<0?.2:-.18;}// mouse wheel
+      else if(isTrackpad){f=e.deltaY<0?0.08:-0.08;}// trackpad scroll zoom
+      else{f=e.deltaY<0?0.2:-0.18;}// mouse wheel
       const rect=el.getBoundingClientRect();const gx=proj.invert&&proj.invert([(e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H]);
       setWz(p=>{const n=Math.max(1,Math.min(8,p*(1+f)));
         if(n>1.05&&gx){const t=Math.min(.15,.05*(n-1));setWc(c=>[c[0]+(gx[0]-c[0])*t,c[1]+(gx[1]-c[1])*t]);}
@@ -2730,12 +3995,38 @@ export default function App(){
   const [lang,setLang]=useState("zh");const [showGuide,setShowGuide]=useState(false);
   const [showHuaxin,setShowHuaxin]=useState(false);const [wikiSp,setWikiSp]=useState(null);
   const [showDiary,setShowDiary]=useState(false);
+  const [showCalendar,setShowCalendar]=useState(false);
+  const [showCrowd,setShowCrowd]=useState(false);
+  const [showPoem,setShowPoem]=useState(false);
+  const [showAI,setShowAI]=useState(false);
+  const [showRec,setShowRec]=useState(false);
+  const [showFeed,setShowFeed]=useState(false);
+  const [showDash,setShowDash]=useState(false);
+  const [showOnboarding,setShowOnboarding]=useState(false);
+  const [toolsOpen,setToolsOpen]=useState(false);
+
+  // Check if first visit → show onboarding
+  useEffect(function(){if(!entered)return;(async function(){
+    try{var r=window.storage?await window.storage.get("onboarding_done"):null;
+      if(!r||!r.value)setShowOnboarding(true);}catch(e){setShowOnboarding(true);}
+  })();},[entered]);
+  const completeOnboarding=async function(){
+    setShowOnboarding(false);
+    try{if(window.storage)await window.storage.set("onboarding_done","1");}catch(e){}
+  };
   const t=I18N[lang]||I18N.zh;
 
   if(!entered)return <ScrollLanding onEnter={()=>setEntered(true)}/>;
 
-  const dc=dark?{bg:"#1a1612",bg2:"#221e18",text:"#e0d8c8",tl:"#8a7a68",accent:"#d07050",border:"#3a4a50"}
-    :{bg:C.bg,bg2:C.bg2,text:C.text,tl:C.tl,accent:C.accent,border:C.border};
+  const dc=(function(){
+    var seasonTint={spring:{bg:"#f8ece4",bg2:"#f0e0d4",accent:"#d07068"},
+      summer:{bg:"#f0ece0",bg2:"#e8e4d4",accent:"#5a8a50"},
+      autumn:{bg:"#f4ece0",bg2:"#ebe0d0",accent:"#c87040"},
+      winter:{bg:"#eff0ee",bg2:"#e4e6e2",accent:"#6a8aaa"}};
+    var st=seasonTint[cs]||seasonTint.spring;
+    if(dark)return{bg:"#1a1612",bg2:"#221e18",text:"#e0d8c8",tl:"#8a7a68",accent:"#d07050",border:"#3a4a50"};
+    return{bg:st.bg,bg2:st.bg2,text:C.text,tl:C.tl,accent:st.accent,border:C.border};
+  })();
 
   return(<div style={{width:"100%",height:"100vh",minHeight:600,position:"relative",overflow:"hidden",
     background:"linear-gradient(155deg,"+dc.bg+","+dc.bg2+")"}} tabIndex={0}>
@@ -2744,14 +4035,14 @@ export default function App(){
       @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-4px) rotate(-4deg)}75%{transform:translateX(4px) rotate(4deg)}}
       @keyframes progress{0%{width:0;opacity:.5}50%{width:100%;opacity:1}100%{width:0;opacity:.5}}
       @keyframes playwave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.6)}}
+      @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
       *{box-sizing:border-box;margin:0;padding:0;font-family:'Noto Serif SC',serif}
       ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(128,128,128,.15);border-radius:2px}
-      /* HOVER EFFECTS */
       button{transition:all .15s ease}
-      button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.08)}
-      .hx-monthbtn:hover{background:rgba(192,96,64,.14)!important;color:#c06040!important;transform:scale(1.08)}
+      @media(hover:hover){button:hover:not(:disabled){transform:translateY(-1px);filter:brightness(1.08)}
+        .hx-monthbtn:hover{background:rgba(192,96,64,.14)!important;color:#c06040!important;transform:scale(1.08)}}
       .hx-monthbtn:active{transform:scale(.95)}
-      .hx-tabbtn:hover{background:rgba(192,96,64,.12)!important}
+      /* TABLET */
       @media(max-width:768px){
         .hx-title{font-size:13px!important}
         .hx-tabs button{font-size:11px!important;padding:3px 8px!important}
@@ -2761,11 +4052,14 @@ export default function App(){
         .hx-nearby{width:160px!important}
         .hx-banner{font-size:11px!important;max-width:92vw!important}
       }
+      /* MOBILE */
       @media(max-width:480px){
         .hx-title{font-size:12px!important}
         .hx-tabs button{font-size:10px!important;padding:2px 6px!important}
         .hx-rank{display:none!important}
-        .hx-wheel{width:160px!important;height:90px!important}
+        .hx-wheel{width:160px!important}
+        .hx-bookmark{transform:scale(.8)!important;transform-origin:right center!important}
+        .hx-music-mini{bottom:65px!important;right:4px!important}
       }`}</style>
 
     {ez>1.5&&<><div style={{position:"absolute",left:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#b08858,#d4b088,#c8a070)"}}/>
@@ -2874,7 +4168,7 @@ export default function App(){
             {s.l}</button>));})()}
       <div style={{width:1,background:"#e0dcd4",margin:"2px 4px"}}></div>
       {[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>(
-        <button key={m} className="hx-monthbtn" title={`${m}月花事`} onClick={()=>setNearbyMonth(m)}
+        <button key={m} className="hx-monthbtn" title={m+"月花事"} onClick={()=>setNearbyMonth(m)}
           style={{border:"none",borderRadius:6,padding:"4px 7px",cursor:"pointer",fontSize:11,
           background:nearbyMonth===m?C.accent+"18":"transparent",color:nearbyMonth===m?C.accent:"#aaa"}}>{m}月</button>))}</div>}
 
@@ -3063,6 +4357,65 @@ export default function App(){
         border:"2px solid #faf6ef"}}>{Object.keys(checkins).length}</div>}
     </button>
     {showDiary&&<DiaryPanel onClose={()=>setShowDiary(false)} checkins={checkins} flora={flora} favs={favs}/>}
+    {showCalendar&&<CalendarPanel onClose={()=>setShowCalendar(false)} flora={flora}/>}
+    {showCrowd&&<CrowdPanel onClose={()=>setShowCrowd(false)} flora={flora}/>}
+    {showPoem&&<PoemPanel onClose={()=>setShowPoem(false)} flora={flora}
+      onGoSpot={function(s){setSel(s);setWz(5);setWc([s.lon,s.lat]);}}/>}
+    {showAI&&<AIAssistant onClose={()=>setShowAI(false)} flora={flora} user={user}
+      onGoSpot={function(s){setSel(s);setWz(5);setWc([s.lon,s.lat]);}}/>}
+    {showRec&&<RecommendPanel onClose={()=>setShowRec(false)} flora={flora}
+      checkins={checkins} favs={favs} userLoc={userLoc}
+      onGoSpot={function(s){setSel(s);setWz(5);setWc([s.lon,s.lat]);}}/>}
+    {showFeed&&<SocialFeed onClose={()=>setShowFeed(false)} flora={flora} user={user}/>}
+    {showDash&&<DashboardPanel onClose={()=>setShowDash(false)} flora={flora} checkins={checkins} favs={favs}/>}
+    {showOnboarding&&<OnboardingGuide onComplete={completeOnboarding}/>}
+    {/* Collapsible FAB menu - bottom left */}
+    <div style={{position:"absolute",bottom:12,left:12,zIndex:30}}>
+      {/* Expanded menu items */}
+      {toolsOpen&&<div style={{marginBottom:8,display:"flex",flexDirection:"column",gap:6,
+        animation:"fadeIn .2s"}}>
+        {[
+          {icon:"📊",label:"花事概览",desc:"全国花事数据",action:function(){setShowDash(true);setToolsOpen(false);}},
+          {icon:"🤖",label:"AI助手",desc:"智能赏花问答",action:function(){setShowAI(true);setToolsOpen(false);}},
+          {icon:"✨",label:"为你推荐",desc:"个性化赏花地",action:function(){setShowRec(true);setToolsOpen(false);}},
+          {icon:"🌺",label:"花事圈",desc:"分享与发现",action:function(){setShowFeed(true);setToolsOpen(false);}},
+          {icon:"🗓",label:"花事日历",desc:"节气·花期·订阅",action:function(){setShowCalendar(true);setToolsOpen(false);}},
+          {icon:"📡",label:"花讯播报",desc:"众包实况",action:function(){setShowCrowd(true);setToolsOpen(false);}},
+          {icon:"📜",label:"诗词花事",desc:"千年诗句遇花事",action:function(){setShowPoem(true);setToolsOpen(false);}},
+        ].map(function(btn,i){return(
+          <button key={i} onClick={btn.action}
+            style={{display:"flex",alignItems:"center",gap:10,
+              border:"1px solid #e0dcd4",background:"rgba(250,245,237,.98)",borderRadius:12,
+              padding:"10px 14px",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,.08)",
+              textAlign:"left",width:180}}>
+            <span style={{fontSize:20}}>{btn.icon}</span>
+            <div>
+              <div style={{fontSize:12,fontWeight:700,color:"#2a2018",letterSpacing:1}}>{btn.label}</div>
+              <div style={{fontSize:10,color:"#8a7a68"}}>{btn.desc}</div>
+            </div>
+          </button>);})}
+      </div>}
+      {/* FAB trigger button */}
+      <button onClick={function(){setToolsOpen(!toolsOpen);}}
+        style={{width:48,height:48,borderRadius:"50%",border:"none",cursor:"pointer",
+          background:toolsOpen?"#2a2018":"linear-gradient(135deg,#c06040,#e0a040)",
+          color:"#fff",fontSize:toolsOpen?18:22,fontWeight:700,
+          boxShadow:"0 4px 16px rgba(192,96,64,.35)",
+          display:"flex",alignItems:"center",justifyContent:"center",
+          transition:"all .2s",transform:toolsOpen?"rotate(45deg)":"none"}}>
+        {toolsOpen?"＋":"☰"}</button>
+    </div>
+    {/* Click outside to close tools */}
+    {toolsOpen&&<div onClick={function(){setToolsOpen(false);}}
+      style={{position:"absolute",inset:0,zIndex:29}}></div>}
+    {/* User avatar or login button */}
+    {user?<UserMenu user={user} onLogout={doLogout} onShowDiary={()=>setShowDiary(true)}/>:
+      <button onClick={()=>setShowLogin(true)} style={{position:"absolute",top:12,right:50,zIndex:35,
+        border:"1.5px solid #e0dcd4",background:"rgba(250,245,237,.95)",borderRadius:20,
+        padding:"5px 14px",cursor:"pointer",fontSize:11,color:"#c06040",fontWeight:600,
+        display:"flex",alignItems:"center",gap:4,boxShadow:"0 1px 4px rgba(0,0,0,.05)"}}>
+        👤 登录</button>}
+    {showLogin&&<LoginPanel onLogin={doLogin} onClose={()=>setShowLogin(false)}/>}
     {/* Dark mode toggle */}
     <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:10,zIndex:31,
       border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
