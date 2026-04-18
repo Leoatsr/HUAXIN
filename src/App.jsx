@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import * as d3 from "d3";
+import { Analytics } from "@vercel/analytics/react";
 
 // ═══ Error Boundary - prevents white screen on component crashes ═══
 class ErrorBoundary extends React.Component {
@@ -5494,6 +5495,7 @@ function SocialFeed({onClose,flora,user}){
 export default function App(){
   return(<ErrorBoundary>
     <AppCore/>
+    <Analytics />
   </ErrorBoundary>);
 }
 
