@@ -47,21 +47,29 @@ const C={bg:"#f4ece0",bg2:"#ebe0d0",accent:"#c06040",accent2:"#a87050",text:"#3a
 // ═══ i18n 多语言 ═══
 const I18N={
 zh:{
-  title:"花信风",subtitle:"跟着天地节律 · 追一场中国色",
+  title:"花信风",subtitle:"一候花风起 · 岁岁花事新",
   tab_map:"时令",tab_species:"花谱",tab_nearby:"附近",
-  current:"当季",yearly:"全年",future:"未来",month1:"1个月",month3:"3个月",halfyr:"半年",
-  blooming:"盛花期",early:"初花期",budding:"含苞待放",faded:"已谢",ending:"末花期",growing:"积温中",
-  pred_title:"基于3年数据预测",pred_bloom:"预测盛花期",pred_hist:"历史数据",pred_conf:"置信度",
-  near_high:"临近！精度高",arrived:"已到/已过",days_later:"天后",
-  fav:"收藏",faved:"已收藏",checkin:"打卡",checked:"已打卡",trip_add:"加入行程",trip_added:"已加入行程",
-  share:"分享",mfw:"查看马蜂窝景点详情",notes:"花友笔记",notes_empty:"还没有笔记",note_ph:"写一条笔记...",send:"发送",
-  trip:"行程规划",trip_stops:"站",trip_total:"全程约",trip_share:"分享行程",trip_clear:"清空",trip_empty:"还没有添加景点",
-  mood:"花签",mood_title:"每日花签",mood_draw:"求签",mood_drawing:"签筒摇动中...",mood_got:"今日得签",mood_share:"分享花签",
-  search_ph:"搜索景点或花种...",scroll_hint:"拖动卷轴，展开花事",enter:"直接进入",
-  rank:"花事排行",nearby_title:"附近花事",
-  guide:"入境指南",guide_title:"China Flower Travel Guide",
-  at:"积温",threshold:"阈值",real:"实时",sim:"模拟",suggest:"建议",
-  overview:"全览",region_ne:"东北",region_n:"华北",region_nw:"西北",region_e:"华东",region_c:"华中",region_sw:"西南",region_s:"华南",region_t:"青藏",
+  current:"正当时",yearly:"四季览",future:"待花开",month1:"一月之内",month3:"三月之内",halfyr:"半年之间",
+  blooming:"花开正盛",early:"初绽芳华",budding:"含苞待放",faded:"花信已过",ending:"花将谢尽",growing:"蓄势待放",
+  pred_title:"三载物候 · 积温推算",pred_bloom:"花期将至",pred_hist:"往年花期",pred_conf:"预测精度",
+  near_high:"将至 · 精准",arrived:"花已开",days_later:"日后",
+  fav:"藏之",faved:"已藏",checkin:"到此一游",checked:"已到此",trip_add:"纳入行程",trip_added:"已纳入",
+  share:"相告",mfw:"查看景点详情",notes:"花友手札",notes_empty:"尚无手札",note_ph:"落笔一记...",send:"落款",
+  trip:"花事行程",trip_stops:"站",trip_total:"共约",trip_share:"分享行程",trip_clear:"清空",trip_empty:"尚未择路",
+  mood:"花签",mood_title:"花信一签",mood_draw:"摇签求缘",mood_drawing:"竹签摇动中",mood_got:"今日所得",mood_share:"分签结缘",
+  search_ph:"访一地，寻一花...",scroll_hint:"点击入山，探花去",enter:"入山探花",
+  rank:"花事榜",nearby_title:"附近芳讯",
+  guide:"行游指南",guide_title:"China Flower Travel Guide",
+  at:"积温",threshold:"阈值",real:"实况",sim:"推算",suggest:"雅事",
+  overview:"全景",region_ne:"东北",region_n:"华北",region_nw:"西北",region_e:"华东",region_c:"华中",region_sw:"西南",region_s:"华南",region_t:"青藏",
+  // Extended UI keys (v2)
+  close:"关闭",confirm:"确认",cancel:"取消",retry:"重试",refresh:"刷新",loading:"加载中",skip:"跳过",next:"下一步",prev:"上一步",done:"完成",view:"查看",submit:"提交",copy:"复制",copied:"已复制",delete:"删除",edit:"编辑",reset:"重置",back_to_overview:"回到全景",
+  diary_title:"我的花历",diary_empty:"还没有花事记录",diary_hint:"在地图上点击景点打卡",
+  wiki_alias:"别名",wiki_family:"科属",wiki_origin:"原产",wiki_story:"文化典故",wiki_care:"养护",wiki_flang:"花语",
+  sub_title:"花期提醒",sub_empty:"还没有订阅",sub_hint:"从收藏中选择景点订阅",sub_notify_on:"通知已开启",sub_enable:"开启通知",
+  checkin_title:"每日签到",puzzle_title:"百花拼图",calendar_title:"花事日历",dashboard_title:"花事概览",
+  ai_title:"AI赏花助手",ai_placeholder:"问问关于赏花的事...",feed_title:"花事圈",feed_empty:"暂无动态",
+  recommend_title:"为你推荐",crowd_title:"花讯播报",poem_title:"诗词花事",huaxin_title:"二十四番花信风",
 },
 en:{
   title:"Flower Wind",subtitle:"Follow nature's rhythm · Chase China's colors",
@@ -79,6 +87,13 @@ en:{
   guide:"Travel Guide",guide_title:"China Flower Travel Guide",
   at:"Accum.Temp",threshold:"Threshold",real:"Live",sim:"Est.",suggest:"Tip",
   overview:"All",region_ne:"NE",region_n:"N",region_nw:"NW",region_e:"E",region_c:"Central",region_sw:"SW",region_s:"S",region_t:"Tibet",
+  close:"Close",confirm:"Confirm",cancel:"Cancel",retry:"Retry",refresh:"Refresh",loading:"Loading",skip:"Skip",next:"Next",prev:"Back",done:"Done",view:"View",submit:"Submit",copy:"Copy",copied:"Copied",delete:"Delete",edit:"Edit",reset:"Reset",back_to_overview:"Reset View",
+  diary_title:"My Diary",diary_empty:"No records yet",diary_hint:"Tap a spot on the map to check in",
+  wiki_alias:"Aliases",wiki_family:"Family",wiki_origin:"Origin",wiki_story:"Culture",wiki_care:"Care",wiki_flang:"Meaning",
+  sub_title:"Bloom Alerts",sub_empty:"No subscriptions",sub_hint:"Subscribe from your favorites",sub_notify_on:"Notifications on",sub_enable:"Enable notifications",
+  checkin_title:"Daily Check-in",puzzle_title:"Flower Puzzle",calendar_title:"Flower Calendar",dashboard_title:"Overview",
+  ai_title:"AI Flower Assistant",ai_placeholder:"Ask about flower viewing...",feed_title:"Community",feed_empty:"No posts yet",
+  recommend_title:"For You",crowd_title:"Live Reports",poem_title:"Poetry & Flowers",huaxin_title:"24 Flower Winds",
 },
 ja:{
   title:"花信風",subtitle:"天地のリズムに従い · 中国の色を追う",
@@ -96,6 +111,13 @@ ja:{
   guide:"旅行ガイド",guide_title:"中国花旅ガイド",
   at:"積算温度",threshold:"閾値",real:"実測",sim:"推定",suggest:"おすすめ",
   overview:"全体",region_ne:"東北",region_n:"華北",region_nw:"西北",region_e:"華東",region_c:"華中",region_sw:"西南",region_s:"華南",region_t:"チベット",
+  close:"閉じる",confirm:"確認",cancel:"キャンセル",retry:"再試行",refresh:"更新",loading:"読込中",skip:"スキップ",next:"次へ",prev:"戻る",done:"完了",view:"見る",submit:"送信",copy:"コピー",copied:"コピー済",delete:"削除",edit:"編集",reset:"リセット",back_to_overview:"全景に戻る",
+  diary_title:"花暦",diary_empty:"記録がありません",diary_hint:"地図でスポットをタップして記録",
+  wiki_alias:"別名",wiki_family:"科属",wiki_origin:"原産",wiki_story:"文化",wiki_care:"手入れ",wiki_flang:"花言葉",
+  sub_title:"開花通知",sub_empty:"購読なし",sub_hint:"お気に入りから購読",sub_notify_on:"通知オン",sub_enable:"通知を有効化",
+  checkin_title:"毎日チェックイン",puzzle_title:"花パズル",calendar_title:"花暦カレンダー",dashboard_title:"概要",
+  ai_title:"AIアシスタント",ai_placeholder:"花見について質問...",feed_title:"コミュニティ",feed_empty:"投稿なし",
+  recommend_title:"おすすめ",crowd_title:"リアル情報",poem_title:"詩歌と花",huaxin_title:"二十四番花信風",
 },
 ko:{
   title:"화신풍",subtitle:"자연의 리듬을 따라 · 중국의 색을 찾다",
@@ -113,6 +135,109 @@ ko:{
   guide:"여행 가이드",guide_title:"중국 꽃 여행 가이드",
   at:"적산온도",threshold:"임계값",real:"실시간",sim:"추정",suggest:"팁",
   overview:"전체",region_ne:"동북",region_n:"화북",region_nw:"서북",region_e:"화동",region_c:"화중",region_sw:"서남",region_s:"화남",region_t:"티벳",
+  close:"닫기",confirm:"확인",cancel:"취소",retry:"재시도",refresh:"새로고침",loading:"로딩중",skip:"건너뛰기",next:"다음",prev:"이전",done:"완료",view:"보기",submit:"제출",copy:"복사",copied:"복사됨",delete:"삭제",edit:"편집",reset:"재설정",back_to_overview:"전체보기",
+  diary_title:"꽃 일기",diary_empty:"기록이 없습니다",diary_hint:"지도에서 장소를 탭하세요",
+  wiki_alias:"별명",wiki_family:"과속",wiki_origin:"원산",wiki_story:"문화",wiki_care:"관리",wiki_flang:"꽃말",
+  sub_title:"개화 알림",sub_empty:"구독 없음",sub_hint:"즐겨찾기에서 구독",sub_notify_on:"알림 켜짐",sub_enable:"알림 켜기",
+  checkin_title:"일일 체크인",puzzle_title:"꽃 퍼즐",calendar_title:"꽃 달력",dashboard_title:"개요",
+  ai_title:"AI 어시스턴트",ai_placeholder:"꽃 감상에 대해 질문...",feed_title:"커뮤니티",feed_empty:"게시물 없음",
+  recommend_title:"추천",crowd_title:"실시간",poem_title:"시와 꽃",huaxin_title:"24번 화신풍",
+},
+th:{
+  title:"ฮวาซินเฟิง",subtitle:"ตามฤดูกาลของธรรมชาติ · ตามหาสีสันของจีน",
+  tab_map:"ฤดูกาล",tab_species:"พรรณไม้",tab_nearby:"ใกล้เคียง",
+  current:"ปัจจุบัน",yearly:"ทั้งปี",future:"กำลังมา",month1:"1 เดือน",month3:"3 เดือน",halfyr:"6 เดือน",
+  blooming:"บานสะพรั่ง",early:"เริ่มบาน",budding:"ตูมตูม",faded:"โรยแล้ว",ending:"ใกล้โรย",growing:"กำลังโต",
+  pred_title:"คาดการณ์จากข้อมูล 3 ปี",pred_bloom:"คาดว่าบาน",pred_hist:"ข้อมูลย้อนหลัง",pred_conf:"ความแม่น",
+  near_high:"ใกล้บานแล้ว!",arrived:"ถึงแล้ว",days_later:"วัน",
+  fav:"บันทึก",faved:"บันทึกแล้ว",checkin:"เช็คอิน",checked:"เช็คแล้ว",trip_add:"เพิ่มในทริป",trip_added:"เพิ่มแล้ว",
+  share:"แชร์",mfw:"ดูรายละเอียด",notes:"บันทึก",notes_empty:"ยังไม่มีบันทึก",note_ph:"เขียนบันทึก...",send:"ส่ง",
+  trip:"แผนเที่ยว",trip_stops:"จุด",trip_total:"รวม~",trip_share:"แชร์ทริป",trip_clear:"ล้าง",trip_empty:"ยังไม่มีจุด",
+  mood:"ดวงดอกไม้",mood_title:"ดวงดอกไม้ประจำวัน",mood_draw:"เสี่ยงทาย",mood_drawing:"กำลังเสี่ยง...",mood_got:"ดวงวันนี้",mood_share:"แชร์",
+  search_ph:"ค้นหาสถานที่หรือดอกไม้...",scroll_hint:"ลากเพื่อเปิด",enter:"เข้าเลย",
+  rank:"อันดับดอกไม้",nearby_title:"ดอกไม้ใกล้ๆ",
+  guide:"คู่มือเที่ยว",guide_title:"คู่มือเที่ยวชมดอกไม้จีน",
+  at:"อุณหภูมิสะสม",threshold:"เกณฑ์",real:"เรียลไทม์",sim:"ประมาณ",suggest:"เคล็ดลับ",
+  overview:"ภาพรวม",region_ne:"ตอ.เฉียงเหนือ",region_n:"เหนือ",region_nw:"ตต.เฉียงเหนือ",region_e:"ตะวันออก",region_c:"กลาง",region_sw:"ตต.เฉียงใต้",region_s:"ใต้",region_t:"ทิเบต",
+  close:"ปิด",confirm:"ยืนยัน",cancel:"ยกเลิก",retry:"ลองใหม่",refresh:"รีเฟรช",loading:"กำลังโหลด",skip:"ข้าม",next:"ถัดไป",prev:"ก่อนหน้า",done:"เสร็จ",view:"ดู",submit:"ส่ง",copy:"คัดลอก",copied:"คัดลอกแล้ว",delete:"ลบ",edit:"แก้ไข",reset:"รีเซ็ต",back_to_overview:"ดูทั้งหมด",
+  diary_title:"บันทึกดอกไม้",diary_empty:"ยังไม่มีบันทึก",diary_hint:"แตะจุดบนแผนที่เพื่อเช็คอิน",
+  wiki_alias:"ชื่ออื่น",wiki_family:"วงศ์",wiki_origin:"ถิ่นกำเนิด",wiki_story:"วัฒนธรรม",wiki_care:"การดูแล",wiki_flang:"ความหมาย",
+  sub_title:"แจ้งเตือนดอกบาน",sub_empty:"ไม่มีการสมัคร",sub_hint:"สมัครจากรายการโปรด",sub_notify_on:"เปิดการแจ้งเตือน",sub_enable:"เปิดการแจ้งเตือน",
+  checkin_title:"เช็คอินประจำวัน",puzzle_title:"จิ๊กซอว์ดอกไม้",calendar_title:"ปฏิทินดอกไม้",dashboard_title:"ภาพรวม",
+  ai_title:"AI ผู้ช่วย",ai_placeholder:"ถามเกี่ยวกับดอกไม้...",feed_title:"ชุมชน",feed_empty:"ไม่มีโพสต์",
+  recommend_title:"สำหรับคุณ",crowd_title:"รายงานสด",poem_title:"กวีกับดอกไม้",huaxin_title:"24 ลมดอกไม้",
+},
+ru:{
+  title:"Хуасиньфэн",subtitle:"Следуй ритму природы · Лови краски Китая",
+  tab_map:"Сезон",tab_species:"Виды",tab_nearby:"Рядом",
+  current:"Сейчас",yearly:"Весь год",future:"Скоро",month1:"1 месяц",month3:"3 месяца",halfyr:"6 месяцев",
+  blooming:"Полный расцвет",early:"Начало",budding:"В бутонах",faded:"Отцвели",ending:"Поздний",growing:"Растут",
+  pred_title:"Прогноз по 3 годам",pred_bloom:"Пик цветения",pred_hist:"История",pred_conf:"Точность",
+  near_high:"Скоро!",arrived:"Наступил",days_later:"дн.",
+  fav:"Сохранить",faved:"Сохранено",checkin:"Отметиться",checked:"Отмечено",trip_add:"В маршрут",trip_added:"Добавлено",
+  share:"Поделиться",mfw:"Подробнее",notes:"Заметки",notes_empty:"Нет заметок",note_ph:"Написать...",send:"Отпр.",
+  trip:"Маршрут",trip_stops:"мест",trip_total:"Всего~",trip_share:"Поделиться",trip_clear:"Очистить",trip_empty:"Пусто",
+  mood:"Гадание",mood_title:"Цветочное гадание",mood_draw:"Тянуть",mood_drawing:"Тянем...",mood_got:"Сегодня",mood_share:"Поделиться",
+  search_ph:"Поиск мест или цветов...",scroll_hint:"Потяните свиток",enter:"Войти",
+  rank:"Топ цветов",nearby_title:"Цветы рядом",
+  guide:"Гид",guide_title:"Гид по цветам Китая",
+  at:"Накопл.темп.",threshold:"Порог",real:"Live",sim:"Прогноз",suggest:"Совет",
+  overview:"Весь",region_ne:"СВ",region_n:"С",region_nw:"СЗ",region_e:"В",region_c:"Центр",region_sw:"ЮЗ",region_s:"Ю",region_t:"Тибет",
+  close:"Закрыть",confirm:"Подтвердить",cancel:"Отмена",retry:"Повторить",refresh:"Обновить",loading:"Загрузка",skip:"Пропустить",next:"Далее",prev:"Назад",done:"Готово",view:"Смотреть",submit:"Отправить",copy:"Копировать",copied:"Скопировано",delete:"Удалить",edit:"Изменить",reset:"Сброс",back_to_overview:"К обзору",
+  diary_title:"Мой дневник",diary_empty:"Нет записей",diary_hint:"Нажмите на место на карте",
+  wiki_alias:"Названия",wiki_family:"Семейство",wiki_origin:"Происхождение",wiki_story:"Культура",wiki_care:"Уход",wiki_flang:"Значение",
+  sub_title:"Уведомления",sub_empty:"Нет подписок",sub_hint:"Подпишитесь из избранного",sub_notify_on:"Уведомления вкл.",sub_enable:"Включить",
+  checkin_title:"Ежедневный вход",puzzle_title:"Пазл цветов",calendar_title:"Календарь",dashboard_title:"Обзор",
+  ai_title:"AI помощник",ai_placeholder:"Спросите о цветах...",feed_title:"Сообщество",feed_empty:"Нет постов",
+  recommend_title:"Для вас",crowd_title:"Live отчёты",poem_title:"Поэзия цветов",huaxin_title:"24 ветра цветов",
+},
+de:{
+  title:"Huaxinfeng",subtitle:"Folge dem Rhythmus der Natur · Jage Chinas Farben",
+  tab_map:"Saison",tab_species:"Arten",tab_nearby:"Nähe",
+  current:"Jetzt",yearly:"Ganzjährig",future:"Bald",month1:"1 Monat",month3:"3 Monate",halfyr:"6 Monate",
+  blooming:"In voller Blüte",early:"Frühblüte",budding:"Knospend",faded:"Verwelkt",ending:"Spätblüte",growing:"Wachsend",
+  pred_title:"3-Jahres Prognose",pred_bloom:"Blütehöhepunkt",pred_hist:"Historie",pred_conf:"Genauigkeit",
+  near_high:"Bald!",arrived:"Angekommen",days_later:"Tage",
+  fav:"Speichern",faved:"Gespeichert",checkin:"Einchecken",checked:"Eingecheckt",trip_add:"Hinzufügen",trip_added:"Hinzugefügt",
+  share:"Teilen",mfw:"Details ansehen",notes:"Notizen",notes_empty:"Keine Notizen",note_ph:"Notiz schreiben...",send:"Senden",
+  trip:"Reiseplan",trip_stops:"Stopps",trip_total:"Gesamt~",trip_share:"Teilen",trip_clear:"Löschen",trip_empty:"Leer",
+  mood:"Orakel",mood_title:"Tagesblumenorakel",mood_draw:"Ziehen",mood_drawing:"Ziehe...",mood_got:"Heute",mood_share:"Teilen",
+  search_ph:"Orte oder Blumen suchen...",scroll_hint:"Rollen ziehen",enter:"Direkt betreten",
+  rank:"Top Blumen",nearby_title:"Blumen in der Nähe",
+  guide:"Reiseführer",guide_title:"China Blumenführer",
+  at:"Wärmesumme",threshold:"Schwelle",real:"Live",sim:"Geschätzt",suggest:"Tipp",
+  overview:"Alle",region_ne:"NO",region_n:"N",region_nw:"NW",region_e:"O",region_c:"Mitte",region_sw:"SW",region_s:"S",region_t:"Tibet",
+  close:"Schließen",confirm:"Bestätigen",cancel:"Abbrechen",retry:"Wiederholen",refresh:"Aktualisieren",loading:"Lädt",skip:"Überspringen",next:"Weiter",prev:"Zurück",done:"Fertig",view:"Ansehen",submit:"Absenden",copy:"Kopieren",copied:"Kopiert",delete:"Löschen",edit:"Bearbeiten",reset:"Zurücksetzen",back_to_overview:"Gesamtansicht",
+  diary_title:"Mein Tagebuch",diary_empty:"Keine Einträge",diary_hint:"Tippen Sie einen Ort auf der Karte",
+  wiki_alias:"Synonyme",wiki_family:"Familie",wiki_origin:"Herkunft",wiki_story:"Kultur",wiki_care:"Pflege",wiki_flang:"Bedeutung",
+  sub_title:"Blüte-Alarme",sub_empty:"Keine Abos",sub_hint:"Aus Favoriten abonnieren",sub_notify_on:"Benachrichtigungen an",sub_enable:"Aktivieren",
+  checkin_title:"Tägl. Check-in",puzzle_title:"Blumen-Puzzle",calendar_title:"Blumenkalender",dashboard_title:"Übersicht",
+  ai_title:"KI-Assistent",ai_placeholder:"Fragen zu Blumen...",feed_title:"Community",feed_empty:"Keine Beiträge",
+  recommend_title:"Für Sie",crowd_title:"Live-Berichte",poem_title:"Poesie & Blumen",huaxin_title:"24 Blumenwinde",
+},
+fr:{
+  title:"Huaxinfeng",subtitle:"Suivre le rythme de la nature · Poursuivre les couleurs de Chine",
+  tab_map:"Saison",tab_species:"Espèces",tab_nearby:"À proximité",
+  current:"Maintenant",yearly:"Toute l'année",future:"Bientôt",month1:"1 mois",month3:"3 mois",halfyr:"6 mois",
+  blooming:"En pleine floraison",early:"Début de floraison",budding:"En bouton",faded:"Fanées",ending:"Fin de floraison",growing:"En croissance",
+  pred_title:"Prédiction 3 ans",pred_bloom:"Pic de floraison",pred_hist:"Historique",pred_conf:"Précision",
+  near_high:"Imminent!",arrived:"Arrivée",days_later:"jours",
+  fav:"Enregistrer",faved:"Enregistré",checkin:"S'enregistrer",checked:"Enregistré",trip_add:"Ajouter",trip_added:"Ajouté",
+  share:"Partager",mfw:"Voir détails",notes:"Notes",notes_empty:"Aucune note",note_ph:"Écrire une note...",send:"Envoyer",
+  trip:"Itinéraire",trip_stops:"arrêts",trip_total:"Total~",trip_share:"Partager",trip_clear:"Effacer",trip_empty:"Vide",
+  mood:"Oracle",mood_title:"Oracle floral du jour",mood_draw:"Tirer",mood_drawing:"Tirage...",mood_got:"Aujourd'hui",mood_share:"Partager",
+  search_ph:"Chercher lieux ou fleurs...",scroll_hint:"Tirer le parchemin",enter:"Entrer",
+  rank:"Top Fleurs",nearby_title:"Fleurs à proximité",
+  guide:"Guide",guide_title:"Guide floral de Chine",
+  at:"Temp.cumulée",threshold:"Seuil",real:"Direct",sim:"Estimé",suggest:"Astuce",
+  overview:"Tout",region_ne:"NE",region_n:"N",region_nw:"NO",region_e:"E",region_c:"Centre",region_sw:"SO",region_s:"S",region_t:"Tibet",
+  close:"Fermer",confirm:"Confirmer",cancel:"Annuler",retry:"Réessayer",refresh:"Actualiser",loading:"Chargement",skip:"Passer",next:"Suivant",prev:"Retour",done:"Terminé",view:"Voir",submit:"Envoyer",copy:"Copier",copied:"Copié",delete:"Supprimer",edit:"Modifier",reset:"Réinitialiser",back_to_overview:"Vue d'ensemble",
+  diary_title:"Mon Journal",diary_empty:"Aucun enregistrement",diary_hint:"Touchez un lieu sur la carte",
+  wiki_alias:"Synonymes",wiki_family:"Famille",wiki_origin:"Origine",wiki_story:"Culture",wiki_care:"Entretien",wiki_flang:"Signification",
+  sub_title:"Alertes floraison",sub_empty:"Aucun abonnement",sub_hint:"Abonnez-vous depuis vos favoris",sub_notify_on:"Notifications activées",sub_enable:"Activer",
+  checkin_title:"Check-in quotidien",puzzle_title:"Puzzle floral",calendar_title:"Calendrier floral",dashboard_title:"Vue d'ensemble",
+  ai_title:"Assistant IA",ai_placeholder:"Posez une question sur les fleurs...",feed_title:"Communauté",feed_empty:"Aucune publication",
+  recommend_title:"Pour vous",crowd_title:"Rapports live",poem_title:"Poésie & fleurs",huaxin_title:"24 vents des fleurs",
 },
 };
 
@@ -993,28 +1118,19 @@ function MusicPlayer(){
   },[show,selInst,ti,playing,filteredTracks.length]);
 
   if(!show)return(
-    <button onClick={()=>setShow(true)} title={playing?t.name+" · "+INST_LABEL[t.inst]:"国乐"}
-      style={{position:"absolute",bottom:80,right:8,zIndex:36,
-      border:playing?"2px solid "+C.accent:"1.5px solid #e0dcd4",borderRadius:28,
-      padding:playing?"6px 12px 6px 8px":"8px 10px",cursor:"pointer",
+    <button onClick={()=>setShow(true)} title={playing?t.name+" · "+INST_LABEL[t.inst]:"🎵 国乐"}
+      style={{position:"absolute",bottom:140,right:12,zIndex:36,
+      width:40,height:40,borderRadius:"50%",
+      border:playing?"2px solid "+C.accent:"1.5px solid #e0dcd4",
+      cursor:"pointer",padding:0,
       background:"rgba(250,245,237,.98)",boxShadow:"0 3px 12px rgba(0,0,0,.08)",
-      display:"flex",alignItems:"center",gap:playing?8:0,minHeight:48}}>
-      <div style={{position:"relative"}}>
-        <InstrIcon type={playing?t.inst:"guqin"} sz={32}/>
-        {playing&&<div style={{position:"absolute",top:-3,right:-3,width:10,height:10,borderRadius:"50%",
-          background:C.accent,border:"2px solid #faf5ed"}}></div>}
+      display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{position:"relative",fontSize:18}}>
+        {playing?"🎵":"🎶"}
+        {playing&&<div style={{position:"absolute",top:-4,right:-4,width:8,height:8,borderRadius:"50%",
+          background:C.accent,border:"2px solid #faf5ed",
+          animation:"pulse 1.5s ease-in-out infinite"}}></div>}
       </div>
-      {playing&&<>
-        <div style={{textAlign:"left",minWidth:0,maxWidth:130}}>
-          <div style={{fontSize:12,fontWeight:700,color:C.text,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{t.name}</div>
-          <div style={{fontSize:10,color:C.accent,letterSpacing:1}}>{INST_LABEL[t.inst]} · 正在演奏</div>
-        </div>
-        {/* Audio wave animation */}
-        <div style={{display:"flex",alignItems:"flex-end",gap:2,height:16,marginLeft:2}}>
-          {[0,1,2].map(i=>(<div key={i} style={{width:2,height:8+i*2,background:C.accent,borderRadius:1,
-            animation:"playwave .6s ease-in-out infinite",animationDelay:(i*.15)+"s"}}></div>))}
-        </div>
-      </>}
     </button>);
 
   return(<div style={{position:"absolute",bottom:8,right:8,zIndex:36,
@@ -1169,17 +1285,19 @@ function NatureAmbient(){
     {k:"rain",l:"☔ 细雨",desc:"雨打芭蕉"},
   ];
 
-  return(<div style={{position:"absolute",bottom:66,right:12,zIndex:29,
-    background:"rgba(250,245,237,.95)",borderRadius:10,border:"1px solid #e0dcd4",
-    padding:"6px 8px",boxShadow:"0 2px 8px rgba(0,0,0,.06)",
+  return(<div style={{position:"absolute",bottom:190,right:12,zIndex:29,
+    background:"rgba(250,245,237,.98)",borderRadius:"50%",border:"1.5px solid #e0dcd4",
+    width:playing?"auto":40,height:40,
+    padding:playing?"0 8px 0 6px":"0",boxShadow:"0 3px 12px rgba(0,0,0,.08)",
     display:"flex",alignItems:"center",gap:4}} className="hx-music-mini">
     <button onClick={function(){setPlaying(!playing);}} title={playing?"暂停":"播放自然音"}
       style={{border:"none",background:"transparent",cursor:"pointer",
-        fontSize:14,color:playing?"#5a8a50":"#8a7a68",padding:"2px 4px"}}>
+        fontSize:16,color:playing?"#5a8a50":"#8a7a68",padding:0,
+        width:playing?28:40,height:40,display:"flex",alignItems:"center",justifyContent:"center"}}>
       {playing?"⏸":"🌿"}</button>
     {playing&&<>
       <select value={type} onChange={function(e){setType(e.target.value);}}
-        style={{border:"none",background:"transparent",fontSize:10,color:"#3a2818",
+        style={{border:"none",background:"transparent",fontSize:11,color:"#3a2818",
           cursor:"pointer",outline:"none",padding:"2px"}}>
         {presets.map(function(p){return<option key={p.k} value={p.k}>{p.l}</option>;})}
       </select>
@@ -1276,6 +1394,45 @@ function MoodCard({onClose}){
 
   const draw=async()=>{
     if(stage!=="idle")return;
+    // Play bamboo shake sound (procedural)
+    try{
+      var ac=getAC();var now=ac.currentTime;
+      // Simulate bamboo sticks clattering: multiple short filtered noise bursts at random offsets
+      for(var i=0;i<14;i++){
+        var t=now+Math.random()*1.4;
+        var dur=0.04+Math.random()*0.06;
+        var bufSize=Math.floor(ac.sampleRate*dur);
+        var buf=ac.createBuffer(1,bufSize,ac.sampleRate);
+        var data=buf.getChannelData(0);
+        for(var j=0;j<bufSize;j++){
+          // Fade envelope
+          var env=Math.exp(-j/(bufSize*0.3));
+          data[j]=(Math.random()*2-1)*env*0.5;
+        }
+        var src=ac.createBufferSource();src.buffer=buf;
+        var filter=ac.createBiquadFilter();
+        filter.type="bandpass";
+        filter.frequency.value=1200+Math.random()*1800; // bamboo stick resonance
+        filter.Q.value=3;
+        var g=ac.createGain();g.gain.value=0.25;
+        src.connect(filter);filter.connect(g);g.connect(ac.destination);
+        src.start(t);
+      }
+      // Final soft 'pluck' when one stick pops out at extraction
+      setTimeout(function(){
+        try{
+          var ac2=getAC();var now2=ac2.currentTime;
+          var osc=ac2.createOscillator();var gg=ac2.createGain();
+          osc.type="sine";osc.frequency.setValueAtTime(600,now2);
+          osc.frequency.exponentialRampToValueAtTime(400,now2+0.3);
+          gg.gain.setValueAtTime(0,now2);
+          gg.gain.linearRampToValueAtTime(0.15,now2+0.02);
+          gg.gain.exponentialRampToValueAtTime(0.001,now2+0.35);
+          osc.connect(gg);gg.connect(ac2.destination);
+          osc.start(now2);osc.stop(now2+0.4);
+        }catch(e){}
+      },1500);
+    }catch(e){}
     setStage("shaking");
     setTimeout(()=>{
       setStage("extracting");
@@ -1832,70 +1989,143 @@ function NearbyPanel({spots,sel,setSel,setWz,setWc,t}){
 // ═══ Scroll Landing ═══
 function ScrollLanding({onEnter}){
   const cs=getSeason();const sm=SM[cs];
-  const poems={spring:"桃花一簇开无主\n可爱深红爱浅红",summer:"小荷才露尖尖角\n早有蜻蜓立上头",autumn:"停车坐爱枫林晚\n霜叶红于二月花",winter:"忽如一夜春风来\n千树万树梨花开"};
-  const [dx,setDx]=useState(0);const [dg,setDg]=useState(false);const [en,setEn]=useState(false);const sr=useRef(null);const cr=useRef(null);
-  const [pulse,setPulse]=useState(true);
-  useEffect(()=>{const t=setInterval(()=>setPulse(p=>!p),1500);return()=>clearInterval(t);},[]);
-  const hs=e=>{e.preventDefault();sr.current={x:e.touches?e.touches[0].clientX:e.clientX,d:dx};setDg(true);};
-  const hm=e=>{if(!dg||!sr.current)return;const x=e.touches?e.touches[0].clientX:e.clientX;
-    setDx(Math.max(0,Math.min(1,sr.current.d+(x-sr.current.x)/(((cr.current?cr.current.offsetWidth:600))*.4))));};
-  const he=()=>{setDg(false);if(dx>.5){setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,300);},150);}else setDx(0);};
+  const poems={
+    spring:{t:"桃之夭夭，灼灼其华",s:"《诗经·周南·桃夭》"},
+    summer:{t:"小荷才露尖尖角，早有蜻蜓立上头",s:"杨万里《小池》"},
+    autumn:{t:"停车坐爱枫林晚，霜叶红于二月花",s:"杜牧《山行》"},
+    winter:{t:"忽如一夜春风来，千树万树梨花开",s:"岑参《白雪歌》"}
+  };
+  const seasonNames={spring:"春",summer:"夏",autumn:"秋",winter:"冬"};
+  const [fadeOut,setFadeOut]=useState(false);
+  const [showEnterBtn,setShowEnterBtn]=useState(false);
+  const [mouseMoved,setMouseMoved]=useState(false);
+
+  useEffect(()=>{
+    const t1=setTimeout(()=>setShowEnterBtn(true),1200);
+    return()=>clearTimeout(t1);
+  },[]);
+
+  const doEnter=()=>{
+    setFadeOut(true);
+    setTimeout(onEnter,500);
+  };
+
   // 千里江山图色调
-  const qp={spring:{s:"#e8dcd0",m1:"#3a6b5a",m2:"#4a8a6a",w:"#6aaab0",t:"#d4756b"},
-    summer:{s:"#d8d4c0",m1:"#2a5a48",m2:"#3a7858",w:"#5898a0",t:"#5a8a50"},
-    autumn:{s:"#e0d0b8",m1:"#8a6a30",m2:"#a08040",w:"#7090a0",t:"#c8703a"},
-    winter:{s:"#e0dcd8",m1:"#6a7a80",m2:"#8a9098",w:"#8aa0b0",t:"#6a8aaa"}}[cs];
-  return(<div ref={cr} style={{position:"fixed",inset:0,zIndex:200,
-    background:"linear-gradient(180deg,"+qp.s+","+qp.s+"dd,"+qp.s+"aa)",
+  const qp={spring:{s:"#e8dcd0",m1:"#3a6b5a",m2:"#4a8a6a",w:"#6aaab0",t:"#d4756b",accent:"#c0604a"},
+    summer:{s:"#d8d4c0",m1:"#2a5a48",m2:"#3a7858",w:"#5898a0",t:"#5a8a50",accent:"#4a7a40"},
+    autumn:{s:"#e0d0b8",m1:"#8a6a30",m2:"#a08040",w:"#7090a0",t:"#c8703a",accent:"#a85830"},
+    winter:{s:"#e0dcd8",m1:"#6a7a80",m2:"#8a9098",w:"#8aa0b0",t:"#6a8aaa",accent:"#5a78a0"}}[cs];
+  const poem=poems[cs];
+
+  return(<div style={{position:"fixed",inset:0,zIndex:200,
+    background:"linear-gradient(180deg,"+qp.s+","+qp.s+"ee 50%,"+qp.s+"c0)",
     display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-    opacity:en?0:1,transition:"opacity .3s",userSelect:"none",touchAction:"none"
-  }} onPointerMove={hm} onPointerUp={he} onPointerLeave={he} onTouchMove={hm} onTouchEnd={he}>
-    {/* 千里江山图风格 SVG 背景 */}
-    <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" style={{position:"absolute",bottom:0,left:0,width:"100%",height:"55%",opacity:.25}}>
-      <defs><linearGradient id="lmist" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={qp.s} stopOpacity="1"/><stop offset="100%" stopColor={qp.s} stopOpacity="0"/></linearGradient></defs>
-      {/* Far mountains - 千里江山图 的层叠远山 */}
-      <path d="M0,280 Q100,180 200,220 T400,160 T600,200 T800,150 T1000,190 T1200,170 L1200,400 L0,400Z" fill={qp.m1} opacity=".15"/>
-      <path d="M0,300 Q150,200 300,250 T500,190 T700,230 T900,180 T1100,210 L1200,220 L1200,400 L0,400Z" fill={qp.m2} opacity=".2"/>
-      {/* Near mountains with peaks */}
-      <path d="M0,340 Q80,260 180,290 T350,240 T500,280 T650,230 T800,270 T950,240 T1100,260 L1200,280 L1200,400 L0,400Z" fill={qp.m1} opacity=".25"/>
-      {/* Water and mist */}
-      <rect x="0" y="350" width="1200" height="50" fill={qp.w} opacity=".12"/>
-      <rect x="0" y="250" width="1200" height="60" fill="url(#lmist)" opacity=".3"/>
-      {/* Scattered trees */}
-      {[100,250,420,580,750,900,1050].map((x,i)=><circle key={i} cx={x} cy={310+Math.sin(i*2.3)*15} r={6+Math.sin(i*1.7)*3} fill={qp.t} opacity=".15"/>)}
-      {/* Boats on water (春江) */}
-      {cs==="spring"&&<><path d="M300,365 Q310,358 320,365" stroke={qp.m1} strokeWidth="1" fill="none" opacity=".2"/><line x1="310" y1="358" x2="310" y2="348" stroke={qp.m1} strokeWidth=".5" opacity=".15"/></>}
-      {/* Flying birds */}
-      {[400,450,480].map((x,i)=><path key={"b"+i} d={`M${x},${120+i*8} q5,-4 10,0 q5,4 10,0`} stroke={qp.m1} strokeWidth=".8" fill="none" opacity=".12"/>)}
+    opacity:fadeOut?0:1,transition:"opacity .5s",userSelect:"none",cursor:"pointer",
+    overflow:"hidden"}} onClick={doEnter}>
+    {/* 千里江山图 SVG 背景 - 更优雅的全景 */}
+    <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice"
+      style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:.35}}>
+      <defs>
+        <linearGradient id="skymist" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={qp.s} stopOpacity="0"/>
+          <stop offset="100%" stopColor={qp.s} stopOpacity=".6"/>
+        </linearGradient>
+        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={qp.w} stopOpacity=".3"/>
+          <stop offset="100%" stopColor={qp.w} stopOpacity=".1"/>
+        </linearGradient>
+      </defs>
+      {/* Sky gradient */}
+      <rect x="0" y="0" width="1200" height="400" fill="url(#skymist)" opacity=".5"/>
+      {/* Far distant mountains - layered */}
+      <path d="M0,420 Q120,340 240,370 T480,320 T720,350 T960,310 T1200,340 L1200,800 L0,800Z" fill={qp.m1} opacity=".2"/>
+      <path d="M0,470 Q150,380 300,410 T600,360 T900,390 T1200,370 L1200,800 L0,800Z" fill={qp.m2} opacity=".3"/>
+      {/* Mid mountains with more peaks */}
+      <path d="M0,520 Q100,430 200,460 T400,410 T600,450 T800,400 T1000,440 T1200,420 L1200,800 L0,800Z" fill={qp.m1} opacity=".4"/>
+      {/* Near mountains - sharper */}
+      <path d="M0,600 Q100,510 200,540 T380,490 T560,530 T740,480 T920,520 T1100,500 L1200,520 L1200,800 L0,800Z" fill={qp.m2} opacity=".5"/>
+      {/* Water area */}
+      <rect x="0" y="640" width="1200" height="160" fill="url(#water)"/>
+      {/* Boat silhouettes on water */}
+      <g opacity=".4">
+        <path d="M400,680 Q415,672 430,680" stroke={qp.m1} strokeWidth="1.5" fill="none"/>
+        <line x1="415" y1="672" x2="415" y2="658" stroke={qp.m1} strokeWidth=".8"/>
+        <path d="M780,695 Q792,688 804,695" stroke={qp.m1} strokeWidth="1.2" fill="none"/>
+      </g>
+      {/* Scattered trees/flowers */}
+      {[{x:150,y:570,r:10},{x:320,y:600,r:8},{x:500,y:580,r:12},
+        {x:680,y:595,r:9},{x:860,y:570,r:11},{x:1050,y:590,r:10}].map((p,i)=>
+        <g key={i} opacity=".5">
+          <circle cx={p.x} cy={p.y} r={p.r} fill={qp.t}/>
+          <line x1={p.x} y1={p.y+p.r} x2={p.x} y2={p.y+p.r+8} stroke={qp.m1} strokeWidth="1.5"/>
+        </g>)}
+      {/* Birds in distance */}
+      {[{x:300,y:180},{x:360,y:160},{x:420,y:190},{x:800,y:170},{x:850,y:200}].map((p,i)=>
+        <path key={"b"+i} d={"M"+p.x+","+p.y+" q5,-3 10,0 q5,3 10,0"}
+          stroke={qp.m1} strokeWidth="1.2" fill="none" opacity=".4"/>)}
+      {/* Mist layers */}
+      <rect x="0" y="500" width="1200" height="80" fill={qp.s} opacity=".3"/>
+      <rect x="0" y="620" width="1200" height="60" fill={qp.s} opacity=".4"/>
     </svg>
-    {/* Title */}
-    <div style={{marginBottom:18,textAlign:"center",opacity:1-dx*1.5,transition:dg?"none":"all .3s",position:"relative",zIndex:2}}>
-      <div style={{fontSize:"min(42px,8vw)",fontWeight:900,color:C.text,letterSpacing:12}}>花信风</div>
-      <div style={{fontSize:"min(13px,3vw)",color:C.tl,letterSpacing:4,marginTop:6}}>跟着天地节律 · 追一场中国色</div></div>
-    {/* Scroll */}
-    <div style={{position:"relative",width:"min(460px,80vw)",height:"min(140px,20vh)",zIndex:2}}>
-      <div style={{position:"absolute",left:0,top:0,bottom:0,width:16,borderRadius:8,background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"2px 0 6px rgba(0,0,0,.15)",zIndex:5}}/>
-      <div style={{position:"absolute",left:16,right:16,top:0,bottom:0,overflow:"hidden"}}>
-        <div style={{position:"absolute",left:0,top:0,bottom:0,width:(dx*100)+"%",
-          background:"linear-gradient(180deg,#f8f2e8,#f0e8dc,#f8f2e8)",
-          transition:dg?"none":"width .3s",display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-          {dx>.2&&<div style={{textAlign:"center",padding:10,opacity:Math.min(1,(dx-.2)*3),whiteSpace:"pre-line",minWidth:180}}>
-            <div style={{fontSize:"min(14px,3.5vw)",color:sm.c,letterSpacing:4,lineHeight:2.2}}>{poems[cs]}</div></div>}</div></div>
-      <div onPointerDown={hs} onTouchStart={hs}
-        style={{position:"absolute",left:(12+dx*66)+"%",top:0,bottom:0,width:16,borderRadius:8,
-          background:"linear-gradient(90deg,#a07848,#c8a070,#b89060,#a07848)",boxShadow:"-2px 0 6px rgba(0,0,0,.15)",
-          cursor:"grab",transition:dg?"none":"all .3s",zIndex:5}}/></div>
-    {/* Animated hint */}
-    <div style={{marginTop:14,display:"flex",alignItems:"center",gap:8,zIndex:2,
-      opacity:dx>0?0.2:0.6,transition:"opacity .3s"}}>
-      <span style={{fontSize:16,transform:pulse?"translateX(-4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☞</span>
-      <span style={{fontSize:13,color:C.tl,letterSpacing:4}}>拖动卷轴，展开花事</span>
-      <span style={{fontSize:16,transform:pulse?"translateX(4px)":"translateX(0)",transition:"transform .4s",color:C.tl}}>☜</span>
+
+    {/* Season indicator top */}
+    <div style={{position:"absolute",top:"min(50px,8vh)",right:"min(40px,6vw)",
+      zIndex:3,opacity:.7,textAlign:"right",
+      animation:"fadeInDown .8s ease .3s both"}}>
+      <div style={{fontSize:"min(11px,2.5vw)",color:qp.m1,letterSpacing:3}}>
+        {new Date().getFullYear()} · {sm.i}</div>
+      <div style={{fontSize:"min(32px,7vw)",fontWeight:900,color:qp.accent,
+        letterSpacing:4,lineHeight:1,marginTop:4}}>{seasonNames[cs]}</div>
     </div>
-    <button onClick={()=>{setDx(1);setTimeout(()=>{setEn(true);setTimeout(onEnter,200);},100);}}
-      style={{position:"absolute",bottom:"min(20px,4vh)",border:"none",background:"transparent",
-        cursor:"pointer",fontSize:12,color:C.tl,opacity:0.35,letterSpacing:3,zIndex:2}}>
-      {"直接进入"}</button>
+
+    {/* Main title */}
+    <div style={{position:"relative",zIndex:3,textAlign:"center",
+      animation:"fadeIn 1s ease .4s both"}}>
+      <div style={{fontSize:"min(14px,3vw)",color:qp.m1,letterSpacing:12,marginBottom:20,opacity:.8}}>
+        · 花 · 信 · 风 ·</div>
+      <h1 style={{fontSize:"min(72px,14vw)",fontWeight:900,color:C.text,
+        letterSpacing:"min(20px,4vw)",margin:0,lineHeight:1.1,
+        textShadow:"2px 2px 4px rgba(255,255,255,.4)"}}>花信风</h1>
+      <div style={{fontSize:"min(14px,3vw)",color:C.tl,letterSpacing:"min(8px,2vw)",
+        marginTop:16,fontStyle:"italic"}}>
+        应花期而来的风也</div>
+    </div>
+
+    {/* Seasonal poem */}
+    <div style={{position:"relative",zIndex:3,marginTop:"min(60px,10vh)",
+      textAlign:"center",maxWidth:"80vw",
+      animation:"fadeIn 1s ease .8s both"}}>
+      <div style={{fontSize:"min(20px,4.5vw)",color:qp.m1,letterSpacing:"min(6px,1.5vw)",
+        lineHeight:2,fontFamily:"'Noto Serif SC',serif"}}>
+        {poem.t}</div>
+      <div style={{fontSize:"min(12px,2.8vw)",color:qp.m2,letterSpacing:3,marginTop:16,opacity:.7}}>
+        — {poem.s}</div>
+    </div>
+
+    {/* Enter button */}
+    {showEnterBtn&&<button onClick={doEnter}
+      style={{position:"relative",zIndex:3,marginTop:"min(80px,12vh)",
+        padding:"14px 40px",borderRadius:40,cursor:"pointer",
+        border:"1.5px solid "+qp.m1+"66",background:"rgba(255,255,255,.6)",
+        color:qp.m1,fontSize:"min(14px,3vw)",letterSpacing:"min(8px,2vw)",
+        fontFamily:"'Noto Serif SC',serif",fontWeight:600,
+        backdropFilter:"blur(8px)",
+        boxShadow:"0 4px 20px "+qp.m1+"22",
+        animation:"fadeInUp .6s ease both, pulse2 2.5s ease-in-out infinite 1.5s"}}>
+      入 山 探 花 →</button>}
+
+    <style>{`
+      @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+      @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px)}to{opacity:.7;transform:translateY(0)}}
+      @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes pulse2{0%,100%{box-shadow:0 4px 20px ${qp.m1}22}50%{box-shadow:0 6px 28px ${qp.m1}44}}
+    `}</style>
+
+    {/* Footer hint */}
+    <div style={{position:"absolute",bottom:"min(30px,5vh)",zIndex:3,
+      fontSize:"min(10px,2.5vw)",color:qp.m2,letterSpacing:4,opacity:.5,
+      animation:"fadeIn 1s ease 1.5s both"}}>
+      点击任意处进入</div>
   </div>);
 }
 
@@ -2171,14 +2401,14 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin,onShow
         {pred&&<div style={{margin:"0 0 14px",padding:"14px 16px",background:"#fdf8f2",borderRadius:8,
           border:"1px solid #e8ddd0"}}>
           <div style={{fontSize:14,fontWeight:700,color:C.accent,marginBottom:6,display:"flex",alignItems:"center",gap:4}}>
-            <span style={{fontSize:16}}>🔮</span> 基于3年数据预测</div>
-          <div style={{fontSize:16,color:C.text,lineHeight:1.6}}>预测盛花期：
+            <span style={{fontSize:16}}>🔮</span> 三载物候 · 积温推算</div>
+          <div style={{fontSize:16,color:C.text,lineHeight:1.6}}>花期将至：
             <strong style={{fontSize:18,color:"#2a1e10"}}>{pred.dateStr}</strong>
-            {pred.daysUntil>0?<span style={{color:C.accent,fontWeight:600}}>{" "}({pred.daysUntil}天后)</span>
-              :<span style={{color:"#2a7a40",fontWeight:600}}>{" "}(已到/已过)</span>}</div>
+            {pred.daysUntil>0?<span style={{color:C.accent,fontWeight:600}}>{" "}({pred.daysUntil}日后)</span>
+              :<span style={{color:"#2a7a40",fontWeight:600}}>{" "}(花已开)</span>}</div>
           <div style={{fontSize:12,color:C.tl,marginTop:6,lineHeight:1.5}}>
-            历史数据：{(s.hist||[]).join(" / ")} · 置信度 <strong>{pred.confidence}%</strong>
-            {pred.daysUntil<15&&pred.daysUntil>0&&<span style={{color:C.accent,fontWeight:700}}>{" "}← 临近！精度高</span>}
+            往年花期：{(s.hist||[]).join(" / ")} · 预测精度 <strong>{pred.confidence}%</strong>
+            {pred.daysUntil<15&&pred.daysUntil>0&&<span style={{color:C.accent,fontWeight:700}}>{" "}← 将至 · 精准</span>}
           </div>
         </div>}
         {/* Progress bar */}
@@ -2255,12 +2485,12 @@ function Card({s,onClose,isFav,onFav,inTrip,onAddTrip,isChecked,onCheckin,onShow
                   borderRadius:6,fontSize:11,color:"#3a2818",textDecoration:"none",
                   border:"1px solid #e0dcd4",fontWeight:600}}>
                 🗺 高德地图</a>
-              <a href={"https://map.baidu.com/?latlng="+s.lat+","+s.lon+"&title="+encodeURIComponent(s.n)}
+              <a href={"https://www.google.com/maps/search/?api=1&query="+s.lat+","+s.lon}
                 target="_blank" rel="noopener noreferrer"
                 style={{flex:1,textAlign:"center",padding:"6px 10px",background:"#f0ece4",
                   borderRadius:6,fontSize:11,color:"#3a2818",textDecoration:"none",
                   border:"1px solid #e0dcd4",fontWeight:600}}>
-                🗺 百度地图</a>
+                🗺 Google Maps</a>
             </div>
           </div>);
         })()}
@@ -4329,9 +4559,9 @@ function DailyCheckin({onClose,user}){
         background:"linear-gradient(135deg,#fdf8f0,#f0e8d4)"}}>
         <div style={{fontSize:12,color:"#b08040",letterSpacing:6,marginBottom:4}}>{"· 每 日 签 到 ·"}</div>
         <div style={{fontSize:28,fontWeight:900,color:"#c06040",letterSpacing:2}}>
-          {streak>0?streak+" 天":"开启花事之旅"}</div>
+          {streak>0?streak+" 天 · 不负花期":"结缘花信 · 从今日始"}</div>
         <div style={{fontSize:11,color:"#8a7a60",marginTop:4}}>
-          {claimed?"今日已签 · 明天再来":"点击下方按钮签到"}</div>
+          {claimed?"今日已签 · 明日再续前缘":"轻触一下，开启花事"}</div>
         {/* Streak visualization */}
         <div style={{display:"flex",justifyContent:"center",gap:4,marginTop:14}}>
           {[1,2,3,4,5,6,7].map(function(d){
@@ -4374,7 +4604,7 @@ function DailyCheckin({onClose,user}){
             style={{flex:1,border:"1.5px solid #e0dcd4",background:"transparent",
               color:"#8a7a68",borderRadius:10,padding:"12px",cursor:"pointer",
               fontSize:13,fontWeight:600,letterSpacing:2}}>
-            明日再来 👋</button>}
+            明日再续 👋</button>}
       </div>
     </div>
   </div>);
@@ -4445,6 +4675,7 @@ function LoginPanel({onLogin,onClose}){
   var [countdown,setCountdown]=useState(0);
   var [nick,setNick]=useState("");
   var [step,setStep]=useState(1); // 1=phone input, 2=code verify, 3=set nickname
+  var [showTerms,setShowTerms]=useState(null); // null | "terms" | "privacy"
 
   // Countdown timer
   useEffect(function(){
@@ -4607,7 +4838,86 @@ function LoginPanel({onLogin,onClose}){
       {/* Footer */}
       <div style={{padding:"0 30px 18px",textAlign:"center"}}>
         <div style={{fontSize:10,color:"#c0b8a8",lineHeight:1.6}}>
-          登录即表示同意《花信风用户协议》和《隐私政策》</div>
+          登录即表示同意<span onClick={function(){setShowTerms("terms");}}
+            style={{color:"#c06040",cursor:"pointer",textDecoration:"underline"}}>《花信风用户协议》</span>
+          和<span onClick={function(){setShowTerms("privacy");}}
+            style={{color:"#c06040",cursor:"pointer",textDecoration:"underline"}}>《隐私政策》</span></div>
+        {/* Terms & Privacy Modal (inline, non-navigating) */}
+        {showTerms&&<div onClick={function(){setShowTerms(null);}}
+          style={{position:"absolute",inset:0,background:"rgba(20,15,10,.85)",zIndex:10,
+            display:"flex",alignItems:"center",justifyContent:"center",padding:20,borderRadius:14}}>
+          <div onClick={function(e){e.stopPropagation();}}
+            style={{width:"100%",maxHeight:"100%",background:"#faf6ef",borderRadius:10,
+              overflow:"hidden",display:"flex",flexDirection:"column",
+              boxShadow:"0 8px 40px rgba(0,0,0,.4)"}}>
+            <div style={{padding:"14px 18px",borderBottom:"1px solid #ece6dc",
+              display:"flex",justifyContent:"space-between",alignItems:"center",
+              background:"linear-gradient(180deg,#faf6ef,#f2ebd8)"}}>
+              <div>
+                <div style={{fontSize:10,color:"#b08040",letterSpacing:4}}>{showTerms==="terms"?"· 用户协议 ·":"· 隐私政策 ·"}</div>
+                <h3 style={{fontSize:15,fontWeight:900,color:"#2a2018",letterSpacing:4,margin:"4px 0 0"}}>
+                  {showTerms==="terms"?"花信风用户协议":"隐私政策"}</h3>
+              </div>
+              <button onClick={function(){setShowTerms(null);}}
+                style={{border:"none",background:"rgba(0,0,0,.08)",color:"#3a2818",
+                  cursor:"pointer",fontSize:14,width:26,height:26,borderRadius:"50%"}}>×</button>
+            </div>
+            <div style={{flex:1,overflow:"auto",padding:"16px 22px",fontSize:12,color:"#3a2818",lineHeight:1.9}}>
+              {showTerms==="terms"?<>
+                <div style={{fontSize:11,color:"#8a7a68",marginBottom:10}}>
+                  更新日期：2026年4月 · 版本 v1.0</div>
+                <p style={{marginBottom:12,color:"#5a4a38"}}>
+                  欢迎使用花信风。本应用是一款基于中国传统物候学的赏花地图工具，为您提供花期预测、景点推荐、文化赏析等服务。请您在使用前仔细阅读本协议。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>一、服务内容</div>
+                <p>花信风为您提供：全国 408 个赏花景点的花期预测；二十四番花信风及七十二候全年物候资料；花卉百科、诗词鉴赏；打卡、成就、社交分享等功能。服务完全免费，无广告植入。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>二、用户行为规范</div>
+                <p>使用花信风时，您应遵守中华人民共和国相关法律法规。不得发布违法、淫秽、暴力、歧视、侵权或虚假信息。发布内容版权归您所有，但授权花信风在平台内展示。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>三、知识产权</div>
+                <p>花信风应用的文案、界面、程序代码、花期数据等著作权均归开发者所有。古诗词、地图数据等引用自公有领域或公开数据源。未经授权不得商用复制。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>四、数据准确性说明</div>
+                <p>花期预测基于积温模型和历史数据，仅供参考。实际花期受天气、物候、园艺管理等因素影响，存在偏差。请以景区官方公告为准。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>五、服务变更与终止</div>
+                <p>花信风保留随时调整或停止部分功能的权利。若重大变更将提前公示。您可随时停止使用本应用。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>六、免责条款</div>
+                <p>因不可抗力或服务中断造成的损失，花信风不承担责任。您在赏花出游过程中应注意自身安全，遵守景区规定，花信风不对人身安全负责。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>七、联系方式</div>
+                <p>如对本协议有任何疑问，可通过应用内反馈渠道与我们联系。</p>
+              </>:<>
+                <div style={{fontSize:11,color:"#8a7a68",marginBottom:10}}>
+                  更新日期：2026年4月 · 版本 v1.0</div>
+                <p style={{marginBottom:12,color:"#5a4a38"}}>
+                  花信风高度重视用户隐私。本政策说明我们收集哪些信息、如何使用、如何保护。请仔细阅读。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>一、我们收集的信息</div>
+                <p>1. <b>账号信息</b>：昵称、头像、手机号（仅用于登录验证，不作他用）。<br/>
+                2. <b>使用行为</b>：打卡记录、收藏、点赞、分享等，用于个性化推荐与成就解锁。<br/>
+                3. <b>位置信息</b>：仅在您主动启用"附近"功能时请求一次，不后台追踪。<br/>
+                4. <b>设备信息</b>：浏览器型号、操作系统版本（用于兼容性优化）。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>二、我们不收集</div>
+                <p>不收集：通讯录、短信、相册（除您主动上传的分享图片）、电话、支付信息等。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>三、信息的使用</div>
+                <p>您的数据<b>仅存储在您本地设备</b>（浏览器 localStorage）。我们不上传您的个人数据到服务器。分享图片中如包含地点信息，请您自行判断是否分享。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>四、第三方服务</div>
+                <p>1. <b>Open-Meteo</b>：获取天气数据，仅传递经纬度，不传个人信息。<br/>
+                2. <b>Google Analytics（可选）</b>：统计匿名访问数据，您可通过浏览器设置禁用。<br/>
+                3. <b>Unsplash</b>：展示花卉照片，不收集任何用户信息。<br/>
+                4. <b>高德地图 / Google Maps</b>：仅在您点击时跳转，不共享个人数据。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>五、您的权利</div>
+                <p>您可随时在浏览器设置中清除所有本地数据（包括打卡、收藏、成就）。您可联系我们删除账号。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>六、未成年人保护</div>
+                <p>花信风适合全年龄用户。14 岁以下用户请在监护人陪同下使用。</p>
+                <div style={{fontWeight:700,color:"#c06040",marginTop:14,marginBottom:6}}>七、政策更新</div>
+                <p>本政策若有重大变更将在应用内公示，您需重新同意后方可继续使用。</p>
+              </>}
+            </div>
+            <div style={{padding:"12px 18px",borderTop:"1px solid #ece6dc",textAlign:"center"}}>
+              <button onClick={function(){setShowTerms(null);}}
+                style={{padding:"8px 30px",background:"#c06040",color:"#fff",
+                  border:"none",borderRadius:8,cursor:"pointer",fontSize:12,
+                  fontWeight:700,letterSpacing:4}}>
+                我已阅读</button>
+            </div>
+          </div>
+        </div>}
       </div>
     </div>
   </div>);
@@ -5325,7 +5635,7 @@ function AppCore(){
     d+=distKm(tripSpots[i-1].lat,tripSpots[i-1].lon,tripSpots[i].lat,tripSpots[i].lon);return Math.round(d);},[tripSpots]);
   const W=1000,H=850;const cs=getSeason();const cr=REGIONS.find(r=>r.id===region)||REGIONS[0];
 
-  const proj=useMemo(()=>d3.geoMercator().center([104.5,35.5]).scale(580).translate([W/2,H/2]),[]);
+  const proj=useMemo(()=>d3.geoMercator().center([104.5,35.5]).scale(680).translate([W/2,H/2]),[]);
   const pathGen=useMemo(()=>d3.geoPath().projection(proj),[proj]);
 
   useEffect(()=>{fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json")
@@ -5622,6 +5932,19 @@ function AppCore(){
       <div style={{position:"absolute",right:0,top:0,bottom:0,width:8,zIndex:15,background:"linear-gradient(90deg,#c8a070,#d4b088,#b08858)"}}/></>}
 
     <div ref={mapRef} onPointerDown={onPD} onPointerMove={onPM} onPointerUp={onPU} onPointerLeave={onPU}
+      onDoubleClick={function(e){
+        // Gaode-standard: double-click to zoom in at cursor
+        var rect=mapRef.current.getBoundingClientRect();
+        var gx=proj.invert&&proj.invert([(e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H]);
+        setWz(function(p){var n=Math.min(8,p*1.6);
+          if(gx){setWc(function(c){return[c[0]+(gx[0]-c[0])*0.3,c[1]+(gx[1]-c[1])*0.3];});}
+          return n;});
+      }}
+      onContextMenu={function(e){
+        // Gaode-standard: right-click to zoom out
+        e.preventDefault();
+        setWz(function(p){return Math.max(1,p*0.7);});
+      }}
       style={{position:"absolute",inset:0,cursor:ez>1.05||region!=="all"?(drag?"grabbing":"grab"):"default",touchAction:"none"}}>
       <div style={{position:"absolute",left:"50%",top:"50%",width:W,height:H,marginLeft:-W/2,marginTop:-H/2,
         transform:"scale("+ez+") translate("+tx/ez+"px,"+ty/ez+"px)",
@@ -5650,7 +5973,46 @@ function AppCore(){
     <AlertBanner onGo={goToSpot} flora={flora}/>
     <MusicPlayer/>
     <NatureAmbient/>
-    <ZoomControls wz={wz} setWz={setWz}/>
+    {/* ═══ 地图控件 · 高德标准 ═══ */}
+    {/* 缩放级别指示器 (右下角) */}
+    <div style={{position:"absolute",right:12,bottom:65,zIndex:29,
+      background:"rgba(250,245,237,.95)",borderRadius:8,
+      padding:"4px 10px",fontSize:10,color:"#8a7a68",
+      border:"1px solid #e0dcd4",fontWeight:600,letterSpacing:1,
+      boxShadow:"0 1px 4px rgba(0,0,0,.05)"}}>
+      {ez.toFixed(1)}×
+    </div>
+    {/* 比例尺 (左下角·在 FAB 上方) */}
+    <div style={{position:"absolute",left:70,bottom:28,zIndex:29,
+      display:"flex",flexDirection:"column",alignItems:"flex-start",gap:2,
+      pointerEvents:"none"}}>
+      <div style={{fontSize:10,color:"#8a7a68",fontWeight:600,letterSpacing:1}}>
+        {(function(){
+          // 近似比例尺：以当前缩放下屏幕 80px 代表多少 km
+          // 地图 scale=680，Mercator 投影在赤道1度经度 ~111.32 km
+          // scale 680 相当于每度 680*π/180 ≈ 11.87 像素
+          // 所以 80 像素 ≈ 80/11.87/ez 度 ≈ 6.74/ez 度 ≈ 749/ez km
+          var km=Math.round(750/ez);
+          if(km>=1000)return Math.round(km/100)*100+" km";
+          if(km>=100)return Math.round(km/10)*10+" km";
+          return km+" km";
+        })()}
+      </div>
+      <div style={{width:80,height:8,borderLeft:"2px solid #8a7a68",
+        borderBottom:"2px solid #8a7a68",borderRight:"2px solid #8a7a68"}}></div>
+    </div>
+    {/* 重置/指南针按钮 (右下角·缩放指示器上方) */}
+    <button onClick={function(){setRegion("all");setWz(1);setWc([104.5,35]);setPan({x:0,y:0});}}
+      title="回到全景" style={{position:"absolute",right:12,bottom:95,zIndex:29,
+        width:36,height:36,borderRadius:"50%",border:"1px solid #e0dcd4",
+        background:"rgba(250,245,237,.98)",cursor:"pointer",padding:0,
+        boxShadow:"0 1px 4px rgba(0,0,0,.06)",
+        display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c06040" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12,3 L13,11 L21,12 L13,13 L12,21 L11,13 L3,12 L11,11 Z" fill="#c06040" stroke="none"/>
+      </svg>
+    </button>
 
     {/* Title */}
     <div style={{position:"absolute",top:22,left:ez>1.5?12:3,zIndex:30}}>
@@ -5866,9 +6228,10 @@ function AppCore(){
       </div>
     </div>}
     {/* Mood card trigger - Bookmark style on left edge */}
-    <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:90,right:0,zIndex:31,
+    <button onClick={()=>setShowMood(true)} style={{position:"absolute",top:110,right:0,zIndex:31,
       border:"none",cursor:"pointer",padding:0,background:"transparent",
-      filter:"drop-shadow(0 2px 6px rgba(200,160,80,.25))"}} title="每日花签·求一签">
+      filter:"drop-shadow(0 2px 6px rgba(200,160,80,.25))"}} title="每日花签·求一签"
+      className="hx-bookmark">
       <svg width="42" height="58" viewBox="0 0 42 58">
         <defs><linearGradient id="bmgrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#e8a850"/><stop offset="100%" stopColor="#c88830"/></linearGradient></defs>
@@ -5879,9 +6242,10 @@ function AppCore(){
       </svg>
     </button>
     {/* 24-Huaxin bookmark - second bookmark below */}
-    <button onClick={()=>setShowHuaxin(true)} style={{position:"absolute",top:154,right:0,zIndex:31,
+    <button onClick={()=>setShowHuaxin(true)} style={{position:"absolute",top:170,right:0,zIndex:31,
       border:"none",cursor:"pointer",padding:0,background:"transparent",
-      filter:"drop-shadow(0 2px 6px rgba(80,120,100,.25))"}} title="二十四番花信风">
+      filter:"drop-shadow(0 2px 6px rgba(80,120,100,.25))"}} title="二十四番花信风"
+      className="hx-bookmark">
       <svg width="42" height="58" viewBox="0 0 42 58">
         <defs><linearGradient id="bmgrad2" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#5a8a70"/><stop offset="100%" stopColor="#3a6b50"/></linearGradient></defs>
@@ -5898,9 +6262,10 @@ function AppCore(){
     {wikiSp&&<FlowerWiki sp={wikiSp} flora={flora} onClose={()=>setWikiSp(null)}
       onPickSpecies={(sp)=>{setSelSp(sp);setPage("species");}}/>}
     {/* Diary bookmark - third bookmark */}
-    <button onClick={()=>setShowDiary(true)} style={{position:"absolute",top:218,right:0,zIndex:31,
+    <button onClick={()=>setShowDiary(true)} style={{position:"absolute",top:234,right:0,zIndex:31,
       border:"none",cursor:"pointer",padding:0,background:"transparent",
-      filter:"drop-shadow(0 2px 6px rgba(192,96,64,.25))"}} title="我的花历">
+      filter:"drop-shadow(0 2px 6px rgba(192,96,64,.25))"}} title="我的花历"
+      className="hx-bookmark">
       <svg width="42" height="58" viewBox="0 0 42 58">
         <defs><linearGradient id="bmgrad3" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#c87050"/><stop offset="100%" stopColor="#a05030"/></linearGradient></defs>
@@ -5934,31 +6299,56 @@ function AppCore(){
     {showStreak&&<DailyStreakToast streak={streak} onClose={()=>setShowStreak(false)}/>}
     {/* Collapsible FAB menu - bottom left */}
     <div style={{position:"absolute",bottom:12,left:12,zIndex:30}}>
-      {/* Expanded menu items */}
-      {toolsOpen&&<div style={{marginBottom:8,display:"flex",flexDirection:"column",gap:6,
-        animation:"fadeIn .2s"}}>
+      {/* Expanded menu items - grouped */}
+      {toolsOpen&&<div style={{marginBottom:8,display:"flex",flexDirection:"column",gap:3,
+        animation:"fadeIn .2s",width:200,
+        background:"rgba(250,245,237,.98)",borderRadius:14,
+        boxShadow:"0 4px 20px rgba(0,0,0,.12)",padding:"8px",
+        border:"1px solid #e0dcd4"}}>
+        {/* Group 1: Discover */}
+        <div style={{fontSize:9,color:"#b08040",letterSpacing:3,padding:"6px 10px 4px",fontWeight:700}}>探索</div>
         {[
-          {icon:"📊",label:"花事概览",desc:"全国花事数据",action:function(){setShowDash(true);setToolsOpen(false);}},
-          {icon:"🌱",label:"每日签到",desc:"连续打开获奖励",action:function(){setShowDaily(true);setToolsOpen(false);}},
-          {icon:"🧩",label:"百花拼图",desc:"收集72种花卉",action:function(){setShowPuzzle(true);setToolsOpen(false);}},
-          {icon:"🔔",label:"花期提醒",desc:"订阅开花通知",action:function(){setShowSub(true);setToolsOpen(false);}},
-          {icon:"🤖",label:"AI助手",desc:"智能赏花问答",action:function(){setShowAI(true);setToolsOpen(false);}},
-          {icon:"✨",label:"为你推荐",desc:"个性化赏花地",action:function(){setShowRec(true);setToolsOpen(false);}},
-          {icon:"🌺",label:"花事圈",desc:"分享与发现",action:function(){setShowFeed(true);setToolsOpen(false);}},
-          {icon:"🗓",label:"花事日历",desc:"节气·花期·订阅",action:function(){setShowCalendar(true);setToolsOpen(false);}},
-          {icon:"📡",label:"花讯播报",desc:"众包实况",action:function(){setShowCrowd(true);setToolsOpen(false);}},
-          {icon:"📜",label:"诗词花事",desc:"千年诗句遇花事",action:function(){setShowPoem(true);setToolsOpen(false);}},
+          {icon:"🤖",label:"AI助手",action:function(){setShowAI(true);setToolsOpen(false);}},
+          {icon:"✨",label:"为你推荐",action:function(){setShowRec(true);setToolsOpen(false);}},
+          {icon:"📊",label:"花事概览",action:function(){setShowDash(true);setToolsOpen(false);}},
+          {icon:"📜",label:"诗词花事",action:function(){setShowPoem(true);setToolsOpen(false);}},
         ].map(function(btn,i){return(
-          <button key={i} onClick={btn.action}
+          <button key={"d"+i} onClick={btn.action}
             style={{display:"flex",alignItems:"center",gap:10,
-              border:"1px solid #e0dcd4",background:"rgba(250,245,237,.98)",borderRadius:12,
-              padding:"10px 14px",cursor:"pointer",boxShadow:"0 2px 8px rgba(0,0,0,.08)",
-              textAlign:"left",width:180}}>
-            <span style={{fontSize:20}}>{btn.icon}</span>
-            <div>
-              <div style={{fontSize:12,fontWeight:700,color:"#2a2018",letterSpacing:1}}>{btn.label}</div>
-              <div style={{fontSize:10,color:"#8a7a68"}}>{btn.desc}</div>
-            </div>
+              border:"none",background:"transparent",borderRadius:8,
+              padding:"8px 10px",cursor:"pointer",textAlign:"left",width:"100%"}}>
+            <span style={{fontSize:16}}>{btn.icon}</span>
+            <span style={{fontSize:13,color:"#2a2018",fontWeight:500}}>{btn.label}</span>
+          </button>);})}
+        {/* Group 2: Engage */}
+        <div style={{height:1,background:"#ece6dc",margin:"4px 10px"}}></div>
+        <div style={{fontSize:9,color:"#b08040",letterSpacing:3,padding:"6px 10px 4px",fontWeight:700}}>互动</div>
+        {[
+          {icon:"🌺",label:"花事圈",action:function(){setShowFeed(true);setToolsOpen(false);}},
+          {icon:"📡",label:"花讯播报",action:function(){setShowCrowd(true);setToolsOpen(false);}},
+          {icon:"🌱",label:"每日签到",action:function(){setShowDaily(true);setToolsOpen(false);}},
+          {icon:"🧩",label:"百花拼图",action:function(){setShowPuzzle(true);setToolsOpen(false);}},
+        ].map(function(btn,i){return(
+          <button key={"e"+i} onClick={btn.action}
+            style={{display:"flex",alignItems:"center",gap:10,
+              border:"none",background:"transparent",borderRadius:8,
+              padding:"8px 10px",cursor:"pointer",textAlign:"left",width:"100%"}}>
+            <span style={{fontSize:16}}>{btn.icon}</span>
+            <span style={{fontSize:13,color:"#2a2018",fontWeight:500}}>{btn.label}</span>
+          </button>);})}
+        {/* Group 3: Plan */}
+        <div style={{height:1,background:"#ece6dc",margin:"4px 10px"}}></div>
+        <div style={{fontSize:9,color:"#b08040",letterSpacing:3,padding:"6px 10px 4px",fontWeight:700}}>计划</div>
+        {[
+          {icon:"🗓",label:"花事日历",action:function(){setShowCalendar(true);setToolsOpen(false);}},
+          {icon:"🔔",label:"花期提醒",action:function(){setShowSub(true);setToolsOpen(false);}},
+        ].map(function(btn,i){return(
+          <button key={"p"+i} onClick={btn.action}
+            style={{display:"flex",alignItems:"center",gap:10,
+              border:"none",background:"transparent",borderRadius:8,
+              padding:"8px 10px",cursor:"pointer",textAlign:"left",width:"100%"}}>
+            <span style={{fontSize:16}}>{btn.icon}</span>
+            <span style={{fontSize:13,color:"#2a2018",fontWeight:500}}>{btn.label}</span>
           </button>);})}
       </div>}
       {/* FAB trigger button */}
@@ -5982,11 +6372,6 @@ function AppCore(){
         display:"flex",alignItems:"center",gap:4,boxShadow:"0 1px 4px rgba(0,0,0,.05)"}}>
         👤 登录</button>}
     {showLogin&&<LoginPanel onLogin={doLogin} onClose={()=>setShowLogin(false)}/>}
-    {/* Dark mode toggle */}
-    <button onClick={()=>setDark(!dark)} style={{position:"absolute",top:12,right:10,zIndex:31,
-      border:"none",borderRadius:16,padding:"5px 10px",cursor:"pointer",
-      background:dark?"rgba(40,35,28,.85)":"rgba(250,245,237,.92)",boxShadow:"0 1px 6px rgba(0,0,0,.05)",
-      fontSize:12,color:dark?"#e0d8c8":C.tl}}>{dark?"☀":"🌙"}</button>
     {/* Language switcher - compact dropdown */}
     <LangSwitcher lang={lang} setLang={setLang} t={t} setShowGuide={setShowGuide}/>
     {showGuide&&<TravelGuide onClose={()=>setShowGuide(false)} lang={lang}/>}
@@ -5996,7 +6381,16 @@ function AppCore(){
 // ═══ Language switcher (compact dropdown) ═══
 function LangSwitcher({lang,setLang,t,setShowGuide}){
   const [open,setOpen]=useState(false);
-  const langs=[{k:"zh",l:"中文",f:"🇨🇳"},{k:"en",l:"English",f:"🇺🇸"},{k:"ja",l:"日本語",f:"🇯🇵"},{k:"ko",l:"한국어",f:"🇰🇷"}];
+  const langs=[
+    {k:"zh",l:"中文",f:"🇨🇳"},
+    {k:"en",l:"English",f:"🇺🇸"},
+    {k:"ja",l:"日本語",f:"🇯🇵"},
+    {k:"ko",l:"한국어",f:"🇰🇷"},
+    {k:"th",l:"ไทย",f:"🇹🇭"},
+    {k:"ru",l:"Русский",f:"🇷🇺"},
+    {k:"de",l:"Deutsch",f:"🇩🇪"},
+    {k:"fr",l:"Français",f:"🇫🇷"},
+  ];
   const cur=langs.find(x=>x.k===lang)||langs[0];
   return(<>
     <button onClick={()=>setOpen(!open)} style={{position:"absolute",top:55,left:12,zIndex:35,
@@ -6006,7 +6400,7 @@ function LangSwitcher({lang,setLang,t,setShowGuide}){
       {cur.f} <span style={{fontWeight:600}}>{cur.l}</span> <span style={{fontSize:9,color:"#8a7a68"}}>▾</span>
     </button>
     {open&&<div style={{position:"absolute",top:85,left:12,zIndex:36,
-      background:"#faf6ef",borderRadius:10,padding:"4px",minWidth:140,
+      background:"#faf6ef",borderRadius:10,padding:"4px",minWidth:150,maxHeight:320,overflow:"auto",
       boxShadow:"0 4px 20px rgba(0,0,0,.15)",border:"1px solid #e0dcd4"}}>
       {langs.map(x=>(
         <button key={x.k} onClick={()=>{setLang(x.k);setOpen(false);}}
