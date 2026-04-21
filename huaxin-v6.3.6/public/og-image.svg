@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- 水墨底纹 -->
+    <pattern id="paper" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+      <rect width="120" height="120" fill="#f6eedd"/>
+      <circle cx="20" cy="30" r="1" fill="#000" opacity="0.02"/>
+      <circle cx="80" cy="60" r="1.2" fill="#000" opacity="0.015"/>
+      <circle cx="40" cy="95" r="0.8" fill="#000" opacity="0.025"/>
+    </pattern>
+
+    <!-- 朱砂渐变 -->
+    <radialGradient id="zhusha" cx="30%" cy="30%">
+      <stop offset="0%"   stop-color="#c85a4a"/>
+      <stop offset="70%"  stop-color="#a0301c"/>
+      <stop offset="100%" stop-color="#7a1a0e"/>
+    </radialGradient>
+
+    <!-- 金色晕染 -->
+    <radialGradient id="jin">
+      <stop offset="0%"   stop-color="#e8b86a"/>
+      <stop offset="60%"  stop-color="#c89a4a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#c89a4a" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- 水墨晕染 -->
+    <radialGradient id="inkWash">
+      <stop offset="0%"   stop-color="#3a2f28" stop-opacity="0.22"/>
+      <stop offset="60%"  stop-color="#3a2f28" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#3a2f28" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- 花瓣形状 (5 瓣梅花) -->
+    <symbol id="petal5" viewBox="0 0 120 120">
+      <g transform="translate(60 60)">
+        <ellipse cx="0" cy="-28" rx="14" ry="26" fill="url(#zhusha)" transform="rotate(0)"/>
+        <ellipse cx="0" cy="-28" rx="14" ry="26" fill="url(#zhusha)" transform="rotate(72)"/>
+        <ellipse cx="0" cy="-28" rx="14" ry="26" fill="url(#zhusha)" transform="rotate(144)"/>
+        <ellipse cx="0" cy="-28" rx="14" ry="26" fill="url(#zhusha)" transform="rotate(216)"/>
+        <ellipse cx="0" cy="-28" rx="14" ry="26" fill="url(#zhusha)" transform="rotate(288)"/>
+        <circle cx="0" cy="0" r="7" fill="#e8b86a"/>
+        <circle cx="0" cy="0" r="3" fill="#7a1a0e"/>
+      </g>
+    </symbol>
+
+    <!-- 细小花瓣 -->
+    <symbol id="petalSmall" viewBox="0 0 40 40">
+      <g transform="translate(20 20)">
+        <ellipse cx="0" cy="-9" rx="4.5" ry="8" fill="#c85a4a" opacity="0.42" transform="rotate(0)"/>
+        <ellipse cx="0" cy="-9" rx="4.5" ry="8" fill="#c85a4a" opacity="0.42" transform="rotate(72)"/>
+        <ellipse cx="0" cy="-9" rx="4.5" ry="8" fill="#c85a4a" opacity="0.42" transform="rotate(144)"/>
+        <ellipse cx="0" cy="-9" rx="4.5" ry="8" fill="#c85a4a" opacity="0.42" transform="rotate(216)"/>
+        <ellipse cx="0" cy="-9" rx="4.5" ry="8" fill="#c85a4a" opacity="0.42" transform="rotate(288)"/>
+      </g>
+    </symbol>
+  </defs>
+
+  <!-- 底色 · 纸 -->
+  <rect width="1200" height="630" fill="url(#paper)"/>
+
+  <!-- 四角水墨晕 -->
+  <circle cx="0"    cy="0"   r="340" fill="url(#inkWash)"/>
+  <circle cx="1200" cy="630" r="360" fill="url(#inkWash)"/>
+  <circle cx="1200" cy="0"   r="220" fill="url(#jin)" opacity="0.55"/>
+  <circle cx="0"    cy="630" r="200" fill="url(#jin)" opacity="0.45"/>
+
+  <!-- 散落的小花瓣 -->
+  <use href="#petalSmall" x="110"  y="100" width="36" height="36" transform="rotate(25 128 118)"/>
+  <use href="#petalSmall" x="200"  y="430" width="44" height="44" transform="rotate(-12 222 452)"/>
+  <use href="#petalSmall" x="950"  y="120" width="40" height="40" transform="rotate(38 970 140)"/>
+  <use href="#petalSmall" x="1030" y="470" width="46" height="46" transform="rotate(-28 1053 493)"/>
+  <use href="#petalSmall" x="60"   y="300" width="28" height="28" transform="rotate(45 74 314)"/>
+  <use href="#petalSmall" x="1080" y="280" width="32" height="32" transform="rotate(-45 1096 296)"/>
+
+  <!-- 左侧大花瓣 (主视觉) -->
+  <g opacity="0.95">
+    <use href="#petal5" x="140" y="150" width="330" height="330"/>
+  </g>
+  <!-- 辅助中型花 -->
+  <use href="#petal5" x="380" y="370" width="170" height="170" opacity="0.6"/>
+
+  <!-- 主标题 · 花 信 风 -->
+  <g transform="translate(660 240)">
+    <text x="0" y="0"
+      font-family="'Noto Serif SC', 'Songti SC', 'STSong', serif"
+      font-size="160"
+      font-weight="700"
+      fill="#2a1f18"
+      letter-spacing="30">花信风</text>
+
+    <!-- 副标 -->
+    <text x="4" y="75"
+      font-family="'Noto Serif SC', 'Songti SC', serif"
+      font-size="32"
+      fill="#5a4a3e"
+      letter-spacing="18"
+      font-weight="400">中国花 · 中国诗 · 中国节气</text>
+
+    <!-- 分隔线 -->
+    <line x1="4" y1="115" x2="100" y2="115" stroke="#a0301c" stroke-width="2"/>
+
+    <!-- 英文小字 -->
+    <text x="4" y="152"
+      font-family="'JetBrains Mono', monospace"
+      font-size="16"
+      fill="#8a7a6e"
+      letter-spacing="3">huaxinfeng · 24 solar terms · 408 scenic spots</text>
+  </g>
+
+  <!-- 右下印章 -->
+  <g transform="translate(1050 540)">
+    <rect x="-42" y="-42" width="84" height="84"
+      fill="none"
+      stroke="#a0301c"
+      stroke-width="3.5"
+      rx="4"/>
+    <text x="0" y="-6"
+      text-anchor="middle"
+      font-family="'Noto Serif SC', serif"
+      font-size="24"
+      font-weight="700"
+      fill="#a0301c"
+      letter-spacing="2">花信</text>
+    <text x="0" y="26"
+      text-anchor="middle"
+      font-family="'Noto Serif SC', serif"
+      font-size="24"
+      font-weight="700"
+      fill="#a0301c"
+      letter-spacing="2">有时</text>
+  </g>
+
+  <!-- 左下小字 URL -->
+  <text x="60" y="590"
+    font-family="'JetBrains Mono', monospace"
+    font-size="16"
+    fill="#7a6a5e"
+    letter-spacing="2">shihua.vercel.app</text>
+</svg>

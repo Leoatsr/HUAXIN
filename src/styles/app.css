@@ -1,0 +1,426 @@
+/* 花信风 · 工具类 */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "palt";
+}
+
+#root { min-height: 100vh; }
+
+/* 字体类 */
+.serif { font-family: var(--font-serif); font-weight: 400; }
+.sans  { font-family: var(--font-sans); }
+.mono  { font-family: var(--font-mono); }
+
+/* 竖排（给签诗用） */
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.15em;
+}
+
+/* 印章 */
+.seal {
+  display: inline-grid;
+  place-items: center;
+  width: 56px; height: 56px;
+  background: var(--seal);
+  color: var(--paper);
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  text-align: center;
+  border-radius: 2px;
+  transform: rotate(-4deg);
+  box-shadow: 0 1px 0 oklch(0.22 0.012 60 / 0.25);
+}
+.seal.sm { width: 36px; height: 36px; font-size: 9px; }
+
+/* 分隔线 */
+.rule { height: 1px; background: var(--line); }
+.rule-ink {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink-3) 20%, var(--ink-3) 80%, transparent);
+  opacity: 0.5;
+}
+.dot-leader { flex: 1; border-bottom: 1px dotted var(--line); margin: 0 8px 4px; }
+
+/* 纸质背景 */
+.paper-bg {
+  background: var(--paper);
+  background-image:
+    radial-gradient(oklch(0.22 0.012 60 / 0.012) 1px, transparent 1px),
+    radial-gradient(oklch(0.22 0.012 60 / 0.008) 1px, transparent 1px);
+  background-size: 22px 22px, 7px 7px;
+  background-position: 0 0, 11px 11px;
+}
+
+/* 按钮 */
+.btn {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--t-button);
+}
+.btn:hover { border-color: var(--ink-3); background: var(--bg); }
+.btn:active { transform: scale(0.97); }
+.btn.primary {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.btn.primary:hover { background: var(--ink-2); border-color: var(--ink-2); }
+.btn.zhusha {
+  background: var(--zhusha);
+  color: var(--paper);
+  border-color: var(--zhusha);
+}
+.btn.ghost { background: transparent; }
+.btn.sm { padding: 5px 10px; font-size: 12px; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* 焦点 */
+*:focus-visible { outline: 2px solid var(--zhusha); outline-offset: 2px; }
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-4); }
+
+/* 标签胶囊 */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--bg-sunk);
+  color: var(--ink-2);
+  border: 1px solid var(--line-2);
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+.pill.zhusha {
+  background: color-mix(in oklch, var(--zhusha) 12%, var(--bg));
+  color: var(--zhusha);
+  border-color: color-mix(in oklch, var(--zhusha) 25%, var(--bg));
+}
+.pill.qing {
+  background: color-mix(in oklch, var(--qing) 12%, var(--bg));
+  color: var(--qing);
+  border-color: color-mix(in oklch, var(--qing) 25%, var(--bg));
+}
+.pill.jin {
+  background: color-mix(in oklch, var(--jin) 12%, var(--bg));
+  color: var(--jin);
+  border-color: color-mix(in oklch, var(--jin) 30%, var(--bg));
+}
+
+/* 键盘键 */
+kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--bg-elev);
+  color: var(--ink-3);
+}
+
+/* 卡片 */
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition: var(--t-card);
+}
+.card.interactive { cursor: pointer; }
+.card.interactive:hover {
+  border-color: var(--ink-3);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.card.interactive:active { transform: translateY(0); }
+
+/* 小标签（英文 caps） */
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 10px;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+}
+
+/* 中文小标签 */
+.cn-caps {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--ink-3);
+}
+
+/* flex 工具 */
+.row { display: flex; }
+.col { display: flex; flex-direction: column; }
+.ac  { align-items: center; }
+.jb  { justify-content: space-between; }
+.jc  { justify-content: center; }
+.g4  { gap: 4px; } .g6 { gap: 6px; } .g8 { gap: 8px; } .g12 { gap: 12px; }
+.g16 { gap: 16px; } .g24 { gap: 24px; } .g32 { gap: 32px; }
+
+/* 响应式（默认桌面；移动端小幅压缩） */
+@media (max-width: 768px) {
+  body { font-size: 13px; }
+}
+
+/* 竹签筒摇签动画 */
+@keyframes hx-shake {
+  0%   { transform: rotate(0deg) translateY(0); }
+  15%  { transform: rotate(-5deg) translateY(-3px); }
+  30%  { transform: rotate(4deg) translateY(2px); }
+  45%  { transform: rotate(-4deg) translateY(-2px); }
+  60%  { transform: rotate(5deg) translateY(3px); }
+  75%  { transform: rotate(-3deg) translateY(-1px); }
+  90%  { transform: rotate(2deg) translateY(1px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+.hx-shake {
+  animation: hx-shake 800ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform-origin: 50% 70%;
+}
+
+/* 音乐播放器脉冲指示 */
+@keyframes hx-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.3); }
+}
+
+/* 进度条动画 */
+@keyframes hx-progress {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 花瓣摇曳 · Loading 用 */
+@keyframes hx-sway {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(6deg); }
+}
+
+/* 状态点呼吸 · WeatherBadge 用 */
+@keyframes hx-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+/* 页面切换 · 淡入上移 */
+@keyframes hx-fade-up {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.hx-enter { animation: hx-fade-up var(--dur-slow) var(--ease-out) both; }
+
+/* 点赞弹跳 */
+@keyframes hx-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.28); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+.hx-pop { animation: hx-pop var(--dur-slow) var(--ease-spring); }
+
+/* 模态/弹窗进入 */
+@keyframes hx-scale-in {
+  0%   { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.hx-modal-enter { animation: hx-scale-in var(--dur-normal) var(--ease-out) both; }
+
+/* ═══ 长辈模式 · data-senior="true" on html ═══ */
+html[data-senior="true"] {
+  /* 放大根字号 · 所有 em/rem 随之 */
+  font-size: 18px;
+}
+html[data-senior="true"] body {
+  font-size: 16px;
+}
+/* 放大所有 serif 字号 */
+html[data-senior="true"] .serif {
+  font-size: 1.08em !important;
+  line-height: 1.8 !important;
+  letter-spacing: 0.06em !important;
+}
+/* 按钮变大 · 更容易点 */
+html[data-senior="true"] .btn {
+  min-height: 48px !important;
+  padding: 12px 20px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.1em !important;
+}
+html[data-senior="true"] .btn.sm {
+  min-height: 38px !important;
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+}
+/* 输入框放大 */
+html[data-senior="true"] input,
+html[data-senior="true"] textarea,
+html[data-senior="true"] select {
+  font-size: 16px !important;
+  min-height: 44px;
+}
+/* 英文 caps 小标题也放大 */
+html[data-senior="true"] .cn-caps,
+html[data-senior="true"] .caps,
+html[data-senior="true"] .mono {
+  font-size: 12px !important;
+}
+/* 页面 padding 更宽松 */
+html[data-senior="true"] .card {
+  padding: 22px !important;
+}
+/* 禁用非关键动效（视觉负担小） */
+html[data-senior="true"] {
+  --dur-fast: 80ms;
+  --dur-normal: 120ms;
+  --dur-slow: 200ms;
+  --dur-calm: 300ms;
+}
+/* 简化 UI · 隐藏纯装饰元素 */
+html[data-senior="true"] .hx-decorative {
+  display: none !important;
+}
+
+/* 降级偏好 · 用户请求减少动效 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══ Onboarding 引导专用 ═══ */
+/* 阶段淡入 */
+@keyframes hx-stage-fade {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 花瓣绽开 */
+@keyframes hx-petal-open {
+  0%   { opacity: 0; transform: rotate(var(--r, 0deg)) scale(0.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 文字浮现 */
+@keyframes hx-text-appear {
+  0%   { opacity: 0; transform: translateY(12px); letter-spacing: 0.8em; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 脉动定位 */
+@keyframes hx-ping {
+  0%   { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* 花瓣飘落 */
+@keyframes hx-petal-fall {
+  0% {
+    transform: translateY(-20vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% {
+    transform: translateY(110vh) translateX(40px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 「为你挑的」呼吸光环 */
+@keyframes hx-picked-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px var(--zhusha),
+                0 0 0 8px color-mix(in oklch, var(--zhusha) 18%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--zhusha),
+                0 0 0 14px color-mix(in oklch, var(--zhusha) 8%, transparent);
+  }
+}
+.hx-picked-seal {
+  animation: hx-picked-seal-in 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes hx-picked-seal-in {
+  0%   { opacity: 0; transform: scale(0.5) rotate(20deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* ═══ 移动端响应式兜底 ═══ */
+@media (max-width: 860px) {
+  /* 按钮点击区至少 44x44（WCAG 推荐）*/
+  .btn {
+    min-height: 40px;
+    padding: 10px 14px;
+  }
+
+  /* 卡片 padding 收紧 */
+  .card {
+    padding: 16px;
+  }
+  .card.paper-bg {
+    padding: 18px;
+  }
+
+  /* 按钮组 flex-wrap 保障 */
+  .btn-group {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 超窄屏 · 卡片更紧凑 */
+  .card {
+    padding: 14px;
+    border-radius: var(--radius-md);
+  }
+
+  /* 触屏点击反馈加强 */
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  /* 表格/网格等宽容器最多横滑 */
+  .scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* 触屏设备禁用 hover · 防止卡住状态 */
+@media (hover: none) {
+  .btn:hover {
+    background: var(--bg-elev);
+  }
+}

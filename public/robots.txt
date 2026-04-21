@@ -1,0 +1,26 @@
+# ═══ 花信风 robots.txt ═══
+User-agent: *
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+User-agent: YisouSpider
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Disallow: /icons/
+Disallow: /sw.js
+
+Sitemap: https://shihua.vercel.app/sitemap.xml

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  
+  <!-- ─── Primary Meta Tags ─── -->
+  <title>花信风 · 跟着天地节律追一场中国色</title>
+  <meta name="title" content="花信风 · 跟着天地节律追一场中国色" />
+  <meta name="description" content="基于中国传统物候学的智能赏花地图。二十四番花信风 × 积温预测 × 实时气象。覆盖全国408个景点，74种花卉，让你在最美的时刻遇见最美的花。" />
+  <meta name="keywords" content="花信风,赏花,赏花地图,二十四节气,二十四番花信风,物候学,花期预测,梅花,樱花,桃花,牡丹,油菜花,薰衣草,红叶,胡杨林,中国赏花,国风赏花,传统节气,春游,秋游,国内旅游" />
+  <meta name="author" content="HuaXinFeng" />
+  <meta name="theme-color" content="#a0301c" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="canonical" href="https://shihua.vercel.app/" />
+
+  <!-- ─── Open Graph / Facebook / WeChat / 小红书 ─── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://shihua.vercel.app/" />
+  <meta property="og:title" content="花信风 · 跟着天地节律追一场中国色" />
+  <meta property="og:description" content="基于中国传统物候学的智能赏花地图。二十四番花信风 × 408 景点 × 74 花种 × 实时气象。" />
+  <meta property="og:image" content="https://shihua.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="花信风 · 中国花 · 中国诗 · 中国节气" />
+  <meta property="og:site_name" content="花信风" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:locale:alternate" content="ja_JP" />
+  <meta property="og:locale:alternate" content="ko_KR" />
+  
+  <!-- ─── 微信专用 ─── -->
+  <meta itemprop="name" content="花信风 · 中国传统赏花地图" />
+  <meta itemprop="description" content="基于中国传统物候学的赏花地图。24番花信风 · 408景点 · 74花种。" />
+  <meta itemprop="image" content="https://shihua.vercel.app/og-image.png" />
+  
+  <!-- ─── Twitter ─── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://shihua.vercel.app/" />
+  <meta name="twitter:title" content="花信风 · 跟着天地节律追一场中国色" />
+  <meta name="twitter:description" content="基于中国传统物候学的赏花地图。408景点 · 74花种 · 24番花信风。" />
+  <meta name="twitter:image" content="https://shihua.vercel.app/og-image.png" />
+  
+  <!-- ─── Mobile App Capable ─── -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="花信风" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  
+  <!-- ─── Favicon (PNG + SVG dataURL + ICO fallback) ─── -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  
+  <!-- ─── PWA Manifest ─── -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  
+  <!-- ─── Schema.org Structured Data ─── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "花信风",
+    "alternateName": "HuaXinFeng",
+    "url": "https://shihua.vercel.app/",
+    "description": "基于中国传统物候学的智能赏花地图 · 24番花信风 · 408景点 · 74花种",
+    "applicationCategory": "TravelApplication",
+    "operatingSystem": "Web",
+    "inLanguage": ["zh-CN", "en-US", "ja-JP", "ko-KR"],
+    "image": "https://shihua.vercel.app/og-image.png",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CNY"
+    },
+    "featureList": [
+      "408 景点花期预测",
+      "二十四番花信风",
+      "积温物候模型",
+      "实时气象数据",
+      "21 种传统乐器 · 50 首古曲",
+      "74 种花卉百科",
+      "500+ 古诗词",
+      "每日花签 · 成就徽章"
+    ],
+    "author": {
+      "@type": "Organization",
+      "name": "花信风"
+    }
+  }
+  </script>
+  
+  <!-- ─── Schema.org · 面包屑导航（帮助搜索引擎理解） ─── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "花信风", "item": "https://shihua.vercel.app/" },
+      { "@type": "ListItem", "position": 2, "name": "花事地图", "item": "https://shihua.vercel.app/#map" },
+      { "@type": "ListItem", "position": 3, "name": "24 番花信风", "item": "https://shihua.vercel.app/#huaxin" }
+    ]
+  }
+  </script>
+  
+  <!-- ─── Preconnect for performance (China-optimized) ─── -->
+  <link rel="preconnect" href="https://fonts.font.im" crossorigin />
+  <link rel="preconnect" href="https://archive-api.open-meteo.com" />
+  <link rel="dns-prefetch" href="https://geo.datav.aliyun.com" />
+  <link rel="dns-prefetch" href="https://api.qrserver.com" />
+  
+  <!-- ─── Google Analytics 4 ─── -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-708D5NMFF4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-708D5NMFF4', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=None;Secure',
+      'send_page_view': true
+    });
+  </script>
+  <!-- ─── END GA4 ─── -->
+
+  <!-- ─── Umami Analytics (Privacy-friendly alternative) ─── -->
+  <!-- Self-hosted or Cloud; replace with your instance URL + website-id
+  <script async defer
+    data-website-id="YOUR-UMAMI-WEBSITE-ID"
+    src="https://YOUR-UMAMI-DOMAIN/script.js"></script>
+  -->
+  
+  <style>
+    /* ─── Pre-React loading screen ─── */
+    html, body { margin:0; padding:0; background:#f4ece0; }
+    body { font-family:'Noto Serif SC','Songti SC',serif; color:#3a2818; }
+    #app-loader {
+      position:fixed; inset:0; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:linear-gradient(155deg,#f4ece0,#ebe0d0);
+      z-index:9999; transition:opacity .5s;
+    }
+    #app-loader.loaded { opacity:0; pointer-events:none; }
+    .loader-flower {
+      width:60px; height:60px;
+      animation:sway 2s ease-in-out infinite;
+    }
+    @keyframes sway {
+      0%,100% { transform:rotate(-5deg) scale(1); }
+      50% { transform:rotate(5deg) scale(1.05); }
+    }
+    .loader-title {
+      font-size:24px; font-weight:900; letter-spacing:8px;
+      color:#2a2018; margin-top:20px;
+    }
+    .loader-subtitle {
+      font-size:11px; letter-spacing:3px;
+      color:#8a7a60; margin-top:6px;
+    }
+    .loader-bar {
+      width:120px; height:2px; background:rgba(192,96,64,.15);
+      border-radius:1px; overflow:hidden; margin-top:24px;
+    }
+    .loader-bar::after {
+      content:''; display:block; width:40%; height:100%;
+      background:linear-gradient(90deg,#c06040,#e0a040);
+      animation:slide 1.2s ease-in-out infinite;
+    }
+    @keyframes slide {
+      0% { margin-left:-40%; }
+      100% { margin-left:100%; }
+    }
+    #root { min-height:100vh; }
+    
+    /* ─── NoScript fallback ─── */
+    .noscript-fallback {
+      padding:40px 20px; text-align:center; max-width:500px; margin:60px auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- Pre-React loading screen (removed by JS when app mounts) -->
+  <div id="app-loader">
+    <svg class="loader-flower" viewBox="0 0 24 24">
+      <g opacity=".9">
+        <ellipse cx="12" cy="7.5" rx="3" ry="4.5" fill="#e08090"/>
+        <ellipse cx="12" cy="7.5" rx="3" ry="4.5" transform="rotate(72 12 12)" fill="#e08090"/>
+        <ellipse cx="12" cy="7.5" rx="3" ry="4.5" transform="rotate(144 12 12)" fill="#e08090"/>
+        <ellipse cx="12" cy="7.5" rx="3" ry="4.5" transform="rotate(216 12 12)" fill="#e08090"/>
+        <ellipse cx="12" cy="7.5" rx="3" ry="4.5" transform="rotate(288 12 12)" fill="#e08090"/>
+        <circle cx="12" cy="12" r="2.5" fill="#f8e0a0"/>
+      </g>
+    </svg>
+    <div class="loader-title">花 信 风</div>
+    <div class="loader-subtitle">正在绘制千里江山...</div>
+    <div class="loader-bar"></div>
+  </div>
+  
+  <!-- React mount point -->
+  <div id="root"></div>
+  
+  <!-- NoScript fallback -->
+  <noscript>
+    <div class="noscript-fallback">
+      <h1>🌸 花信风</h1>
+      <p>这是一款基于中国传统物候学的智能赏花地图应用。</p>
+      <p><strong>请启用 JavaScript 以使用完整功能。</strong></p>
+    </div>
+  </noscript>
+  
+  <!-- Remove loader when React mounts -->
+  <script>
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var loader = document.getElementById('app-loader');
+        if (loader) {
+          loader.classList.add('loaded');
+          setTimeout(function() { loader.remove(); }, 500);
+        }
+      }, 300);
+    });
+    
+    /* ─── Basic Analytics Event Bus ─── */
+    window._hxTrack = function(event, data) {
+      try {
+        console.log('[花信风]', event, data || '');
+        // Forward to Google Analytics 4 if loaded
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', event, data || {});
+        }
+        // Forward to Umami if loaded
+        if (window.umami && typeof window.umami.track === 'function') {
+          window.umami.track(event, data || {});
+        }
+        // Forward to PostHog if loaded
+        if (window.posthog && typeof window.posthog.capture === 'function') {
+          window.posthog.capture(event, data || {});
+        }
+      } catch(e) {
+        console.warn('[花信风] analytics error:', e);
+      }
+    };
+    
+    /* Prevent Ctrl+Scroll browser zoom (so map zoom works correctly) */
+    window.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+    /* Prevent Ctrl+Plus/Minus browser zoom */
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
+  </script>
+  
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

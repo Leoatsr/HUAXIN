@@ -1,0 +1,90 @@
+/* ═══════════════════════════════════════════════════════════════
+   花信风 · 设计令牌（Design Tokens）
+   从 Claude Design 导出的 oklch 调色板
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Spring 默认主题 */
+  --bg: oklch(0.975 0.006 85);
+  --bg-elev: oklch(0.99 0.004 85);
+  --bg-sunk: oklch(0.94 0.008 80);
+
+  --ink:   oklch(0.22 0.012 60);
+  --ink-2: oklch(0.38 0.014 60);
+  --ink-3: oklch(0.56 0.012 70);
+  --ink-4: oklch(0.72 0.01 75);
+
+  --line:   oklch(0.86 0.008 75);
+  --line-2: oklch(0.92 0.006 80);
+
+  /* 品牌色 */
+  --zhusha:      oklch(0.58 0.15 35);  /* 朱砂 · 主强调 */
+  --zhusha-soft: oklch(0.88 0.06 35);
+  --qing:        oklch(0.52 0.07 180); /* 青 · 二级强调 */
+  --jin:         oklch(0.72 0.09 85);  /* 金 · 高光 */
+  --paper:       oklch(0.965 0.012 85);
+  --seal:        oklch(0.52 0.17 30);  /* 印章朱红 */
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 22px;
+
+  /* ═══ 动效 token · v3.8 统一 ═══ */
+  /* 时长 */
+  --dur-fast:   120ms;   /* 微反馈 · hover、按钮按下 */
+  --dur-normal: 220ms;   /* 默认 · 切换、展开 */
+  --dur-slow:   380ms;   /* 页面级 · 模态进入、屏切换 */
+  --dur-calm:   600ms;   /* 优雅慢动作 · 图片淡入、装饰 */
+
+  /* 缓动曲线 */
+  --ease-out:     cubic-bezier(0.4, 0, 0.2, 1);       /* 默认 · Material */
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.6, 1);       /* 对称 · 滑动 */
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);  /* 弹跳 · 点赞、完成 */
+  --ease-natural: cubic-bezier(0.25, 0.1, 0.25, 1);   /* 自然 · 古风适配 */
+
+  /* 组合 shorthand */
+  --t-button: transform var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  --t-card:   transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out), border-color var(--dur-normal) var(--ease-out);
+  --t-fade:   opacity var(--dur-normal) var(--ease-out);
+  --t-slide:  transform var(--dur-normal) var(--ease-out);
+  --t-all:    all var(--dur-normal) var(--ease-out);
+
+  --font-serif: 'Noto Serif SC','Songti SC','STSong','Source Han Serif SC',serif;
+  --font-sans:  'Noto Sans SC','PingFang SC','Hiragino Sans GB',system-ui,sans-serif;
+  --font-mono:  'JetBrains Mono','Menlo',monospace;
+
+  --shadow-sm: 0 1px 2px oklch(0.22 0.012 60 / 0.05),
+               0 1px 1px oklch(0.22 0.012 60 / 0.04);
+  --shadow-md: 0 6px 20px oklch(0.22 0.012 60 / 0.06),
+               0 2px 6px oklch(0.22 0.012 60 / 0.04);
+  --shadow-lg: 0 18px 48px oklch(0.22 0.012 60 / 0.1),
+               0 4px 12px oklch(0.22 0.012 60 / 0.05);
+}
+
+/* 四季主题切换 */
+body[data-season="spring"] {
+  --bg:       oklch(0.975 0.008 50);
+  --bg-sunk:  oklch(0.94 0.014 45);
+  --zhusha:   oklch(0.60 0.16 30);
+  --paper:    oklch(0.97 0.014 55);
+}
+body[data-season="summer"] {
+  --bg:       oklch(0.975 0.008 170);
+  --bg-sunk:  oklch(0.94 0.012 170);
+  --zhusha:   oklch(0.55 0.10 170);
+  --paper:    oklch(0.97 0.012 170);
+}
+body[data-season="autumn"] {
+  --bg:       oklch(0.975 0.012 75);
+  --bg-sunk:  oklch(0.93 0.018 70);
+  --zhusha:   oklch(0.60 0.16 55);
+  --paper:    oklch(0.965 0.018 75);
+}
+body[data-season="winter"] {
+  --bg:       oklch(0.975 0.005 230);
+  --bg-sunk:  oklch(0.93 0.008 230);
+  --zhusha:   oklch(0.50 0.10 240);
+  --paper:    oklch(0.97 0.006 230);
+}
